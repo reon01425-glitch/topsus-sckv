@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animasi Rogue Software — Step by Step | UNDIP Cyber Security</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: #0f172a;
+      --panel-2: #111827;
+      --line: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --cyan: #06b6d4;
+      --cyan-soft: rgba(6, 182, 212, 0.15);
+      --red: #ef4444;
+      --red-soft: rgba(239, 68, 68, 0.18);
+      --green: #22c55e;
+      --green-soft: rgba(34, 197, 94, 0.18);
+      --amber: #f59e0b;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: "Source Sans 3", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(6, 182, 212, 0.12), transparent 35%),
+        radial-gradient(circle at 85% 85%, rgba(239, 68, 68, 0.08), transparent 30%),
+        linear-gradient(160deg, #172554 0%, var(--bg) 55%, #020617 100%);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .app {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1rem clamp(1rem, 3vw, 2rem) 1.5rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .brand .tag {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .brand h1 {
+      font-family: Montserrat, sans-serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.55rem);
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .step-badge {
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.45rem 0.85rem;
+      border-radius: 999px;
+      background: var(--cyan-soft);
+      color: var(--cyan);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      white-space: nowrap;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 240px 1fr 300px;
+      gap: 1rem;
+      min-height: 520px;
+    }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; min-height: auto; }
+      .timeline { order: 2; }
+      .stage { order: 1; }
+      .detail { order: 3; }
+    }
+
+    .panel {
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .timeline {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      overflow-y: auto;
+    }
+
+    .timeline h2 {
+      font-family: Montserrat, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .step-btn {
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 0.55rem;
+      align-items: start;
+      width: 100%;
+      text-align: left;
+      padding: 0.65rem 0.7rem;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    }
+
+    .step-btn:hover { background: rgba(255, 255, 255, 0.04); }
+    .step-btn.active {
+      background: var(--cyan-soft);
+      border-color: rgba(6, 182, 212, 0.45);
+    }
+
+    .step-btn .num {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 0.82rem;
+      background: #1e293b;
+      color: var(--muted);
+    }
+
+    .step-btn.active .num {
+      background: var(--cyan);
+      color: #042f2e;
+    }
+
+    .step-btn .label {
+      font-weight: 700;
+      font-size: 0.88rem;
+      line-height: 1.25;
+    }
+
+    .step-btn .hint {
+      grid-column: 2;
+      margin-top: -0.15rem;
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .stage {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+
+    .stage-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .stage-head h2 {
+      font-family: Montserrat, sans-serif;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .status-pill {
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+    }
+
+    .status-pill.ok { background: var(--green-soft); color: var(--green); }
+    .status-pill.warn { background: rgba(245, 158, 11, 0.18); color: var(--amber); }
+    .status-pill.bad { background: var(--red-soft); color: var(--red); }
+
+    .canvas-wrap {
+      flex: 1;
+      min-height: 340px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #1e293b;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(180deg, #0b1224, #020617);
+      background-size: 28px 28px, 28px 28px, auto;
+      position: relative;
+    }
+
+    svg.scene {
+      width: 100%;
+      height: 100%;
+      min-height: 340px;
+      display: block;
+    }
+
+    .detail {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .detail h2 {
+      font-family: Montserrat, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .detail p {
+      line-height: 1.55;
+      color: #cbd5e1;
+      font-size: 0.95rem;
+    }
+
+    .def-box {
+      display: grid;
+      gap: 0.55rem;
+      padding: 0.75rem;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid #334155;
+    }
+
+    .def-box div {
+      font-size: 0.84rem;
+      line-height: 1.45;
+      color: #cbd5e1;
+    }
+
+    .def-box strong { color: var(--cyan); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    .controls-left, .controls-right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    button.ctrl {
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 0.55rem 0.95rem;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    }
+
+    button.ctrl:hover { background: #273449; border-color: #475569; }
+    button.ctrl:active { transform: translateY(1px); }
+    button.ctrl.primary {
+      background: var(--cyan);
+      border-color: #0891b2;
+      color: #042f2e;
+    }
+    button.ctrl.primary:hover { background: #22d3ee; }
+    button.ctrl:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .progress {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #334155;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .dot.active { background: var(--cyan); box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.25); }
+
+    footer {
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.45;
+      padding: 0 0.25rem;
+    }
+
+    footer cite { font-style: normal; color: #64748b; }
+
+    .layer { transition: opacity 0.45s ease; }
+    .hidden { opacity: 0; pointer-events: none; }
+    .visible { opacity: 1; }
+
+    .pulse { animation: pulse 1.4s ease-in-out infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 1; }
+    }
+
+    .blink-red { animation: blinkRed 0.8s step-end infinite; }
+    @keyframes blinkRed {
+      50% { opacity: 0.35; }
+    }
+
+    .shake {
+      animation: shake 0.45s ease-in-out infinite;
+      transform-origin: 410px 210px;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translate(0, 0); }
+      25% { transform: translate(-2px, 1px); }
+      75% { transform: translate(2px, -1px); }
+    }
+
+    .popup-enter {
+      transform-origin: 410px 210px;
+      animation: popupIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    @keyframes popupIn {
+      from { opacity: 0; transform: scale(0.72) translateY(-12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .scan-bar {
+      transform-box: fill-box;
+      transform-origin: left center;
+      animation: scanFill 2.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes scanFill {
+      from { transform: scaleX(0.08); }
+      to { transform: scaleX(1); }
+    }
+
+    .scan-line {
+      animation: scanSweep 1.6s linear infinite;
+    }
+
+    @keyframes scanSweep {
+      0% { transform: translateY(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(72px); opacity: 0; }
+    }
+
+    .mask-peel {
+      animation: maskPeel 2.8s ease-in-out infinite alternate;
+    }
+
+    @keyframes maskPeel {
+      from { transform: rotate(0deg) translate(0, 0); }
+      to { transform: rotate(-8deg) translate(-6px, -4px); }
+    }
+
+    .dot-along {
+      fill: none;
+      stroke-linecap: round;
+      stroke-width: 8;
+    }
+
+    .dot-along-uang {
+      stroke: #facc15;
+      stroke-dasharray: 0.01 100;
+      animation: runPath 1.8s linear infinite;
+    }
+
+    .dot-along-uang.delay {
+      animation-delay: 0.9s;
+    }
+
+    .dot-along-malware {
+      stroke: #ef4444;
+      stroke-dasharray: 0.01 100;
+      animation: runPath 2s linear infinite;
+    }
+
+    @keyframes runPath {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: -100; }
+    }
+
+    .trust-fill {
+      transition: width 0.8s ease, fill 0.8s ease;
+    }
+
+    .card-pop:nth-child(1) { animation: fadeIn 0.45s ease both; }
+    .card-pop:nth-child(2) { animation: fadeIn 0.45s ease both 0.12s; }
+    .card-pop:nth-child(3) { animation: fadeIn 0.45s ease both 0.24s; }
+    .card-pop:nth-child(4) { animation: fadeIn 0.45s ease both 0.36s; }
+
+    .shield-glow {
+      animation: shieldPulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes shieldPulse {
+      0%, 100% { filter: url(#glowCyan); opacity: 0.85; }
+      50% { filter: url(#glowCyan); opacity: 1; }
+    }
+
+    .stamp-in {
+      transform-origin: 226px 242px;
+      animation: stampIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both 0.35s;
+    }
+
+    @keyframes stampIn {
+      from { opacity: 0; transform: scale(1.4) rotate(-8deg); }
+      to { opacity: 1; transform: scale(1) rotate(-6deg); }
+    }
+
+    .fade-in { animation: fadeIn 0.5s ease both; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .canvas-overlay {
+      position: absolute;
+      inset: 0;
+      padding: 0.85rem 1rem;
+      overflow: auto;
+      background: linear-gradient(180deg, rgba(11, 18, 36, 0.96), rgba(2, 6, 23, 0.96));
+      color: var(--text);
+    }
+
+    .canvas-overlay.hidden { display: none; }
+
+    .quiz-wrap h3 {
+      font-family: Montserrat, sans-serif;
+      font-size: 0.92rem;
+      font-weight: 800;
+      margin-bottom: 0.65rem;
+      color: #fff;
+    }
+
+    .quiz-block {
+      margin-bottom: 0.85rem;
+      padding: 0.7rem 0.75rem;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.55);
+    }
+
+    .quiz-q {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 0.55rem;
+      color: #e2e8f0;
+    }
+
+    .quiz-opts {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .quiz-opts button {
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.82rem;
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      border-radius: 10px;
+      border: 1px solid #475569;
+      background: #1e293b;
+      color: var(--text);
+      cursor: pointer;
+      line-height: 1.35;
+    }
+
+    .quiz-opts button:hover { background: #273449; }
+    .quiz-opts button.correct {
+      background: var(--green-soft);
+      border-color: var(--green);
+      color: #86efac;
+    }
+    .quiz-opts button.wrong {
+      background: var(--red-soft);
+      border-color: var(--red);
+      color: #fca5a5;
+    }
+    .quiz-opts button:disabled { cursor: default; }
+    .quiz-opts button.dim { opacity: 0.45; }
+
+    .quiz-fb {
+      min-height: 1.2em;
+      margin-top: 0.45rem;
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+    .quiz-fb.ok { color: #86efac; }
+    .quiz-fb.no { color: #fca5a5; }
+
+    button.ctrl:focus-visible,
+    .step-btn:focus-visible,
+    .dot:focus-visible,
+    .quiz-opts button:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .pulse, .blink-red, .shake, .popup-enter, .scan-bar, .scan-line,
+      .mask-peel, .dot-along-uang, .dot-along-malware, .card-pop,
+      .shield-glow, .stamp-in, .fade-in {
+        animation: none !important;
+      }
+      .layer { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <p class="sr-only">
+      Simulasi edukatif. Pop-up infeksi pada animasi ini adalah contoh tipuan rogue software,
+      bukan peringatan sistem yang nyata. Materi ini konseptual dan defensif.
+    </p>
+
+    <header>
+      <div class="brand">
+        <span class="tag">Modul 02 · Taksonomi Malware</span>
+        <h1>Animasi Rogue Software — Step by Step</h1>
+      </div>
+      <span class="step-badge" id="stepBadge">Langkah 1 / 8</span>
+    </header>
+
+    <div class="layout">
+      <aside class="panel timeline" aria-label="Daftar langkah">
+        <h2>Alur Konsep</h2>
+        <div id="stepList"></div>
+      </aside>
+
+      <section class="panel stage" aria-live="polite">
+        <div class="stage-head">
+          <h2 id="stageTitle">Pop-up mendesak</h2>
+          <span class="status-pill warn" id="stageStatus">Asli atau tipuan?</span>
+        </div>
+        <div class="canvas-wrap">
+          <svg class="scene" viewBox="0 0 820 360" role="img" aria-labelledby="stageTitle">
+            <defs>
+              <linearGradient id="chromeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#1e293b"/>
+                <stop offset="100%" stop-color="#0f172a"/>
+              </linearGradient>
+              <linearGradient id="pageGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#f8fafc"/>
+                <stop offset="100%" stop-color="#e2e8f0"/>
+              </linearGradient>
+              <filter id="glowCyan">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="glowRed">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <!-- Browser desktop (latar tetap) -->
+            <g id="layerBrowser" class="layer visible">
+              <rect x="48" y="22" width="724" height="318" rx="12" fill="url(#chromeGrad)" stroke="#334155" stroke-width="2"/>
+              <rect x="48" y="22" width="724" height="32" rx="12" fill="#0f172a"/>
+              <rect x="48" y="42" width="724" height="12" fill="#0f172a"/>
+              <circle cx="70" cy="38" r="5" fill="#ef4444"/>
+              <circle cx="86" cy="38" r="5" fill="#f59e0b"/>
+              <circle cx="102" cy="38" r="5" fill="#22c55e"/>
+              <text x="410" y="42" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="700">Browser — berita kampus</text>
+              <rect x="62" y="58" width="696" height="22" rx="6" fill="#020617" stroke="#1e293b"/>
+              <text x="76" y="73" fill="#64748b" font-size="10">https://berita.kampus.example/artikel</text>
+              <rect x="62" y="88" width="696" height="238" rx="8" fill="url(#pageGrad)"/>
+              <rect x="86" y="108" width="220" height="12" rx="3" fill="#94a3b8"/>
+              <rect x="86" y="130" width="640" height="8" rx="3" fill="#cbd5e1"/>
+              <rect x="86" y="146" width="580" height="8" rx="3" fill="#cbd5e1"/>
+              <rect x="86" y="162" width="610" height="8" rx="3" fill="#cbd5e1"/>
+              <rect x="86" y="186" width="300" height="110" rx="6" fill="#e2e8f0"/>
+              <rect x="400" y="186" width="326" height="8" rx="3" fill="#cbd5e1"/>
+              <rect x="400" y="204" width="300" height="8" rx="3" fill="#cbd5e1"/>
+              <rect x="400" y="222" width="280" height="8" rx="3" fill="#cbd5e1"/>
+            </g>
+
+            <!-- Step 1: pop-up palsu -->
+            <g id="layerHook" class="layer hidden">
+              <rect x="62" y="88" width="696" height="238" rx="8" fill="rgba(2,6,23,0.55)"/>
+              <g>
+                <rect x="278" y="96" width="264" height="24" rx="12" fill="rgba(245,158,11,0.22)" stroke="#f59e0b"/>
+                <text x="410" y="113" text-anchor="middle" fill="#fcd34d" font-size="11" font-weight="800">ASLI ATAU TIPUAN?</text>
+              </g>
+              <g id="fakePopup" class="popup-enter shake">
+                <rect x="230" y="126" width="360" height="186" rx="10" fill="#450a0a" stroke="#ef4444" stroke-width="2" filter="url(#glowRed)"/>
+                <rect x="230" y="126" width="360" height="32" rx="10" fill="#7f1d1d"/>
+                <rect x="230" y="146" width="360" height="12" fill="#7f1d1d"/>
+                <text x="410" y="148" text-anchor="middle" fill="#fecaca" font-size="12" font-weight="800">PERINGATAN KEAMANAN</text>
+                <text x="410" y="176" text-anchor="middle" fill="#fff" font-size="13" font-weight="800">KOMPUTER ANDA TERINFEKSI</text>
+                <text id="virusCount" class="blink-red" x="410" y="212" text-anchor="middle" fill="#facc15" font-size="32" font-weight="800">247</text>
+                <text x="410" y="230" text-anchor="middle" fill="#fca5a5" font-size="11" font-weight="700">VIRUS TERDETEKSI</text>
+                <rect x="258" y="244" width="148" height="26" rx="6" fill="#ef4444"/>
+                <text x="332" y="261" text-anchor="middle" fill="#fff" font-size="10" font-weight="800">SCAN / BERSIHKAN</text>
+                <rect x="414" y="244" width="148" height="26" rx="6" fill="#f59e0b"/>
+                <text x="488" y="261" text-anchor="middle" fill="#422006" font-size="10" font-weight="800">BAYAR SEKARANG</text>
+                <text x="410" y="294" text-anchor="middle" fill="#fca5a5" font-size="9" class="pulse">Jendela ini memaksa aksi — bukan dari tool terpasang</text>
+              </g>
+            </g>
+
+            <!-- Step 2: pengertian — topeng palsu vs ancaman -->
+            <g id="layerDef" class="layer hidden">
+              <rect x="62" y="88" width="696" height="238" rx="8" fill="rgba(15,23,42,0.92)"/>
+              <g class="mask-peel" style="transform-origin: 250px 200px">
+                <path d="M250 132 L292 150 L292 198 L250 218 L208 198 L208 150 Z" fill="rgba(6,182,212,0.18)" stroke="#67e8f9" stroke-width="2"/>
+                <text x="250" y="178" text-anchor="middle" fill="#a5f3fc" font-size="11" font-weight="800">AV GRATIS</text>
+              </g>
+              <circle cx="250" cy="200" r="18" fill="#450a0a" stroke="#ef4444" stroke-width="2"/>
+              <text x="250" y="205" text-anchor="middle" fill="#fecaca" font-size="14" font-weight="800">?</text>
+              <text x="250" y="248" text-anchor="middle" fill="#94a3b8" font-size="11">Menyamar sebagai tool sah</text>
+
+              <path d="M330 190 H390" stroke="#64748b" stroke-width="2"/>
+              <polygon points="390,190 378,184 378,196" fill="#64748b"/>
+
+              <g>
+                <rect x="410" y="118" width="300" height="168" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="1.5"/>
+                <text x="560" y="146" text-anchor="middle" fill="#67e8f9" font-size="13" font-weight="800">Rogue Software</text>
+                <text x="430" y="176" fill="#cbd5e1" font-size="12">1. Menyamar sebagai antivirus / pembersih</text>
+                <text x="430" y="200" fill="#cbd5e1" font-size="12">2. Menakut-nakuti dengan infeksi fiktif</text>
+                <text x="430" y="224" fill="#cbd5e1" font-size="12">3. Menuntut bayar atau instalasi lanjutan</text>
+                <text x="430" y="256" fill="#94a3b8" font-size="11">Tujuan: keuntungan finansial pelaku</text>
+              </g>
+            </g>
+
+            <!-- Step 3: ciri -->
+            <g id="layerCiri" class="layer hidden">
+              <rect x="62" y="88" width="696" height="238" rx="8" fill="rgba(15,23,42,0.94)"/>
+              <g class="card-pop">
+                <rect x="80" y="108" width="200" height="196" rx="10" fill="#0f172a" stroke="#ef4444"/>
+                <text x="180" y="136" text-anchor="middle" fill="#fca5a5" font-size="12" font-weight="800">Alarm palsu</text>
+                <rect x="102" y="152" width="156" height="10" rx="5" fill="#1e293b" stroke="#475569"/>
+                  <rect class="scan-bar" x="102" y="152" width="156" height="10" rx="5" fill="#ef4444"/>
+                <text x="180" y="186" text-anchor="middle" fill="#facc15" font-size="22" font-weight="800">247</text>
+                <text x="180" y="206" text-anchor="middle" fill="#94a3b8" font-size="10">ancaman fiktif</text>
+                <text x="180" y="236" text-anchor="middle" fill="#cbd5e1" font-size="11">Scan selalu “menemukan”</text>
+                <text x="180" y="254" text-anchor="middle" fill="#cbd5e1" font-size="11">infeksi meski sistem sehat</text>
+              </g>
+              <g class="card-pop">
+                <rect x="310" y="108" width="200" height="196" rx="10" fill="#0f172a" stroke="#f59e0b"/>
+                <text x="410" y="136" text-anchor="middle" fill="#fcd34d" font-size="12" font-weight="800">UI meniru keamanan</text>
+                <path d="M410 158 L438 172 L438 202 L410 216 L382 202 L382 172 Z" fill="rgba(245,158,11,0.15)" stroke="#f59e0b"/>
+                <line x1="398" y1="178" x2="422" y2="202" stroke="#ef4444" stroke-width="3"/>
+                <line x1="422" y1="178" x2="398" y2="202" stroke="#ef4444" stroke-width="3"/>
+                <text x="410" y="246" text-anchor="middle" fill="#cbd5e1" font-size="11">Perisai, warna, dan logo</text>
+                <text x="410" y="264" text-anchor="middle" fill="#cbd5e1" font-size="11">dipinjam agar terlihat resmi</text>
+              </g>
+              <g class="card-pop">
+                <rect x="540" y="108" width="200" height="196" rx="10" fill="#0f172a" stroke="#06b6d4"/>
+                <text x="640" y="136" text-anchor="middle" fill="#67e8f9" font-size="12" font-weight="800">Desakan bayar</text>
+                <rect x="568" y="158" width="144" height="36" rx="6" fill="#ef4444" class="pulse"/>
+                <text x="640" y="181" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">BAYAR SEKARANG</text>
+                <text x="640" y="226" text-anchor="middle" fill="#cbd5e1" font-size="11">Scan / bersihkan / unlock</text>
+                <text x="640" y="244" text-anchor="middle" fill="#cbd5e1" font-size="11">harus “sekarang” — takut</text>
+                <text x="640" y="272" text-anchor="middle" fill="#94a3b8" font-size="10">Tekanan waktu adalah senjata tipuan</text>
+              </g>
+            </g>
+
+            <!-- Step 4: bedakan -->
+            <g id="layerCompare" class="layer hidden">
+              <rect x="62" y="88" width="696" height="238" rx="8" fill="rgba(15,23,42,0.94)"/>
+              <g class="card-pop">
+                <rect x="78" y="100" width="328" height="102" rx="10" fill="#0f172a" stroke="#ef4444" stroke-width="2"/>
+                <text x="96" y="124" fill="#fecaca" font-size="13" font-weight="800">Rogue</text>
+                <text x="96" y="146" fill="#e2e8f0" font-size="11">AV / pembersih palsu — senjata: rasa takut</text>
+                <text x="96" y="166" fill="#cbd5e1" font-size="11">Infeksi fiktif, lalu meminta bayar “obat”</text>
+                <text x="96" y="186" fill="#fca5a5" font-size="11" font-weight="700">PENIPUAN LANGSUNG</text>
+              </g>
+              <g class="card-pop">
+                <rect x="416" y="100" width="328" height="102" rx="10" fill="#0f172a" stroke="#64748b"/>
+                <text x="434" y="124" fill="#cbd5e1" font-size="13" font-weight="800">Adware</text>
+                <text x="434" y="146" fill="#e2e8f0" font-size="11">Mendorong iklan — senjata: gangguan</text>
+                <text x="434" y="166" fill="#cbd5e1" font-size="11">Tidak wajib mengklaim “247 virus” demi tebusan</text>
+                <text x="434" y="186" fill="#94a3b8" font-size="11" font-weight="700">IKLAN, BUKAN ALARM PALSU</text>
+              </g>
+              <g class="card-pop">
+                <rect x="78" y="212" width="328" height="102" rx="10" fill="#0f172a" stroke="#64748b"/>
+                <text x="96" y="236" fill="#cbd5e1" font-size="13" font-weight="800">Ransomware</text>
+                <text x="96" y="258" fill="#e2e8f0" font-size="11">Mengunci / enkripsi file — senjata: data disandera</text>
+                <text x="96" y="278" fill="#cbd5e1" font-size="11">Tebusan untuk kunci dekripsi, bukan tombol “scan”</text>
+                <text x="96" y="298" fill="#94a3b8" font-size="11" font-weight="700">PEMERASAN FILE</text>
+              </g>
+              <g class="card-pop">
+                <rect x="416" y="212" width="328" height="102" rx="10" fill="#0f172a" stroke="#64748b"/>
+                <text x="434" y="236" fill="#cbd5e1" font-size="13" font-weight="800">Trojan</text>
+                <text x="434" y="258" fill="#e2e8f0" font-size="11">Menyamar sebagai program berguna — diundang masuk</text>
+                <text x="434" y="278" fill="#cbd5e1" font-size="11">Payload tersembunyi; tidak selalu berkedok fake-AV</text>
+                <text x="434" y="298" fill="#94a3b8" font-size="11" font-weight="700">HADIAH PALSU</text>
+              </g>
+            </g>
+
+            <!-- Step 5: dampak -->
+            <g id="layerImpact" class="layer hidden">
+              <rect x="62" y="88" width="696" height="238" rx="8" fill="rgba(15,23,42,0.94)"/>
+              <g>
+                <rect x="340" y="118" width="140" height="88" rx="10" fill="#450a0a" stroke="#ef4444"/>
+                <text x="410" y="152" text-anchor="middle" fill="#fecaca" font-size="12" font-weight="800">Rogue AV</text>
+                <text x="410" y="174" text-anchor="middle" fill="#fca5a5" font-size="10">klaim palsu</text>
+                <text x="410" y="192" text-anchor="middle" fill="#fca5a5" font-size="10">+ tombol bayar</text>
+              </g>
+              <path id="pathUang" d="M 340 186 L 228 214" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <path id="pathMalware" d="M 410 206 L 410 236" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <path id="pathTrust" d="M 480 186 L 584 214" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <path class="dot-along dot-along-uang" pathLength="100" d="M 340 186 L 228 214"/>
+              <path class="dot-along dot-along-uang delay" pathLength="100" d="M 340 186 L 228 214"/>
+              <path class="dot-along dot-along-malware" pathLength="100" d="M 410 206 L 410 236"/>
+
+              <g class="card-pop">
+                <rect x="86" y="214" width="150" height="90" rx="8" fill="#0f172a" stroke="#f59e0b"/>
+                <text x="161" y="240" text-anchor="middle" fill="#fcd34d" font-size="11" font-weight="800">Uang hilang</text>
+                <text x="161" y="262" text-anchor="middle" fill="#cbd5e1" font-size="10">Bayar “pembersihan”</text>
+                <text x="161" y="278" text-anchor="middle" fill="#cbd5e1" font-size="10">yang tidak ada</text>
+              </g>
+              <g class="card-pop">
+                <rect x="335" y="236" width="150" height="68" rx="8" fill="#0f172a" stroke="#ef4444"/>
+                <text x="410" y="262" text-anchor="middle" fill="#fca5a5" font-size="11" font-weight="800">Malware tambahan</text>
+                <text x="410" y="282" text-anchor="middle" fill="#cbd5e1" font-size="10">Instalasi ikut-ikutan</text>
+              </g>
+              <g class="card-pop">
+                <rect x="584" y="214" width="150" height="90" rx="8" fill="#0f172a" stroke="#64748b"/>
+                <text x="659" y="240" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="800">Kepercayaan retak</text>
+                <rect x="604" y="252" width="110" height="10" rx="5" fill="#1e293b"/>
+                <rect id="trustFill" class="trust-fill" x="604" y="252" width="22" height="10" rx="5" fill="#ef4444"/>
+                <text x="659" y="282" text-anchor="middle" fill="#cbd5e1" font-size="10">Peringatan sah diabaikan</text>
+              </g>
+            </g>
+
+            <!-- Step 6: pencegahan -->
+            <g id="layerDefend" class="layer hidden">
+              <rect x="62" y="88" width="696" height="238" rx="8" fill="rgba(15,23,42,0.94)"/>
+              <g class="shield-glow">
+                <path d="M410 108 L452 128 L452 172 L410 192 L368 172 L368 128 Z" fill="rgba(6,182,212,0.18)" stroke="#06b6d4" stroke-width="2"/>
+                <text x="410" y="154" text-anchor="middle" fill="#a5f3fc" font-size="12" font-weight="800">USER</text>
+              </g>
+              <g class="card-pop">
+                <rect x="78" y="112" width="200" height="86" rx="8" fill="#0f172a" stroke="#22c55e"/>
+                <text x="178" y="140" text-anchor="middle" fill="#86efac" font-size="11" font-weight="800">1. Sumber resmi</text>
+                <text x="178" y="162" text-anchor="middle" fill="#cbd5e1" font-size="10">Unduh keamanan hanya dari</text>
+                <text x="178" y="178" text-anchor="middle" fill="#cbd5e1" font-size="10">situs / toko resmi vendor</text>
+              </g>
+              <g class="card-pop">
+                <rect x="542" y="112" width="200" height="86" rx="8" fill="#0f172a" stroke="#22c55e"/>
+                <text x="642" y="140" text-anchor="middle" fill="#86efac" font-size="11" font-weight="800">2. Abaikan paksaan</text>
+                <text x="642" y="162" text-anchor="middle" fill="#cbd5e1" font-size="10">Pop-up browser yang memaksa</text>
+                <text x="642" y="178" text-anchor="middle" fill="#cbd5e1" font-size="10">scan/bayar bukan AV terpasang</text>
+              </g>
+              <g class="card-pop">
+                <rect x="78" y="220" width="200" height="86" rx="8" fill="#0f172a" stroke="#22c55e"/>
+                <text x="178" y="248" text-anchor="middle" fill="#86efac" font-size="11" font-weight="800">3. Verifikasi lokal</text>
+                <text x="178" y="270" text-anchor="middle" fill="#cbd5e1" font-size="10">Cek lewat tool keamanan</text>
+                <text x="178" y="286" text-anchor="middle" fill="#cbd5e1" font-size="10">yang sudah terpasang resmi</text>
+              </g>
+              <g class="card-pop">
+                <rect x="542" y="220" width="200" height="86" rx="8" fill="#0f172a" stroke="#22c55e"/>
+                <text x="642" y="248" text-anchor="middle" fill="#86efac" font-size="11" font-weight="800">4. Jangan bayar iklan</text>
+                <text x="642" y="270" text-anchor="middle" fill="#cbd5e1" font-size="10">Jangan “unlock” dari iklan</text>
+                <text x="642" y="286" text-anchor="middle" fill="#cbd5e1" font-size="10">atau tombol pop-up mendesak</text>
+              </g>
+              <g>
+                <rect x="300" y="214" width="220" height="92" rx="10" fill="#052e16" stroke="#22c55e"/>
+                <text x="410" y="248" text-anchor="middle" fill="#86efac" font-size="11" font-weight="800">Peringatan sah</text>
+                <text x="410" y="268" text-anchor="middle" fill="#bbf7d0" font-size="10">Tenang, dapat ditutup, tidak</text>
+                <text x="410" y="284" text-anchor="middle" fill="#bbf7d0" font-size="10">memaksa kartu kredit</text>
+              </g>
+            </g>
+
+            <!-- Step 8: takeaway -->
+            <g id="layerTakeaway" class="layer hidden">
+              <rect x="62" y="88" width="696" height="238" rx="8" fill="rgba(15,23,42,0.94)"/>
+              <g>
+                <rect x="86" y="112" width="280" height="168" rx="10" fill="#450a0a" stroke="#ef4444"/>
+                <text x="226" y="142" text-anchor="middle" fill="#fca5a5" font-size="12" font-weight="800">POP-UP PALSU</text>
+                <text x="226" y="172" text-anchor="middle" fill="#fecaca" font-size="11">Mendesak · 247 virus</text>
+                <text x="226" y="192" text-anchor="middle" fill="#fecaca" font-size="11">Tombol bayar mencolok</text>
+                <text x="226" y="212" text-anchor="middle" fill="#fecaca" font-size="11">Muncul di halaman web</text>
+                <g class="stamp-in">
+                  <rect x="148" y="228" width="156" height="28" rx="6" fill="transparent" stroke="#facc15" stroke-width="2"/>
+                  <text x="226" y="247" text-anchor="middle" fill="#facc15" font-size="11" font-weight="800">TOLAK / TUTUP TAB</text>
+                </g>
+              </g>
+              <g>
+                <rect x="454" y="112" width="280" height="168" rx="10" fill="#052e16" stroke="#22c55e"/>
+                <text x="594" y="142" text-anchor="middle" fill="#86efac" font-size="12" font-weight="800">TOOL RESMI</text>
+                <text x="594" y="172" text-anchor="middle" fill="#bbf7d0" font-size="11">Tenang · dapat ditunda</text>
+                <text x="594" y="192" text-anchor="middle" fill="#bbf7d0" font-size="11">Tidak meminta kartu di iklan</text>
+                <text x="594" y="212" text-anchor="middle" fill="#bbf7d0" font-size="11">Ikon di sistem terpasang</text>
+                <rect x="516" y="228" width="156" height="28" rx="6" fill="#166534"/>
+                <text x="594" y="247" text-anchor="middle" fill="#dcfce7" font-size="11" font-weight="800">VERIFIKASI DI SINI</text>
+              </g>
+              <text x="410" y="308" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="700">
+                Jangan percaya — dan jangan bayar — alarm infeksi dari pop-up browser.
+              </text>
+            </g>
+          </svg>
+
+          <div id="quizOverlay" class="canvas-overlay hidden" role="region" aria-label="Checkpoint">
+            <div class="quiz-wrap">
+              <h3>Checkpoint: kunci konsep</h3>
+              <div class="quiz-block" data-quiz="0">
+                <p class="quiz-q">1. Mengapa pop-up “PC infected” di browser belum tentu antivirus asli?</p>
+                <div class="quiz-opts">
+                  <button type="button" data-ok="0">Karena setiap browser sudah membawa antivirus bawaan yang selalu benar.</button>
+                  <button type="button" data-ok="1">Karena iklan atau skrip halaman dapat meniru UI keamanan tanpa terpasang di sistem.</button>
+                  <button type="button" data-ok="0">Karena angka ancaman yang besar selalu berarti infeksi nyata.</button>
+                </div>
+                <p class="quiz-fb" aria-live="polite"></p>
+              </div>
+              <div class="quiz-block" data-quiz="1">
+                <p class="quiz-q">2. Apa yang membedakan rogue software dari ransomware pada materi ini?</p>
+                <div class="quiz-opts">
+                  <button type="button" data-ok="0">Rogue mengenkripsi seluruh file penting, lalu meminta tebusan kunci dekripsi.</button>
+                  <button type="button" data-ok="1">Rogue menakut-nakuti dengan infeksi fiktif agar korban membayar “pembersihan”.</button>
+                  <button type="button" data-ok="0">Rogue hanya menampilkan iklan, tanpa klaim keamanan bohong.</button>
+                </div>
+                <p class="quiz-fb" aria-live="polite"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel detail">
+        <h2>Penjelasan Langkah</h2>
+        <p id="stepDesc"></p>
+        <div class="def-box" id="termBox"></div>
+      </aside>
+    </div>
+
+    <div class="controls">
+      <div class="controls-left">
+        <button class="ctrl" id="btnPrev" type="button">&#8592; Sebelumnya</button>
+        <button class="ctrl primary" id="btnNext" type="button">Berikutnya &#8594;</button>
+        <button class="ctrl" id="btnReset" type="button">Reset</button>
+      </div>
+      <div class="progress" id="progressDots" aria-label="Progres langkah"></div>
+      <div class="controls-right">
+        <button class="ctrl" id="btnAuto" type="button">&#9654; Putar otomatis</button>
+      </div>
+    </div>
+
+    <footer>
+      <cite>[1]</cite> Cybersecurity Fundamentals, UNDIP Cyber Security Course Materials, Universitas Diponegoro, Semarang, Indonesia, 2026.
+      <cite>[2]</cite> Eight Most Common Cybersecurity Threats, UNDIP Cyber Security Course Materials, Universitas Diponegoro, Semarang, Indonesia, 2026.
+    </footer>
+  </div>
+
+  <script>
+    const QUIZ_FB = [
+      {
+        ok: "Benar. Pop-up di halaman web dapat meniru perisai dan sirene, tetapi itu bukan jendela tool keamanan yang Anda instal sendiri.",
+        no: "Belum tepat. Antivirus asli tidak “menyembul” memaksa dari artikel berita. Iklan/skrip halaman dapat meniru UI keamanan."
+      },
+      {
+        ok: "Benar. Rogue software memeras lewat klaim infeksi fiktif. Ransomware menyandera file dengan enkripsi; adware mendorong iklan.",
+        no: "Belum tepat. Enkripsi + tebusan kunci adalah ransomware. Rogue: alarm palsu berkedok antivirus, lalu meminta bayar pembersihan."
+      }
+    ];
+
+    const STEPS = [
+      {
+        title: "Pop-up mendesak",
+        status: { text: "Asli atau tipuan?", cls: "warn" },
+        desc: "Sebuah halaman berita tiba-tiba menampilkan sirene: “Komputer Anda terinfeksi 247 virus!” Tombol Scan dan Bayar mendesak. Pertanyaan pembuka: apakah ini peringatan keamanan asli, atau tipuan di dalam browser?",
+        terms: [
+          ["Pop-up browser", "Jendela mendadak yang muncul di atas halaman web, bukan otomatis dari antivirus terpasang."],
+          ["Desakan", "Tekanan waktu (“sekarang”) yang mendorong klik sebelum pengguna sempat berpikir."]
+        ],
+        show: ["layerBrowser", "layerHook"],
+        replay: ["fakePopup"]
+      },
+      {
+        title: "Pengertian",
+        status: { text: "Topeng tool sah", cls: "warn" },
+        desc: "Rogue software merupakan perangkat lunak yang berbahaya atau menipu, yang menyamar sebagai tool sah — sering antivirus atau pembersih gratis. Ia menakut-nakuti pengguna dengan klaim infeksi fiktif, lalu menuntut pembayaran atau mengarahkan instalasi malware lain.",
+        terms: [
+          ["Rogue software", "Perangkat lunak palsu yang menipu dengan klaim keamanan bohong demi keuntungan finansial pelaku."],
+          ["Infeksi fiktif", "Klaim ancaman yang dikarang agar korban takut dan membayar, bukan hasil deteksi yang sah."]
+        ],
+        show: ["layerBrowser", "layerDef"],
+        replay: ["layerDef"]
+      },
+      {
+        title: "Ciri tipuan",
+        status: { text: "Tiga tanda", cls: "bad" },
+        desc: "Tiga ciri yang sering muncul bersama: alarm palsu (scan “selalu” menemukan ancaman), antarmuka yang meniru produk keamanan, dan desakan untuk scan, bersihkan, atau bayar sekarang. Kombinasi ini dirancang agar korban tidak sempat memeriksa sumber peringatan.",
+        terms: [
+          ["Alarm palsu", "Peringatan infeksi yang tidak berasal dari pemeriksaan keamanan yang sah."],
+          ["UI meniru", "Tampilan perisai, warna, dan kata “antivirus” yang dipinjam agar terlihat resmi."]
+        ],
+        show: ["layerBrowser", "layerCiri"],
+        replay: ["layerCiri"]
+      },
+      {
+        title: "Bukan yang lain",
+        status: { text: "Empat kotak", cls: "ok" },
+        desc: "Jangan tumpang tindih. Adware mendorong iklan. Ransomware mengunci atau mengenkripsi file lalu memeras tebusan dekripsi. Trojan menyamar sebagai program berguna agar diinstal. Rogue software secara khusus berkedok tool keamanan, mengklaim infeksi fiktif, lalu memeras “pembersihan”.",
+        terms: [
+          ["Ransomware", "Malware yang mengunci atau mengenkripsi file penting, lalu meminta tebusan untuk kunci dekripsi."],
+          ["Trojan", "Program yang tampak sah, tetapi menyembunyikan fungsi berbahaya setelah diinstal."]
+        ],
+        show: ["layerBrowser", "layerCompare"],
+        replay: ["layerCompare"]
+      },
+      {
+        title: "Dampak korban",
+        status: { text: "Tiga kerugian", cls: "bad" },
+        desc: "Korban dapat kehilangan uang karena membayar pembersihan yang tidak ada, menerima instalasi malware tambahan, dan kehilangan kepercayaan pada peringatan keamanan yang sah. Setelah ditipu, peringatan asli sering diabaikan — itu juga kemenangan pelaku.",
+        terms: [
+          ["Kerugian finansial", "Uang yang dibayarkan ke pelaku karena takut, bukan karena layanan keamanan nyata."],
+          ["Kepercayaan retak", "Korban mulai mengabaikan peringatan sah setelah terlalu sering melihat alarm palsu."]
+        ],
+        show: ["layerBrowser", "layerImpact"],
+        replay: ["layerImpact"]
+      },
+      {
+        title: "Pencegahan",
+        status: { text: "Empat sikap", cls: "ok" },
+        desc: "Unduh perangkat lunak keamanan hanya dari sumber resmi. Jangan percaya pop-up browser yang memaksa. Verifikasi peringatan lewat tool yang sudah terpasang di sistem. Jangan membayar “unlock” atau pembersihan dari iklan. Ini adalah sikap defensif, bukan prosedur serangan.",
+        terms: [
+          ["Sumber resmi", "Situs atau toko aplikasi milik vendor keamanan, bukan tautan di iklan pop-up."],
+          ["Verifikasi lokal", "Membuka aplikasi keamanan yang sudah Anda instal, bukan mengikuti tombol di halaman web."]
+        ],
+        show: ["layerBrowser", "layerDefend"],
+        replay: ["layerDefend"]
+      },
+      {
+        title: "Checkpoint",
+        status: { text: "Uji konsep", cls: "warn" },
+        desc: "Dua soal untuk mengunci rumus. Klik jawaban di kanvas. Jika salah, baca umpan baliknya. Ini bukan ujian nilai — ini penguncian: pop-up browser bukan antivirus, dan rogue bukan ransomware.",
+        terms: [
+          ["Pop-up ≠ AV terpasang", "Peringatan di halaman web dapat meniru UI keamanan tanpa terpasang di sistem."],
+          ["Rogue ≠ ransomware", "Rogue memeras lewat infeksi fiktif; ransomware menyandera file dengan enkripsi."]
+        ],
+        show: [],
+        overlay: "quiz"
+      },
+      {
+        title: "Takeaway",
+        status: { text: "Satu kalimat", cls: "ok" },
+        desc: "Jangan percaya — dan jangan bayar — alarm infeksi yang mendesak dari pop-up atau iklan browser. Peringatan yang sah datang dari tool keamanan resmi yang sudah terpasang, biasanya tenang, dan tidak menagih kartu kredit di tengah artikel.",
+        terms: [
+          ["Takeaway", "Jangan percaya dan jangan bayar alarm infeksi dari pop-up browser; verifikasi hanya lewat tool resmi terpasang."],
+          ["Human firewall", "Keputusan pengguna untuk menolak desakan adalah lapisan pertahanan pertama."]
+        ],
+        show: ["layerBrowser", "layerTakeaway"],
+        replay: ["layerTakeaway"]
+      }
+    ];
+
+    let current = 0;
+    let autoTimer = null;
+
+    const els = {
+      stepList: document.getElementById("stepList"),
+      progressDots: document.getElementById("progressDots"),
+      stepBadge: document.getElementById("stepBadge"),
+      stageTitle: document.getElementById("stageTitle"),
+      stageStatus: document.getElementById("stageStatus"),
+      stepDesc: document.getElementById("stepDesc"),
+      termBox: document.getElementById("termBox"),
+      btnPrev: document.getElementById("btnPrev"),
+      btnNext: document.getElementById("btnNext"),
+      btnReset: document.getElementById("btnReset"),
+      btnAuto: document.getElementById("btnAuto"),
+      quizOverlay: document.getElementById("quizOverlay")
+    };
+
+    const ALL_LAYERS = [
+      "layerBrowser", "layerHook", "layerDef", "layerCiri",
+      "layerCompare", "layerImpact", "layerDefend", "layerTakeaway"
+    ];
+
+    function buildUI() {
+      STEPS.forEach((step, i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "step-btn";
+        btn.dataset.step = String(i);
+        btn.innerHTML = `
+          <span class="num">${i + 1}</span>
+          <span class="label">${step.title}</span>
+          <span class="hint">${step.status.text}</span>`;
+        btn.addEventListener("click", () => goTo(i));
+        els.stepList.appendChild(btn);
+
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "dot";
+        dot.title = step.title;
+        dot.setAttribute("aria-label", `Langkah ${i + 1}: ${step.title}`);
+        dot.dataset.step = String(i);
+        dot.addEventListener("click", () => goTo(i));
+        els.progressDots.appendChild(dot);
+      });
+    }
+
+    function setLayerVisibility(names) {
+      ALL_LAYERS.forEach(id => {
+        const node = document.getElementById(id);
+        if (!node) return;
+        node.classList.toggle("visible", names.includes(id));
+        node.classList.toggle("hidden", !names.includes(id));
+      });
+    }
+
+    function restartLayer(id) {
+      const node = document.getElementById(id);
+      if (!node || !node.parentNode) return;
+      const clone = node.cloneNode(true);
+      node.replaceWith(clone);
+    }
+
+    function resetQuiz() {
+      document.querySelectorAll(".quiz-block").forEach(block => {
+        const fb = block.querySelector(".quiz-fb");
+        if (fb) {
+          fb.textContent = "";
+          fb.className = "quiz-fb";
+        }
+        block.querySelectorAll(".quiz-opts button").forEach(btn => {
+          btn.disabled = false;
+          btn.classList.remove("correct", "wrong", "dim");
+        });
+      });
+    }
+
+    function render(stepIndex) {
+      const step = STEPS[stepIndex];
+      current = stepIndex;
+
+      document.querySelectorAll(".step-btn").forEach((btn, i) => {
+        btn.classList.toggle("active", i === stepIndex);
+      });
+      document.querySelectorAll(".dot").forEach((dot, i) => {
+        dot.classList.toggle("active", i === stepIndex);
+      });
+
+      els.stepBadge.textContent = `Langkah ${stepIndex + 1} / ${STEPS.length}`;
+      els.stageTitle.textContent = step.title;
+      els.stageStatus.textContent = step.status.text;
+      els.stageStatus.className = `status-pill ${step.status.cls}`;
+      els.stepDesc.textContent = step.desc;
+      els.stepDesc.className = "fade-in";
+
+      els.termBox.innerHTML = step.terms.map(([term, def]) =>
+        `<div><strong>${term}</strong> — ${def}</div>`
+      ).join("");
+
+      if (step.replay) {
+        step.replay.forEach(restartLayer);
+      }
+
+      setLayerVisibility(step.show || []);
+
+      const isQuiz = step.overlay === "quiz";
+      els.quizOverlay.classList.toggle("hidden", !isQuiz);
+      if (isQuiz) {
+        resetQuiz();
+        stopAuto();
+      }
+
+      els.btnPrev.disabled = stepIndex === 0;
+      els.btnNext.disabled = stepIndex === STEPS.length - 1;
+    }
+
+    function goTo(index) {
+      if (index < 0 || index >= STEPS.length) return;
+      render(index);
+    }
+
+    function next() {
+      if (current < STEPS.length - 1) goTo(current + 1);
+      else stopAuto();
+    }
+    function prev() { if (current > 0) goTo(current - 1); }
+
+    function stopAuto() {
+      if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+      }
+      els.btnAuto.textContent = "\u25B6 Putar otomatis";
+    }
+
+    function toggleAuto() {
+      if (autoTimer) {
+        stopAuto();
+        return;
+      }
+      els.btnAuto.textContent = "\u23F8 Jeda otomatis";
+      autoTimer = setInterval(() => {
+        if (current >= STEPS.length - 1 || STEPS[current].overlay === "quiz") {
+          stopAuto();
+          return;
+        }
+        next();
+      }, 3500);
+    }
+
+    els.btnPrev.addEventListener("click", prev);
+    els.btnNext.addEventListener("click", next);
+    els.btnReset.addEventListener("click", () => { stopAuto(); goTo(0); });
+    els.btnAuto.addEventListener("click", toggleAuto);
+
+    els.quizOverlay.addEventListener("click", (e) => {
+      const btn = e.target.closest(".quiz-opts button");
+      if (!btn || btn.disabled) return;
+      const block = btn.closest(".quiz-block");
+      const idx = Number(block.dataset.quiz);
+      const correct = btn.dataset.ok === "1";
+      const fb = block.querySelector(".quiz-fb");
+      block.querySelectorAll(".quiz-opts button").forEach(b => {
+        b.disabled = true;
+        if (b.dataset.ok === "1") b.classList.add("correct");
+        else b.classList.add("dim");
+      });
+      if (!correct) btn.classList.add("wrong");
+      fb.className = "quiz-fb " + (correct ? "ok" : "no");
+      fb.textContent = correct ? QUIZ_FB[idx].ok : QUIZ_FB[idx].no;
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.target && e.target.closest && e.target.closest(".quiz-opts")) return;
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "Home") goTo(0);
+      if (e.key === "End") goTo(STEPS.length - 1);
+    });
+
+    buildUI();
+    const hashStep = parseInt(String(location.hash || "").replace("#", ""), 10);
+    const start = Number.isInteger(hashStep) && hashStep >= 1 && hashStep <= STEPS.length ? hashStep - 1 : 0;
+    render(start);
+  </script>
+</body>
+</html>

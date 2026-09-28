@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animasi Pengertian Ransomware — Step by Step | UNDIP Cyber Security</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: #0f172a;
+      --panel-2: #111827;
+      --line: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --cyan: #06b6d4;
+      --cyan-soft: rgba(6, 182, 212, 0.15);
+      --red: #ef4444;
+      --red-soft: rgba(239, 68, 68, 0.18);
+      --green: #22c55e;
+      --green-soft: rgba(34, 197, 94, 0.18);
+      --amber: #f59e0b;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: "Source Sans 3", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(6, 182, 212, 0.12), transparent 35%),
+        radial-gradient(circle at 85% 85%, rgba(239, 68, 68, 0.08), transparent 30%),
+        linear-gradient(160deg, #172554 0%, var(--bg) 55%, #020617 100%);
+    }
+
+    .app {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1rem clamp(1rem, 3vw, 2rem) 1.5rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .brand .tag {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .brand h1 {
+      font-family: Montserrat, sans-serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.55rem);
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .step-badge {
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.45rem 0.85rem;
+      border-radius: 999px;
+      background: var(--cyan-soft);
+      color: var(--cyan);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      white-space: nowrap;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 240px 1fr 300px;
+      gap: 1rem;
+      min-height: 520px;
+    }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; min-height: auto; }
+      .timeline { order: 2; }
+      .stage { order: 1; }
+      .detail { order: 3; }
+    }
+
+    .panel {
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .timeline {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .timeline h2 {
+      font-family: Montserrat, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .step-btn {
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 0.55rem;
+      align-items: start;
+      width: 100%;
+      text-align: left;
+      padding: 0.65rem 0.7rem;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    }
+
+    .step-btn:hover { background: rgba(255, 255, 255, 0.04); }
+    .step-btn:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
+    }
+    .step-btn.active {
+      background: var(--cyan-soft);
+      border-color: rgba(6, 182, 212, 0.45);
+    }
+
+    .step-btn .num {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 0.82rem;
+      background: #1e293b;
+      color: var(--muted);
+    }
+
+    .step-btn.active .num {
+      background: var(--cyan);
+      color: #042f2e;
+    }
+
+    .step-btn .label {
+      font-weight: 700;
+      font-size: 0.88rem;
+      line-height: 1.25;
+    }
+
+    .step-btn .hint {
+      grid-column: 2;
+      margin-top: -0.15rem;
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .stage {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+
+    .stage-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .stage-head h2 {
+      font-family: Montserrat, sans-serif;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .status-pill {
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+    }
+
+    .status-pill.ok { background: var(--green-soft); color: var(--green); }
+    .status-pill.warn { background: rgba(245, 158, 11, 0.18); color: var(--amber); }
+    .status-pill.bad { background: var(--red-soft); color: var(--red); }
+
+    .canvas-wrap {
+      flex: 1;
+      min-height: 340px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #1e293b;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(180deg, #0b1224, #020617);
+      background-size: 28px 28px, 28px 28px, auto;
+      position: relative;
+    }
+
+    svg.scene {
+      width: 100%;
+      height: 100%;
+      min-height: 340px;
+      display: block;
+    }
+
+    .detail {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .detail h2 {
+      font-family: Montserrat, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .detail p {
+      line-height: 1.55;
+      color: #cbd5e1;
+      font-size: 0.95rem;
+    }
+
+    .def-box {
+      display: grid;
+      gap: 0.55rem;
+      padding: 0.75rem;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid #334155;
+    }
+
+    .def-box div {
+      font-size: 0.84rem;
+      line-height: 1.45;
+      color: #cbd5e1;
+    }
+
+    .def-box strong { color: var(--cyan); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    .controls-left, .controls-right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    button.ctrl {
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 0.55rem 0.95rem;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    }
+
+    button.ctrl:hover { background: #273449; border-color: #475569; }
+    button.ctrl:active { transform: translateY(1px); }
+    button.ctrl:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
+    }
+    button.ctrl.primary {
+      background: var(--cyan);
+      border-color: #0891b2;
+      color: #042f2e;
+    }
+    button.ctrl.primary:hover { background: #22d3ee; }
+    button.ctrl:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .progress {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #334155;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .dot:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
+    }
+
+    .dot.active { background: var(--cyan); box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.25); }
+
+    footer {
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.45;
+      padding: 0 0.25rem;
+    }
+
+    footer cite { font-style: normal; color: #64748b; }
+
+    .layer { transition: opacity 0.45s ease; }
+    .hidden { opacity: 0; pointer-events: none; }
+    .visible { opacity: 1; }
+
+    .pulse { animation: pulse 1.4s ease-in-out infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 1; }
+    }
+
+    .fade-in { animation: fadeIn 0.5s ease both; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .file-lock { opacity: 0; }
+    .file-tint { opacity: 0; }
+
+    .layer.visible.lockwave .file-card:nth-child(1) .file-lock { animation: lockIn 0.45s ease forwards; animation-delay: 0.35s; }
+    .layer.visible.lockwave .file-card:nth-child(2) .file-lock { animation: lockIn 0.45s ease forwards; animation-delay: 0.75s; }
+    .layer.visible.lockwave .file-card:nth-child(3) .file-lock { animation: lockIn 0.45s ease forwards; animation-delay: 1.15s; }
+    .layer.visible.lockwave .file-card:nth-child(4) .file-lock { animation: lockIn 0.45s ease forwards; animation-delay: 1.55s; }
+
+    .layer.visible.lockwave .file-card:nth-child(1) .file-tint { animation: tintIn 0.45s ease forwards; animation-delay: 0.35s; }
+    .layer.visible.lockwave .file-card:nth-child(2) .file-tint { animation: tintIn 0.45s ease forwards; animation-delay: 0.75s; }
+    .layer.visible.lockwave .file-card:nth-child(3) .file-tint { animation: tintIn 0.45s ease forwards; animation-delay: 1.15s; }
+    .layer.visible.lockwave .file-card:nth-child(4) .file-tint { animation: tintIn 0.45s ease forwards; animation-delay: 1.55s; }
+
+    .layer.visible.lockwave .file-card:nth-child(1) { animation: fileShake 0.35s ease; animation-delay: 0.35s; }
+    .layer.visible.lockwave .file-card:nth-child(2) { animation: fileShake 0.35s ease; animation-delay: 0.75s; }
+    .layer.visible.lockwave .file-card:nth-child(3) { animation: fileShake 0.35s ease; animation-delay: 1.15s; }
+    .layer.visible.lockwave .file-card:nth-child(4) { animation: fileShake 0.35s ease; animation-delay: 1.55s; }
+
+    .files-locked .file-lock { opacity: 1; animation: none !important; }
+    .files-locked .file-tint { opacity: 0.55; animation: none !important; }
+
+    @keyframes lockIn {
+      from { opacity: 0; transform: scale(0.4) translateY(-6px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes tintIn { from { opacity: 0; } to { opacity: 0.55; } }
+    @keyframes fileShake {
+      0%, 100% { transform: translate(0, 0); }
+      25% { transform: translate(-2px, 1px); }
+      75% { transform: translate(2px, -1px); }
+    }
+
+    .ransom-note { opacity: 0; transform-origin: 410px 250px; }
+    .layer.visible.lockwave .ransom-note {
+      animation: notePop 0.5s ease forwards;
+      animation-delay: 2.05s;
+    }
+    .files-locked .ransom-note { opacity: 1; animation: none !important; }
+
+    @keyframes notePop {
+      0% { opacity: 0; transform: scale(0.85) translateY(10px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .screen-warn { opacity: 0; }
+    .layer.visible.lockwave .screen-warn {
+      animation: tintIn 0.6s ease forwards;
+      animation-delay: 1.9s;
+    }
+    .files-locked .screen-warn { opacity: 0.35; animation: none !important; }
+
+    .formula-card { opacity: 0; }
+    .layer.visible.define .formula-card:nth-child(1) { animation: fadeIn 0.45s ease forwards; animation-delay: 0.1s; }
+    .layer.visible.define .formula-card:nth-child(3) { animation: fadeIn 0.45s ease forwards; animation-delay: 0.35s; }
+    .layer.visible.define .formula-card:nth-child(5) { animation: fadeIn 0.45s ease forwards; animation-delay: 0.6s; }
+
+    .flow-node { opacity: 0.22; }
+    .flow-arrow { opacity: 0.15; }
+    .layer.visible.playing .flow-node:nth-child(1) { animation: flowOn 0.4s ease forwards; }
+    .layer.visible.playing .flow-node:nth-child(3) { animation: flowOn 0.4s ease forwards; animation-delay: 0.55s; }
+    .layer.visible.playing .flow-node:nth-child(5) { animation: flowOn 0.4s ease forwards; animation-delay: 1.1s; }
+    .layer.visible.playing .flow-node:nth-child(7) { animation: flowOn 0.4s ease forwards; animation-delay: 1.65s; }
+    .layer.visible.playing .flow-node:nth-child(9) { animation: flowOn 0.4s ease forwards; animation-delay: 2.2s; }
+    .layer.visible.playing .flow-arrow:nth-child(2) { animation: flowOn 0.35s ease forwards; animation-delay: 0.4s; }
+    .layer.visible.playing .flow-arrow:nth-child(4) { animation: flowOn 0.35s ease forwards; animation-delay: 0.95s; }
+    .layer.visible.playing .flow-arrow:nth-child(6) { animation: flowOn 0.35s ease forwards; animation-delay: 1.5s; }
+    .layer.visible.playing .flow-arrow:nth-child(8) { animation: flowOn 0.35s ease forwards; animation-delay: 2.05s; }
+    @keyframes flowOn { to { opacity: 1; } }
+
+    .compare-card { opacity: 0.45; }
+    .layer.visible.compare .compare-card { animation: fadeIn 0.45s ease forwards; }
+    .layer.visible.compare .compare-card.highlight {
+      animation: comparePulse 1.6s ease-in-out infinite;
+      animation-delay: 0.4s;
+    }
+    @keyframes comparePulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.72; }
+    }
+
+    .impact-card { opacity: 0; }
+    .layer.visible.impacting .impact-card:nth-child(1) { animation: fadeIn 0.45s ease forwards; }
+    .layer.visible.impacting .impact-card:nth-child(2) { animation: fadeIn 0.45s ease forwards; animation-delay: 0.25s; }
+    .layer.visible.impacting .impact-card:nth-child(3) { animation: fadeIn 0.45s ease forwards; animation-delay: 0.5s; }
+
+    .shield-item { opacity: 0; }
+    .layer.visible.defend .shield-item:nth-child(2) { animation: fadeIn 0.4s ease forwards; }
+    .layer.visible.defend .shield-item:nth-child(3) { animation: fadeIn 0.4s ease forwards; animation-delay: 0.2s; }
+    .layer.visible.defend .shield-item:nth-child(4) { animation: fadeIn 0.4s ease forwards; animation-delay: 0.4s; }
+    .layer.visible.defend .shield-item:nth-child(5) { animation: fadeIn 0.4s ease forwards; animation-delay: 0.6s; }
+    .layer.visible.defend .shield-item:nth-child(6) { animation: fadeIn 0.4s ease forwards; animation-delay: 0.8s; }
+
+    .restore-glow { opacity: 0; }
+    .layer.visible.defend .restore-glow {
+      animation: glowIn 0.8s ease forwards;
+      animation-delay: 1s;
+    }
+    @keyframes glowIn { to { opacity: 0.7; } }
+
+    .takeaway-banner { opacity: 0; }
+    .layer.visible.defend .takeaway-banner {
+      animation: fadeIn 0.5s ease forwards;
+      animation-delay: 1.3s;
+    }
+
+    .quiz-overlay {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      gap: 0.7rem;
+      padding: 0.9rem 1rem;
+      overflow: auto;
+      background: linear-gradient(180deg, rgba(11, 18, 36, 0.96), rgba(2, 6, 23, 0.96));
+    }
+    .quiz-overlay.visible { display: flex; }
+
+    .quiz-card {
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.75rem 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+    }
+    .quiz-card h3 {
+      font-family: Montserrat, sans-serif;
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.45rem;
+      line-height: 1.35;
+    }
+    .quiz-opts {
+      display: grid;
+      gap: 0.35rem;
+    }
+    .quiz-opts button {
+      font-family: inherit;
+      text-align: left;
+      font-size: 0.8rem;
+      line-height: 1.35;
+      padding: 0.45rem 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .quiz-opts button:hover { border-color: #64748b; background: #273449; }
+    .quiz-opts button:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
+    }
+    .quiz-opts button.correct {
+      border-color: #22c55e;
+      background: rgba(34, 197, 94, 0.16);
+      color: #86efac;
+    }
+    .quiz-opts button.wrong {
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.16);
+      color: #fca5a5;
+    }
+    .quiz-feedback {
+      min-height: 1.2em;
+      font-size: 0.78rem;
+      color: #94a3b8;
+      margin-top: 0.4rem;
+    }
+    .quiz-feedback.ok { color: #86efac; }
+    .quiz-feedback.bad { color: #fca5a5; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <span class="tag">Modul 02 · Ancaman Malware</span>
+        <h1>Animasi Pengertian Ransomware — Step by Step</h1>
+      </div>
+      <span class="step-badge" id="stepBadge">Langkah 1 / 7</span>
+    </header>
+
+    <div class="layout">
+      <aside class="panel timeline" aria-label="Daftar langkah">
+        <h2>Alur Konsep</h2>
+        <div id="stepList"></div>
+      </aside>
+
+      <section class="panel stage" aria-live="polite">
+        <div class="stage-head">
+          <h2 id="stageTitle">File Terkunci</h2>
+          <span class="status-pill bad" id="stageStatus">Sistem ditahan</span>
+        </div>
+        <div class="canvas-wrap">
+          <svg class="scene" viewBox="0 0 820 360" role="img" aria-labelledby="stageTitle">
+            <defs>
+              <linearGradient id="pcGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#1e293b"/>
+                <stop offset="100%" stop-color="#0f172a"/>
+              </linearGradient>
+              <linearGradient id="screenGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#0b1224"/>
+                <stop offset="100%" stop-color="#020617"/>
+              </linearGradient>
+              <filter id="glowCyan">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="glowRed">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="glowGreen">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <!-- Desktop PC + files -->
+            <g id="layerDesktop" class="layer visible">
+              <rect x="268" y="48" width="284" height="198" rx="14" fill="url(#pcGrad)" stroke="#06b6d4" stroke-width="2"/>
+              <rect x="280" y="60" width="260" height="160" rx="6" fill="url(#screenGrad)" stroke="#1e293b"/>
+              <rect class="screen-warn" x="280" y="60" width="260" height="160" rx="6" fill="#7f1d1d"/>
+              <rect x="372" y="246" width="76" height="10" rx="3" fill="#334155"/>
+              <rect x="330" y="256" width="160" height="12" rx="4" fill="#1e293b" stroke="#475569"/>
+              <text x="410" y="286" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="700">PC Korban</text>
+            </g>
+
+            <g id="layerFiles" class="layer visible">
+              <g class="file-card">
+                <rect x="300" y="82" width="52" height="62" rx="6" fill="#1e293b" stroke="#64748b"/>
+                <rect class="file-tint" x="300" y="82" width="52" height="62" rx="6" fill="#ef4444"/>
+                <path d="M314 96 h16 l8 8 v28 h-24 z" fill="#334155" stroke="#94a3b8" stroke-width="1"/>
+                <path d="M330 96 v8 h8" fill="none" stroke="#94a3b8" stroke-width="1"/>
+                <text x="326" y="150" text-anchor="middle" fill="#cbd5e1" font-size="8">Tugas.pdf</text>
+                <g class="file-lock" transform="translate(326 112)">
+                  <path d="M-6 -8 a6 6 0 0 1 12 0" fill="none" stroke="#fecaca" stroke-width="2"/>
+                  <rect x="-8" y="-8" width="16" height="12" rx="2" fill="#ef4444"/>
+                </g>
+              </g>
+              <g class="file-card">
+                <rect x="364" y="82" width="52" height="62" rx="6" fill="#1e293b" stroke="#64748b"/>
+                <rect class="file-tint" x="364" y="82" width="52" height="62" rx="6" fill="#ef4444"/>
+                <path d="M378 96 h16 l8 8 v28 h-24 z" fill="#334155" stroke="#94a3b8" stroke-width="1"/>
+                <path d="M394 96 v8 h8" fill="none" stroke="#94a3b8" stroke-width="1"/>
+                <text x="390" y="150" text-anchor="middle" fill="#cbd5e1" font-size="8">Foto.jpg</text>
+                <g class="file-lock" transform="translate(390 112)">
+                  <path d="M-6 -8 a6 6 0 0 1 12 0" fill="none" stroke="#fecaca" stroke-width="2"/>
+                  <rect x="-8" y="-8" width="16" height="12" rx="2" fill="#ef4444"/>
+                </g>
+              </g>
+              <g class="file-card">
+                <rect x="428" y="82" width="52" height="62" rx="6" fill="#1e293b" stroke="#64748b"/>
+                <rect class="file-tint" x="428" y="82" width="52" height="62" rx="6" fill="#ef4444"/>
+                <path d="M442 96 h16 l8 8 v28 h-24 z" fill="#334155" stroke="#94a3b8" stroke-width="1"/>
+                <path d="M458 96 v8 h8" fill="none" stroke="#94a3b8" stroke-width="1"/>
+                <text x="454" y="150" text-anchor="middle" fill="#cbd5e1" font-size="8">Nilai.xlsx</text>
+                <g class="file-lock" transform="translate(454 112)">
+                  <path d="M-6 -8 a6 6 0 0 1 12 0" fill="none" stroke="#fecaca" stroke-width="2"/>
+                  <rect x="-8" y="-8" width="16" height="12" rx="2" fill="#ef4444"/>
+                </g>
+              </g>
+              <g class="file-card">
+                <rect x="364" y="154" width="52" height="54" rx="6" fill="#1e293b" stroke="#64748b"/>
+                <rect class="file-tint" x="364" y="154" width="52" height="54" rx="6" fill="#ef4444"/>
+                <path d="M378 164 h16 l8 8 v20 h-24 z" fill="#334155" stroke="#94a3b8" stroke-width="1"/>
+                <path d="M394 164 v8 h8" fill="none" stroke="#94a3b8" stroke-width="1"/>
+                <text x="390" y="202" text-anchor="middle" fill="#cbd5e1" font-size="8">Catatan.docx</text>
+                <g class="file-lock" transform="translate(390 178)">
+                  <path d="M-6 -8 a6 6 0 0 1 12 0" fill="none" stroke="#fecaca" stroke-width="2"/>
+                  <rect x="-8" y="-8" width="16" height="12" rx="2" fill="#ef4444"/>
+                </g>
+              </g>
+            </g>
+
+            <g id="layerRansomNote" class="layer hidden">
+              <g class="ransom-note">
+                <rect x="292" y="168" width="236" height="86" rx="8" fill="rgba(69,10,10,0.96)" stroke="#ef4444" stroke-width="2" filter="url(#glowRed)"/>
+                <text x="410" y="190" text-anchor="middle" fill="#fecaca" font-size="13" font-weight="800">FILE ANDA TERKUNCI</text>
+                <text x="410" y="208" text-anchor="middle" fill="#fca5a5" font-size="10">Data ditahan. Pelaku menuntut tebusan.</text>
+                <text x="410" y="226" text-anchor="middle" fill="#f87171" font-size="9" font-weight="700">Apa yang terjadi?</text>
+                <text x="410" y="244" text-anchor="middle" fill="#94a3b8" font-size="8">Simulasi edukasi — bukan instruksi pembayaran</text>
+              </g>
+            </g>
+
+            <!-- Definition formula -->
+            <g id="layerDefinition" class="layer hidden">
+              <g class="formula-card">
+                <rect x="36" y="78" width="150" height="92" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="1.5"/>
+                <text x="111" y="108" text-anchor="middle" fill="#67e8f9" font-size="12" font-weight="800">RANSOM</text>
+                <text x="111" y="128" text-anchor="middle" fill="#cbd5e1" font-size="11">tebusan / sandera</text>
+                <text x="111" y="148" text-anchor="middle" fill="#94a3b8" font-size="10">akses data ditahan</text>
+              </g>
+              <text x="204" y="128" text-anchor="middle" fill="#f59e0b" font-size="22" font-weight="800">+</text>
+              <g class="formula-card">
+                <rect x="222" y="78" width="150" height="92" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="1.5"/>
+                <text x="297" y="108" text-anchor="middle" fill="#67e8f9" font-size="12" font-weight="800">WARE</text>
+                <text x="297" y="128" text-anchor="middle" fill="#cbd5e1" font-size="11">perangkat lunak</text>
+                <text x="297" y="148" text-anchor="middle" fill="#94a3b8" font-size="10">malware berbahaya</text>
+              </g>
+              <text x="390" y="128" text-anchor="middle" fill="#f59e0b" font-size="22" font-weight="800">=</text>
+              <g class="formula-card">
+                <rect x="408" y="70" width="196" height="108" rx="10" fill="#450a0a" stroke="#ef4444" stroke-width="2" filter="url(#glowRed)"/>
+                <text x="506" y="104" text-anchor="middle" fill="#fecaca" font-size="13" font-weight="800">RANSOMWARE</text>
+                <text x="506" y="126" text-anchor="middle" fill="#fca5a5" font-size="11">kunci data + tuntut tebusan</text>
+                <text x="506" y="148" text-anchor="middle" fill="#94a3b8" font-size="10">tujuan: pemerasan</text>
+              </g>
+              <text x="410" y="214" text-anchor="middle" fill="#94a3b8" font-size="12">Biasanya file dienkripsi sehingga korban tidak dapat membukanya.</text>
+            </g>
+
+            <!-- Conceptual flow -->
+            <g id="layerFlow" class="layer hidden">
+              <g class="flow-node">
+                <rect x="28" y="118" width="124" height="92" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="1.5"/>
+                <text x="90" y="146" text-anchor="middle" fill="#fcd34d" font-size="11" font-weight="800">1. MASUK</text>
+                <text x="90" y="166" text-anchor="middle" fill="#cbd5e1" font-size="10">lampiran / tautan</text>
+                <text x="90" y="182" text-anchor="middle" fill="#94a3b8" font-size="9">atau perangkat usang</text>
+              </g>
+              <g class="flow-arrow">
+                <polygon points="160,164 176,164 176,158 194,170 176,182 176,176 160,176" fill="#64748b"/>
+              </g>
+              <g class="flow-node">
+                <rect x="200" y="118" width="124" height="92" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="1.5"/>
+                <text x="262" y="146" text-anchor="middle" fill="#fcd34d" font-size="11" font-weight="800">2. EKSEKUSI</text>
+                <text x="262" y="166" text-anchor="middle" fill="#cbd5e1" font-size="10">program jahat</text>
+                <text x="262" y="182" text-anchor="middle" fill="#94a3b8" font-size="9">berjalan di sistem</text>
+              </g>
+              <g class="flow-arrow">
+                <polygon points="332,164 348,164 348,158 366,170 348,182 348,176 332,176" fill="#64748b"/>
+              </g>
+              <g class="flow-node">
+                <rect x="372" y="118" width="124" height="92" rx="10" fill="#0f172a" stroke="#ef4444" stroke-width="1.5"/>
+                <text x="434" y="146" text-anchor="middle" fill="#fecaca" font-size="11" font-weight="800">3. KUNCI DATA</text>
+                <text x="434" y="166" text-anchor="middle" fill="#cbd5e1" font-size="10">file tidak terbaca</text>
+                <text x="434" y="182" text-anchor="middle" fill="#94a3b8" font-size="9">(biasanya enkripsi)</text>
+              </g>
+              <g class="flow-arrow">
+                <polygon points="504,164 520,164 520,158 538,170 520,182 520,176 504,176" fill="#64748b"/>
+              </g>
+              <g class="flow-node">
+                <rect x="544" y="70" width="124" height="92" rx="10" fill="#0f172a" stroke="#ef4444" stroke-width="1.5"/>
+                <text x="606" y="98" text-anchor="middle" fill="#fecaca" font-size="11" font-weight="800">4. TUNTUTAN</text>
+                <text x="606" y="118" text-anchor="middle" fill="#cbd5e1" font-size="10">pesan tebusan</text>
+                <text x="606" y="134" text-anchor="middle" fill="#94a3b8" font-size="9">muncul di layar</text>
+              </g>
+              <g class="flow-arrow">
+                <polygon points="606,170 612,186 600,186" fill="#64748b"/>
+              </g>
+              <g class="flow-node">
+                <rect x="544" y="196" width="124" height="92" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="1.5"/>
+                <text x="606" y="224" text-anchor="middle" fill="#fcd34d" font-size="11" font-weight="800">5. DILEMA</text>
+                <text x="606" y="244" text-anchor="middle" fill="#cbd5e1" font-size="10">korban tertekan</text>
+                <text x="606" y="260" text-anchor="middle" fill="#94a3b8" font-size="9">bayar vs pulihkan</text>
+              </g>
+              <text x="300" y="50" text-anchor="middle" fill="#94a3b8" font-size="12">Alur konseptual — tanpa langkah teknis serangan</text>
+            </g>
+
+            <!-- Compare vs other malware -->
+            <g id="layerCompare" class="layer hidden">
+              <g class="compare-card">
+                <rect x="36" y="88" width="170" height="150" rx="12" fill="#0f172a" stroke="#475569"/>
+                <text x="121" y="118" text-anchor="middle" fill="#94a3b8" font-size="12" font-weight="800">Virus</text>
+                <text x="121" y="148" text-anchor="middle" fill="#cbd5e1" font-size="11">Merusak / menempel</text>
+                <text x="121" y="168" text-anchor="middle" fill="#94a3b8" font-size="10">pada file lain</text>
+                <text x="121" y="200" text-anchor="middle" fill="#64748b" font-size="10">motif: merusak</text>
+              </g>
+              <g class="compare-card">
+                <rect x="228" y="88" width="170" height="150" rx="12" fill="#0f172a" stroke="#475569"/>
+                <text x="313" y="118" text-anchor="middle" fill="#94a3b8" font-size="12" font-weight="800">Worm</text>
+                <text x="313" y="148" text-anchor="middle" fill="#cbd5e1" font-size="11">Menyebar sendiri</text>
+                <text x="313" y="168" text-anchor="middle" fill="#94a3b8" font-size="10">lewat jaringan</text>
+                <text x="313" y="200" text-anchor="middle" fill="#64748b" font-size="10">motif: menyebar</text>
+              </g>
+              <g class="compare-card">
+                <rect x="420" y="88" width="170" height="150" rx="12" fill="#0f172a" stroke="#475569"/>
+                <text x="505" y="118" text-anchor="middle" fill="#94a3b8" font-size="12" font-weight="800">Trojan</text>
+                <text x="505" y="148" text-anchor="middle" fill="#cbd5e1" font-size="11">Menyamar sah</text>
+                <text x="505" y="168" text-anchor="middle" fill="#94a3b8" font-size="10">agar dijalankan</text>
+                <text x="505" y="200" text-anchor="middle" fill="#64748b" font-size="10">motif: menyusup</text>
+              </g>
+              <g class="compare-card highlight">
+                <rect x="612" y="78" width="176" height="170" rx="12" fill="#450a0a" stroke="#ef4444" stroke-width="2" filter="url(#glowRed)"/>
+                <text x="700" y="114" text-anchor="middle" fill="#fecaca" font-size="13" font-weight="800">Ransomware</text>
+                <text x="700" y="144" text-anchor="middle" fill="#fca5a5" font-size="11">Mengunci data</text>
+                <text x="700" y="164" text-anchor="middle" fill="#fca5a5" font-size="11">lalu memeras</text>
+                <text x="700" y="202" text-anchor="middle" fill="#f87171" font-size="11" font-weight="700">motif: TEBUSAN</text>
+              </g>
+            </g>
+
+            <!-- Impact -->
+            <g id="layerImpact" class="layer hidden">
+              <g class="impact-card">
+                <rect x="48" y="86" width="220" height="168" rx="12" fill="#0f172a" stroke="#ef4444" stroke-width="1.5"/>
+                <text x="158" y="118" text-anchor="middle" fill="#fecaca" font-size="13" font-weight="800">Data hilang</text>
+                <text x="158" y="148" text-anchor="middle" fill="#cbd5e1" font-size="11">File tugas, arsip, atau</text>
+                <text x="158" y="166" text-anchor="middle" fill="#cbd5e1" font-size="11">basis data tidak terbaca.</text>
+                <text x="158" y="200" text-anchor="middle" fill="#94a3b8" font-size="10">Availability &amp; Integrity</text>
+                <text x="158" y="216" text-anchor="middle" fill="#94a3b8" font-size="10">terganggu sekaligus.</text>
+              </g>
+              <g class="impact-card">
+                <rect x="300" y="86" width="220" height="168" rx="12" fill="#0f172a" stroke="#f59e0b" stroke-width="1.5"/>
+                <text x="410" y="118" text-anchor="middle" fill="#fcd34d" font-size="13" font-weight="800">Operasi berhenti</text>
+                <text x="410" y="148" text-anchor="middle" fill="#cbd5e1" font-size="11">Layanan kampus, rumah</text>
+                <text x="410" y="166" text-anchor="middle" fill="#cbd5e1" font-size="11">sakit, atau kantor macet.</text>
+                <text x="410" y="200" text-anchor="middle" fill="#94a3b8" font-size="10">Downtime: biaya &amp;</text>
+                <text x="410" y="216" text-anchor="middle" fill="#94a3b8" font-size="10">kepercayaan jatuh.</text>
+              </g>
+              <g class="impact-card">
+                <rect x="552" y="86" width="220" height="168" rx="12" fill="#0f172a" stroke="#ef4444" stroke-width="1.5"/>
+                <text x="662" y="118" text-anchor="middle" fill="#fecaca" font-size="13" font-weight="800">Dilema tebusan</text>
+                <text x="662" y="148" text-anchor="middle" fill="#cbd5e1" font-size="11">Membayar tidak menjamin</text>
+                <text x="662" y="166" text-anchor="middle" fill="#cbd5e1" font-size="11">data kembali.</text>
+                <text x="662" y="200" text-anchor="middle" fill="#f87171" font-size="10" font-weight="700">Jangan bayar — itu</text>
+                <text x="662" y="216" text-anchor="middle" fill="#f87171" font-size="10" font-weight="700">mendanai pelaku.</text>
+              </g>
+            </g>
+
+            <!-- Defense -->
+            <g id="layerDefense" class="layer hidden">
+              <ellipse class="restore-glow" cx="150" cy="168" rx="70" ry="70" fill="#22c55e" opacity="0.12" filter="url(#glowGreen)"/>
+              <g class="shield-item">
+                <rect x="48" y="70" width="204" height="86" rx="12" fill="#052e16" stroke="#22c55e" stroke-width="2"/>
+                <text x="150" y="102" text-anchor="middle" fill="#86efac" font-size="13" font-weight="800">BACKUP 3-2-1</text>
+                <text x="150" y="122" text-anchor="middle" fill="#cbd5e1" font-size="10">3 salinan · 2 media</text>
+                <text x="150" y="138" text-anchor="middle" fill="#94a3b8" font-size="10">1 salinan offline terisolasi</text>
+              </g>
+              <g class="shield-item">
+                <rect x="280" y="58" width="150" height="70" rx="10" fill="#0f172a" stroke="#06b6d4"/>
+                <text x="355" y="88" text-anchor="middle" fill="#67e8f9" font-size="12" font-weight="800">Patch rutin</text>
+                <text x="355" y="108" text-anchor="middle" fill="#94a3b8" font-size="10">tutup perangkat usang</text>
+              </g>
+              <g class="shield-item">
+                <rect x="450" y="58" width="150" height="70" rx="10" fill="#0f172a" stroke="#06b6d4"/>
+                <text x="525" y="88" text-anchor="middle" fill="#67e8f9" font-size="12" font-weight="800">Cek lampiran</text>
+                <text x="525" y="108" text-anchor="middle" fill="#94a3b8" font-size="10">jangan buka yang mencurigakan</text>
+              </g>
+              <g class="shield-item">
+                <rect x="620" y="58" width="150" height="70" rx="10" fill="#0f172a" stroke="#06b6d4"/>
+                <text x="695" y="88" text-anchor="middle" fill="#67e8f9" font-size="12" font-weight="800">Least privilege</text>
+                <text x="695" y="108" text-anchor="middle" fill="#94a3b8" font-size="10">izin seminimal mungkin</text>
+              </g>
+              <g class="shield-item">
+                <rect x="280" y="146" width="490" height="70" rx="10" fill="#0f172a" stroke="#22c55e"/>
+                <text x="525" y="176" text-anchor="middle" fill="#86efac" font-size="13" font-weight="800">Rencana insiden: isolasi sistem, laporkan, pulihkan dari cadangan</text>
+                <text x="525" y="196" text-anchor="middle" fill="#94a3b8" font-size="10">Bukan membayar tebusan. Cadangan terisolasi adalah jalur pemulihan.</text>
+              </g>
+              <g class="takeaway-banner">
+                <rect x="48" y="236" width="724" height="88" rx="12" fill="#083344" stroke="#06b6d4" stroke-width="2"/>
+                <text x="410" y="264" text-anchor="middle" fill="#67e8f9" font-size="11" font-weight="700">TAKEAWAY</text>
+                <text x="410" y="286" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="800">Ransomware menahan data untuk memeras — jangan bayar.</text>
+                <text x="410" y="308" text-anchor="middle" fill="#e2e8f0" font-size="13" font-weight="700">Pulihkan dari backup yang terisolasi.</text>
+              </g>
+            </g>
+          </svg>
+
+          <div class="quiz-overlay" id="quizOverlay">
+            <div class="quiz-card" data-q="0">
+              <h3>1. Apa yang paling membedakan ransomware dari virus biasa?</h3>
+              <div class="quiz-opts">
+                <button type="button" data-correct="false">A. Menyebar sendiri lewat jaringan tanpa bantuan siapa pun</button>
+                <button type="button" data-correct="true">B. Tujuan utamanya adalah pemerasan: data dikunci lalu diminta tebusan</button>
+                <button type="button" data-correct="false">C. Hanya merusak file tanpa menuntut apa pun dari korban</button>
+              </div>
+              <div class="quiz-feedback" aria-live="polite"></div>
+            </div>
+            <div class="quiz-card" data-q="1">
+              <h3>2. Mengapa backup terisolasi (offline) penting menghadapi ransomware?</h3>
+              <div class="quiz-opts">
+                <button type="button" data-correct="false">A. Karena cadangan di komputer yang sama selalu aman</button>
+                <button type="button" data-correct="true">B. Supaya data dapat dipulihkan tanpa membayar tebusan</button>
+                <button type="button" data-correct="false">C. Agar pelaku mendapat salinan data tambahan</button>
+              </div>
+              <div class="quiz-feedback" aria-live="polite"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel detail">
+        <h2>Penjelasan Langkah</h2>
+        <p id="stepDesc"></p>
+        <div class="def-box" id="termBox"></div>
+      </aside>
+    </div>
+
+    <div class="controls">
+      <div class="controls-left">
+        <button class="ctrl" id="btnPrev" type="button">&#8592; Sebelumnya</button>
+        <button class="ctrl primary" id="btnNext" type="button">Berikutnya &#8594;</button>
+        <button class="ctrl" id="btnReset" type="button">Reset</button>
+      </div>
+      <div class="progress" id="progressDots" aria-label="Progres langkah"></div>
+      <div class="controls-right">
+        <button class="ctrl" id="btnAuto" type="button">&#9654; Putar otomatis</button>
+      </div>
+    </div>
+
+    <footer>
+      Simulasi edukasi defensif — tidak berisi prosedur serangan, payload, atau cara pembayaran tebusan.
+      <cite>[1]</cite> Eight Most Common Cybersecurity Threats, UNDIP Cyber Security Course Materials, Universitas Diponegoro, Semarang, Indonesia, 2026.
+      <cite>[2]</cite> Cybersecurity Fundamentals, UNDIP Cyber Security Course Materials, Universitas Diponegoro, Semarang, Indonesia, 2026.
+    </footer>
+  </div>
+
+  <script>
+    const STEPS = [
+      {
+        title: "File Terkunci",
+        status: { text: "Sistem ditahan", cls: "bad" },
+        desc: "Layar PC tiba-tiba menampilkan file yang tidak dapat dibuka. Satu per satu ikon file mendapat gembok, lalu pesan tebusan muncul. Ini simulasi edukasi: data ditahan, pelaku menuntut bayaran — tanpa instruksi pembayaran.",
+        terms: [
+          ["Tebusan", "Tuntutan pembayaran dari pelaku agar akses data dikembalikan."],
+          ["Simulasi edukasi", "Tampilan belajar di kelas; bukan panduan teknis serangan atau pembayaran."]
+        ],
+        show: ["layerDesktop", "layerFiles", "layerRansomNote"],
+        lockwave: true
+      },
+      {
+        title: "Pengertian",
+        status: { text: "Definisi inti", cls: "warn" },
+        desc: "Ransomware merupakan malware yang menahan akses ke data atau sistem — biasanya dengan mengenkripsi file — lalu menuntut tebusan finansial untuk kunci dekripsi. Intinya adalah pemerasan, bukan sekadar merusak.",
+        terms: [
+          ["Ransomware", "Malware yang mengunci/mengenkripsi file penting lalu memeras tebusan."],
+          ["Malware", "Perangkat lunak berbahaya yang dipasang tanpa izin pemilik sistem."]
+        ],
+        show: ["layerDefinition"],
+        define: true
+      },
+      {
+        title: "Cara Kerja",
+        status: { text: "Alur konseptual", cls: "warn" },
+        desc: "Secara konsep: masuk (sering lewat lampiran/tautan menipu atau perangkat lunak usang) → program jahat dijalankan → data dikunci → pesan tuntutan tampil → korban dihadapkan pada dilema. Ini peta dampak, bukan resep serangan.",
+        terms: [
+          ["Vektor masuk", "Jalur awal infeksi pada tingkat konsep, misalnya lampiran menipu atau sistem yang tidak diperbarui."],
+          ["Enkripsi (konsep)", "File diubah sehingga tidak terbaca tanpa kunci; detail teknis implementasi tidak dibahas di sini."]
+        ],
+        show: ["layerFlow"],
+        playing: true
+      },
+      {
+        title: "Ciri Khas",
+        status: { text: "Bukan virus biasa", cls: "warn" },
+        desc: "Virus cenderung merusak atau menempel pada file; worm menyebar sendiri; Trojan menyamar agar dijalankan. Ransomware menonjol karena motifnya adalah pemerasan: data ditahan sebagai sandera.",
+        terms: [
+          ["Motif pemerasan", "Tujuan utama pelaku adalah uang/tebusan, bukan sekadar merusak atau menyebar."],
+          ["Sandera data", "Akses file korban ditahan agar tekanan membayar muncul."]
+        ],
+        show: ["layerCompare"],
+        compare: true
+      },
+      {
+        title: "Dampak",
+        status: { text: "Data & operasi", cls: "bad" },
+        desc: "Korban kehilangan akses data, operasional macet, dan menghadapi dilema tebusan. Aturan baku materi kuliah: jangan pernah membayar — pembayaran tidak menjamin data kembali dan justru mendanai pelaku. Terkadang pelaku juga mengancam membocorkan salinan data (pemerasan ganda).",
+        terms: [
+          ["Double extortion", "Pemerasan ganda: data dikunci dan salinannya diancam dibocorkan ke publik."],
+          ["Jangan bayar", "Pembayaran tidak menjamin pemulihan dan mendukung kejahatan siber."]
+        ],
+        show: ["layerImpact"],
+        impacting: true
+      },
+      {
+        title: "Checkpoint",
+        status: { text: "Uji pemahaman", cls: "ok" },
+        desc: "Jawab dua pertanyaan singkat di kanvas. Pikirkan motif (pemerasan) dan peran backup. Setelah menjawab, bahas bersama sebelum lanjut ke pertahanan.",
+        terms: [
+          ["Checkpoint", "Jeda aktif untuk menguji apakah konsep sudah tertangkap."],
+          ["Think-pair-share", "Jawab sendiri, diskusikan dengan teman, lalu cocokkan dengan kelas."]
+        ],
+        show: [],
+        checkpoint: true
+      },
+      {
+        title: "Pertahanan",
+        status: { text: "Pulihkan tanpa tebusan", cls: "ok" },
+        desc: "Pertahanan tingkat tinggi: backup 3-2-1 dengan satu salinan offline terisolasi, patch rutin, jangan buka lampiran mencurigakan, least privilege, dan rencana insiden (isolasi, laporkan, pulihkan). Cadangan yang sehat mengalahkan tebusan.",
+        terms: [
+          ["Backup 3-2-1", "Tiga salinan data, dua jenis media, satu salinan offline terpisah dari jaringan."],
+          ["Least privilege", "Setiap akun hanya mendapat izin minimum yang benar-benar diperlukan."]
+        ],
+        show: ["layerDefense"],
+        defend: true
+      }
+    ];
+
+    let current = 0;
+    let autoTimer = null;
+
+    const els = {
+      stepList: document.getElementById("stepList"),
+      progressDots: document.getElementById("progressDots"),
+      stepBadge: document.getElementById("stepBadge"),
+      stageTitle: document.getElementById("stageTitle"),
+      stageStatus: document.getElementById("stageStatus"),
+      stepDesc: document.getElementById("stepDesc"),
+      termBox: document.getElementById("termBox"),
+      btnPrev: document.getElementById("btnPrev"),
+      btnNext: document.getElementById("btnNext"),
+      btnReset: document.getElementById("btnReset"),
+      btnAuto: document.getElementById("btnAuto"),
+      quizOverlay: document.getElementById("quizOverlay"),
+      layerFiles: document.getElementById("layerFiles"),
+      layerRansomNote: document.getElementById("layerRansomNote"),
+      layerFlow: document.getElementById("layerFlow"),
+      layerDefinition: document.getElementById("layerDefinition"),
+      layerCompare: document.getElementById("layerCompare"),
+      layerImpact: document.getElementById("layerImpact"),
+      layerDefense: document.getElementById("layerDefense")
+    };
+
+    const ALL_LAYERS = [
+      "layerDesktop", "layerFiles", "layerRansomNote", "layerDefinition",
+      "layerFlow", "layerCompare", "layerImpact", "layerDefense"
+    ];
+
+    function buildUI() {
+      STEPS.forEach((step, i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "step-btn";
+        btn.dataset.step = String(i);
+        btn.innerHTML = `
+          <span class="num">${i + 1}</span>
+          <span class="label">${step.title}</span>
+          <span class="hint">${step.status.text}</span>`;
+        btn.addEventListener("click", () => goTo(i));
+        els.stepList.appendChild(btn);
+
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "dot";
+        dot.title = step.title;
+        dot.dataset.step = String(i);
+        dot.setAttribute("aria-label", `Langkah ${i + 1}: ${step.title}`);
+        dot.addEventListener("click", () => goTo(i));
+        els.progressDots.appendChild(dot);
+      });
+    }
+
+    function setLayerVisibility(names) {
+      ALL_LAYERS.forEach(id => {
+        const node = document.getElementById(id);
+        if (!node) return;
+        node.classList.toggle("visible", names.includes(id));
+        node.classList.toggle("hidden", !names.includes(id));
+      });
+    }
+
+    function restartLayer(id) {
+      const node = document.getElementById(id);
+      if (!node || !node.parentNode) return node;
+      const clone = node.cloneNode(true);
+      node.replaceWith(clone);
+      if (els[id] !== undefined) els[id] = clone;
+      return clone;
+    }
+
+    function resetQuizVisuals() {
+      els.quizOverlay.querySelectorAll("button").forEach(btn => {
+        btn.classList.remove("correct", "wrong");
+        btn.disabled = false;
+      });
+      els.quizOverlay.querySelectorAll(".quiz-feedback").forEach(el => {
+        el.textContent = "";
+        el.className = "quiz-feedback";
+      });
+    }
+
+    function bindQuiz() {
+      els.quizOverlay.querySelectorAll(".quiz-card").forEach(card => {
+        const feedback = card.querySelector(".quiz-feedback");
+        card.querySelectorAll(".quiz-opts button").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const correct = btn.dataset.correct === "true";
+            card.querySelectorAll(".quiz-opts button").forEach(b => { b.disabled = true; });
+            if (correct) {
+              btn.classList.add("correct");
+              feedback.textContent = "Tepat. Kunci ransomware adalah pemerasan + pemulihan lewat backup, bukan tebusan.";
+              feedback.className = "quiz-feedback ok";
+            } else {
+              btn.classList.add("wrong");
+              const right = card.querySelector('[data-correct="true"]');
+              if (right) right.classList.add("correct");
+              feedback.textContent = "Belum tepat. Lihat opsi yang ditandai hijau, lalu bandingkan dengan definisi di panel kanan.";
+              feedback.className = "quiz-feedback bad";
+            }
+          });
+        });
+      });
+    }
+
+    function render(stepIndex) {
+      const step = STEPS[stepIndex];
+      current = stepIndex;
+
+      document.querySelectorAll(".step-btn").forEach((btn, i) => {
+        btn.classList.toggle("active", i === stepIndex);
+        btn.setAttribute("aria-current", i === stepIndex ? "step" : "false");
+      });
+      document.querySelectorAll(".dot").forEach((dot, i) => {
+        dot.classList.toggle("active", i === stepIndex);
+      });
+
+      els.stepBadge.textContent = `Langkah ${stepIndex + 1} / ${STEPS.length}`;
+      els.stageTitle.textContent = step.title;
+      els.stageStatus.textContent = step.status.text;
+      els.stageStatus.className = `status-pill ${step.status.cls}`;
+      els.stepDesc.textContent = step.desc;
+      els.stepDesc.className = "fade-in";
+
+      els.termBox.innerHTML = step.terms.map(([term, def]) =>
+        `<div><strong>${term}</strong> — ${def}</div>`
+      ).join("");
+
+      if (step.lockwave) {
+        restartLayer("layerFiles");
+        restartLayer("layerRansomNote");
+        restartLayer("layerDesktop");
+      }
+      if (step.playing) restartLayer("layerFlow");
+      if (step.define) restartLayer("layerDefinition");
+      if (step.compare) restartLayer("layerCompare");
+      if (step.impacting) restartLayer("layerImpact");
+      if (step.defend) restartLayer("layerDefense");
+
+      setLayerVisibility(step.show);
+
+      const desk = document.getElementById("layerDesktop");
+      const files = document.getElementById("layerFiles");
+      const note = document.getElementById("layerRansomNote");
+      const flow = document.getElementById("layerFlow");
+      const defn = document.getElementById("layerDefinition");
+      const cmp = document.getElementById("layerCompare");
+      const impact = document.getElementById("layerImpact");
+      const defense = document.getElementById("layerDefense");
+
+      if (desk) desk.classList.toggle("lockwave", !!step.lockwave);
+      if (files) {
+        files.classList.toggle("lockwave", !!step.lockwave);
+        files.classList.toggle("files-locked", !step.lockwave && step.show.includes("layerFiles"));
+      }
+      if (note) {
+        note.classList.toggle("lockwave", !!step.lockwave);
+        note.classList.toggle("files-locked", !step.lockwave && step.show.includes("layerRansomNote"));
+      }
+      if (flow) flow.classList.toggle("playing", !!step.playing);
+      if (defn) defn.classList.toggle("define", !!step.define);
+      if (cmp) cmp.classList.toggle("compare", !!step.compare);
+      if (impact) impact.classList.toggle("impacting", !!step.impacting);
+      if (defense) defense.classList.toggle("defend", !!step.defend);
+
+      const showQuiz = !!step.checkpoint;
+      els.quizOverlay.classList.toggle("visible", showQuiz);
+      if (showQuiz) stopAuto();
+
+      els.btnPrev.disabled = stepIndex === 0;
+      els.btnNext.disabled = stepIndex === STEPS.length - 1;
+    }
+
+    function goTo(index) {
+      if (index < 0 || index >= STEPS.length) return;
+      render(index);
+    }
+
+    function next() { if (current < STEPS.length - 1) goTo(current + 1); else stopAuto(); }
+    function prev() { if (current > 0) goTo(current - 1); }
+
+    function stopAuto() {
+      if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+      }
+      els.btnAuto.textContent = "\u25B6 Putar otomatis";
+    }
+
+    function toggleAuto() {
+      if (autoTimer) {
+        stopAuto();
+        return;
+      }
+      els.btnAuto.textContent = "\u23F8 Jeda otomatis";
+      autoTimer = setInterval(() => {
+        if (current >= STEPS.length - 1) {
+          stopAuto();
+          return;
+        }
+        if (STEPS[current + 1] && STEPS[current + 1].checkpoint) {
+          next();
+          stopAuto();
+          return;
+        }
+        next();
+      }, 3500);
+    }
+
+    els.btnPrev.addEventListener("click", prev);
+    els.btnNext.addEventListener("click", next);
+    els.btnReset.addEventListener("click", () => {
+      stopAuto();
+      resetQuizVisuals();
+      goTo(0);
+    });
+    els.btnAuto.addEventListener("click", toggleAuto);
+
+    document.addEventListener("keydown", (e) => {
+      const tag = (e.target && e.target.tagName) || "";
+      if (tag === "BUTTON" && (e.key === " " || e.key === "Enter") && e.target.closest(".quiz-overlay")) return;
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "Home") goTo(0);
+      if (e.key === "End") goTo(STEPS.length - 1);
+    });
+
+    bindQuiz();
+    buildUI();
+    const startStep = (() => {
+      const n = parseInt(new URLSearchParams(location.search).get("step") || "1", 10);
+      if (Number.isNaN(n)) return 0;
+      return Math.min(STEPS.length, Math.max(1, n)) - 1;
+    })();
+    render(startStep);
+  </script>
+</body>
+</html>

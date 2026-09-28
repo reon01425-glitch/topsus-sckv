@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animasi Virus, Worm, dan Trojan — Step by Step | UNDIP Cyber Security</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: #0f172a;
+      --panel-2: #111827;
+      --line: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --cyan: #06b6d4;
+      --cyan-soft: rgba(6, 182, 212, 0.15);
+      --red: #ef4444;
+      --red-soft: rgba(239, 68, 68, 0.18);
+      --green: #22c55e;
+      --green-soft: rgba(34, 197, 94, 0.18);
+      --amber: #f59e0b;
+      --purple: #c084fc;
+      --purple-soft: rgba(168, 85, 247, 0.18);
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: "Source Sans 3", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(168, 85, 247, 0.12), transparent 35%),
+        radial-gradient(circle at 85% 85%, rgba(245, 158, 11, 0.08), transparent 30%),
+        linear-gradient(160deg, #172554 0%, var(--bg) 55%, #020617 100%);
+    }
+
+    .app {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1rem clamp(1rem, 3vw, 2rem) 1.5rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .brand .tag {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .brand h1 {
+      font-family: Montserrat, sans-serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.55rem);
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .step-badge {
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.45rem 0.85rem;
+      border-radius: 999px;
+      background: var(--cyan-soft);
+      color: var(--cyan);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      white-space: nowrap;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 240px 1fr 300px;
+      gap: 1rem;
+      min-height: 520px;
+    }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; min-height: auto; }
+      .timeline { order: 2; }
+      .stage { order: 1; }
+      .detail { order: 3; }
+    }
+
+    .panel {
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .timeline {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .timeline h2 {
+      font-family: Montserrat, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .step-btn {
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 0.55rem;
+      align-items: start;
+      width: 100%;
+      text-align: left;
+      padding: 0.65rem 0.7rem;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    }
+
+    .step-btn:hover { background: rgba(255, 255, 255, 0.04); }
+    .step-btn.active {
+      background: var(--cyan-soft);
+      border-color: rgba(6, 182, 212, 0.45);
+    }
+
+    .step-btn .num {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 0.82rem;
+      background: #1e293b;
+      color: var(--muted);
+    }
+
+    .step-btn.active .num {
+      background: var(--cyan);
+      color: #042f2e;
+    }
+
+    .step-btn .label {
+      font-weight: 700;
+      font-size: 0.88rem;
+      line-height: 1.25;
+    }
+
+    .step-btn .hint {
+      grid-column: 2;
+      margin-top: -0.15rem;
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .stage {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+
+    .stage-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .stage-head h2 {
+      font-family: Montserrat, sans-serif;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .status-pill {
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+    }
+
+    .status-pill.ok { background: var(--green-soft); color: var(--green); }
+    .status-pill.warn { background: rgba(245, 158, 11, 0.18); color: var(--amber); }
+    .status-pill.bad { background: var(--red-soft); color: var(--red); }
+    .status-pill.info { background: var(--purple-soft); color: var(--purple); }
+
+    .canvas-wrap {
+      flex: 1;
+      min-height: 340px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #1e293b;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(180deg, #0b1224, #020617);
+      background-size: 28px 28px, 28px 28px, auto;
+      position: relative;
+    }
+
+    svg.scene {
+      width: 100%;
+      height: 100%;
+      min-height: 340px;
+      display: block;
+    }
+
+    .detail {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .detail h2 {
+      font-family: Montserrat, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .detail p {
+      line-height: 1.55;
+      color: #cbd5e1;
+      font-size: 0.95rem;
+    }
+
+    .def-box {
+      display: grid;
+      gap: 0.55rem;
+      padding: 0.75rem;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid #334155;
+    }
+
+    .def-box div {
+      font-size: 0.84rem;
+      line-height: 1.45;
+      color: #cbd5e1;
+    }
+
+    .def-box strong { color: var(--cyan); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    .controls-left, .controls-right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    button.ctrl {
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 0.55rem 0.95rem;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    }
+
+    button.ctrl:hover { background: #273449; border-color: #475569; }
+    button.ctrl:active { transform: translateY(1px); }
+    button.ctrl.primary {
+      background: var(--cyan);
+      border-color: #0891b2;
+      color: #042f2e;
+    }
+    button.ctrl.primary:hover { background: #22d3ee; }
+    button.ctrl:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .progress {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #334155;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .dot.active { background: var(--cyan); box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.25); }
+
+    footer {
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.45;
+      padding: 0 0.25rem;
+    }
+
+    footer cite { font-style: normal; color: #64748b; }
+
+    .layer { transition: opacity 0.45s ease; }
+    .hidden { opacity: 0; pointer-events: none; }
+    .visible { opacity: 1; }
+
+    .pulse { animation: pulse 1.4s ease-in-out infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 1; }
+    }
+
+    .packet {
+      stroke-width: 2.5;
+      stroke-linecap: round;
+    }
+    .packet-purple { fill: #a855f7; }
+    .packet-amber { fill: #f59e0b; }
+    .packet-red { fill: #ef4444; }
+
+    @keyframes dashFlow {
+      to { stroke-dashoffset: -20; }
+    }
+
+    .share-line {
+      fill: none;
+      stroke: #a855f7;
+      stroke-width: 1.8;
+      stroke-dasharray: 7 5;
+      opacity: 0.7;
+      animation: dashFlow 1.1s linear infinite;
+    }
+
+    .net-line {
+      fill: none;
+      stroke: #f59e0b;
+      stroke-width: 1.6;
+      stroke-dasharray: 6 4;
+      opacity: 0.55;
+      animation: dashFlow 1.2s linear infinite;
+    }
+
+    .move-virus-copy {
+      offset-path: path("M 210 150 Q 410 90 610 150");
+      animation: movePacket 2.2s linear infinite;
+    }
+
+    .move-worm-1 {
+      offset-path: path("M 140 90 L 680 90");
+      animation: movePacket 1.6s linear infinite;
+    }
+    .move-worm-2 {
+      offset-path: path("M 680 90 L 680 250");
+      animation: movePacket 1.6s linear infinite;
+      animation-delay: 0.4s;
+    }
+    .move-worm-3 {
+      offset-path: path("M 680 250 L 140 250");
+      animation: movePacket 1.6s linear infinite;
+      animation-delay: 0.8s;
+    }
+    .move-worm-4 {
+      offset-path: path("M 140 250 L 140 90");
+      animation: movePacket 1.6s linear infinite;
+      animation-delay: 1.2s;
+    }
+
+    @keyframes movePacket {
+      0% { offset-distance: 0%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { offset-distance: 100%; opacity: 0; }
+    }
+
+    .virus-hop {
+      offset-path: path("M 210 70 L 210 96 L 610 96");
+      offset-rotate: 0deg;
+      animation: virusHop 2.8s ease-in-out infinite;
+    }
+    @keyframes virusHop {
+      0%, 12% { offset-distance: 0%; opacity: 0.35; }
+      28%, 48% { offset-distance: 28%; opacity: 1; }
+      70%, 100% { offset-distance: 100%; opacity: 0.95; }
+    }
+
+    .file-infect {
+      animation: fileInfect 2.8s ease-in-out infinite;
+    }
+    .file-infect-late {
+      animation: fileInfect 2.8s ease-in-out infinite;
+      animation-delay: 1.5s;
+    }
+    @keyframes fileInfect {
+      0%, 20% { stroke: #64748b; fill: #1e293b; }
+      40%, 100% { stroke: #c084fc; fill: #3b0764; }
+    }
+
+    .click-hand {
+      animation: clickHand 1.8s ease-in-out infinite;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    @keyframes clickHand {
+      0%, 40% { transform: translate(0, 0); opacity: 0.85; }
+      50% { transform: translate(0, 7px) scale(0.92); opacity: 1; }
+      65%, 100% { transform: translate(0, 0); opacity: 0.85; }
+    }
+
+    .layer.visible.worming .pc-node:nth-child(1) .pc-disk { animation: pcAmber 0.5s ease forwards; animation-delay: 0.2s; }
+    .layer.visible.worming .pc-node:nth-child(2) .pc-disk { animation: pcAmber 0.5s ease forwards; animation-delay: 0.7s; }
+    .layer.visible.worming .pc-node:nth-child(3) .pc-disk { animation: pcAmber 0.5s ease forwards; animation-delay: 1.2s; }
+    .layer.visible.worming .pc-node:nth-child(4) .pc-disk { animation: pcAmber 0.5s ease forwards; animation-delay: 1.7s; }
+    .layer.visible.worming .pc-node:nth-child(1) .pc-tag { animation: tagAmber 0.5s ease forwards; animation-delay: 0.2s; }
+    .layer.visible.worming .pc-node:nth-child(2) .pc-tag { animation: tagAmber 0.5s ease forwards; animation-delay: 0.7s; }
+    .layer.visible.worming .pc-node:nth-child(3) .pc-tag { animation: tagAmber 0.5s ease forwards; animation-delay: 1.2s; }
+    .layer.visible.worming .pc-node:nth-child(4) .pc-tag { animation: tagAmber 0.5s ease forwards; animation-delay: 1.7s; }
+
+    @keyframes pcAmber {
+      to { stroke: #f59e0b; fill: #451a03; }
+    }
+    @keyframes tagAmber {
+      to { fill: #fcd34d; }
+    }
+
+    .gift-mask {
+      animation: giftMask 3.4s ease-in-out infinite;
+    }
+    @keyframes giftMask {
+      0%, 32% { opacity: 1; transform: translateY(0); }
+      48%, 100% { opacity: 0; transform: translateY(16px); }
+    }
+
+    .backdoor-reveal {
+      animation: doorReveal 3.4s ease-in-out infinite;
+    }
+    @keyframes doorReveal {
+      0%, 38% { opacity: 0; }
+      52%, 100% { opacity: 1; }
+    }
+
+    .no-spread {
+      animation: fadeIn 0.7s ease both;
+    }
+
+    .shield-glow {
+      animation: shieldPulse 1.8s ease-in-out infinite;
+    }
+    @keyframes shieldPulse {
+      0%, 100% { opacity: 0.55; }
+      50% { opacity: 1; }
+    }
+
+    .fade-in { animation: fadeIn 0.5s ease both; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .canvas-overlay {
+      position: absolute;
+      inset: 0;
+      padding: 0.85rem 1rem;
+      overflow: auto;
+      background: linear-gradient(180deg, rgba(11, 18, 36, 0.96), rgba(2, 6, 23, 0.96));
+      color: var(--text);
+    }
+
+    .canvas-overlay.hidden {
+      display: none;
+    }
+
+    .cmp-wrap h3, .quiz-wrap h3 {
+      font-family: Montserrat, sans-serif;
+      font-size: 0.92rem;
+      font-weight: 800;
+      margin-bottom: 0.65rem;
+      color: #fff;
+    }
+
+    .cmp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      line-height: 1.35;
+    }
+
+    .cmp-table th, .cmp-table td {
+      border: 1px solid #334155;
+      padding: 0.45rem 0.5rem;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .cmp-table th {
+      background: #1e293b;
+      font-family: Montserrat, sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .cmp-table th.col-v { color: var(--purple); }
+    .cmp-table th.col-w { color: var(--amber); }
+    .cmp-table th.col-t { color: #f87171; }
+    .cmp-table td.axis {
+      color: #94a3b8;
+      font-weight: 700;
+      width: 18%;
+      background: rgba(15, 23, 42, 0.65);
+    }
+    .cmp-table tbody tr:nth-child(odd) td:not(.axis) {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .quiz-block {
+      margin-bottom: 0.85rem;
+      padding: 0.7rem 0.75rem;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.55);
+    }
+
+    .quiz-q {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 0.55rem;
+      color: #e2e8f0;
+    }
+
+    .quiz-opts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .quiz-opts button {
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid #475569;
+      background: #1e293b;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .quiz-opts button[data-kind="virus"] { border-color: rgba(192, 132, 252, 0.55); }
+    .quiz-opts button[data-kind="worm"] { border-color: rgba(245, 158, 11, 0.55); }
+    .quiz-opts button[data-kind="trojan"] { border-color: rgba(239, 68, 68, 0.55); }
+
+    .quiz-opts button:hover { background: #273449; }
+    .quiz-opts button.correct {
+      background: var(--green-soft);
+      border-color: var(--green);
+      color: #86efac;
+    }
+    .quiz-opts button.wrong {
+      background: var(--red-soft);
+      border-color: var(--red);
+      color: #fca5a5;
+    }
+    .quiz-opts button:disabled { cursor: default; }
+    .quiz-opts button.dim { opacity: 0.45; }
+
+    .quiz-fb {
+      min-height: 1.2em;
+      margin-top: 0.45rem;
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+    .quiz-fb.ok { color: #86efac; }
+    .quiz-fb.no { color: #fca5a5; }
+
+    button.ctrl:focus-visible,
+    .step-btn:focus-visible,
+    .dot:focus-visible,
+    .quiz-opts button:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .pulse, .share-line, .net-line, .virus-hop, .file-infect,
+      .file-infect-late, .click-hand, .gift-mask, .backdoor-reveal,
+      .shield-glow, .packet, .move-virus-copy, .move-worm-1,
+      .move-worm-2, .move-worm-3, .move-worm-4 {
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <span class="tag">Modul 02 · Taksonomi Malware</span>
+        <h1>Virus vs Worm vs Trojan — Step by Step</h1>
+      </div>
+      <span class="step-badge" id="stepBadge">Langkah 1 / 8</span>
+    </header>
+
+    <div class="layout">
+      <aside class="panel timeline" aria-label="Daftar langkah">
+        <h2>Alur Konsep</h2>
+        <div id="stepList"></div>
+      </aside>
+
+      <section class="panel stage" aria-live="polite">
+        <div class="stage-head">
+          <h2 id="stageTitle">Tiga ancaman, satu kata</h2>
+          <span class="status-pill info" id="stageStatus">Tampak mirip</span>
+        </div>
+        <div class="canvas-wrap">
+          <svg class="scene" viewBox="0 0 820 360" role="img" aria-labelledby="stageTitle" aria-describedby="stepDesc">
+            <defs>
+              <filter id="glowCyan">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="glowPurple">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="glowAmber">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <!-- Step 1: hook -->
+            <g id="layerHook" class="layer visible">
+              <rect x="355" y="200" width="110" height="72" rx="10" fill="#1e293b" stroke="#64748b" stroke-width="1.6"/>
+              <rect x="368" y="212" width="84" height="42" rx="4" fill="#334155"/>
+              <text x="410" y="292" text-anchor="middle" fill="#94a3b8" font-size="11">Laptop pengguna</text>
+
+              <g>
+                <rect x="80" y="70" width="88" height="72" rx="12" fill="#1e293b" stroke="#64748b" stroke-width="1.6"/>
+                <text x="124" y="112" text-anchor="middle" fill="#e2e8f0" font-size="22" font-weight="800">?</text>
+                <text x="124" y="160" text-anchor="middle" fill="#94a3b8" font-size="11">Malware A</text>
+              </g>
+              <g>
+                <rect x="366" y="48" width="88" height="72" rx="12" fill="#1e293b" stroke="#64748b" stroke-width="1.6"/>
+                <text x="410" y="90" text-anchor="middle" fill="#e2e8f0" font-size="22" font-weight="800">?</text>
+                <text x="410" y="138" text-anchor="middle" fill="#94a3b8" font-size="11">Malware B</text>
+              </g>
+              <g>
+                <rect x="652" y="70" width="88" height="72" rx="12" fill="#1e293b" stroke="#64748b" stroke-width="1.6"/>
+                <text x="696" y="112" text-anchor="middle" fill="#e2e8f0" font-size="22" font-weight="800">?</text>
+                <text x="696" y="160" text-anchor="middle" fill="#94a3b8" font-size="11">Malware C</text>
+              </g>
+
+              <text x="410" y="330" text-anchor="middle" fill="#67e8f9" font-size="13" font-weight="700" class="pulse">Apa yang membedakan ketiganya?</text>
+            </g>
+
+            <!-- Step 2: virus -->
+            <g id="layerVirus" class="layer hidden">
+              <g class="click-hand">
+                <path d="M70 250 l8 -18 6 4 -2 20 10 2 2 8 -22 4 z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+                <text x="78" y="292" text-anchor="middle" fill="#67e8f9" font-size="9" font-weight="700">USER KLIK</text>
+              </g>
+
+              <rect class="file-infect" x="155" y="118" width="110" height="78" rx="8" fill="#1e293b" stroke="#64748b" stroke-width="2"/>
+              <text x="210" y="152" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="700">tugas.docx</text>
+              <text x="210" y="170" text-anchor="middle" fill="#94a3b8" font-size="9">FILE HOST</text>
+              <text x="210" y="214" text-anchor="middle" fill="#c084fc" font-size="10" font-weight="700">File 1 terinfeksi</text>
+
+              <g class="virus-hop" filter="url(#glowPurple)">
+                <circle cx="0" cy="0" r="16" fill="#6b21a8" stroke="#c084fc" stroke-width="2"/>
+                <circle cx="0" cy="-16" r="4" fill="#c084fc"/>
+                <circle cx="-14" cy="-4" r="4" fill="#c084fc"/>
+                <circle cx="14" cy="-4" r="4" fill="#c084fc"/>
+                <circle cx="-12" cy="12" r="4" fill="#c084fc"/>
+                <circle cx="12" cy="12" r="4" fill="#c084fc"/>
+                <text x="0" y="4" text-anchor="middle" fill="#f5d0fe" font-size="9" font-weight="800">V</text>
+              </g>
+
+              <path class="share-line" d="M270 155 H 545"/>
+              <text x="410" y="146" text-anchor="middle" fill="#c084fc" font-size="10" font-weight="700">dibagikan / disalin</text>
+              <circle r="5" class="packet packet-purple move-virus-copy"/>
+
+              <rect class="file-infect-late" x="555" y="118" width="110" height="78" rx="8" fill="#1e293b" stroke="#64748b" stroke-width="2"/>
+              <text x="610" y="152" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="700">salinan.docx</text>
+              <text x="610" y="170" text-anchor="middle" fill="#94a3b8" font-size="9">HOST BARU</text>
+              <text x="610" y="214" text-anchor="middle" fill="#c084fc" font-size="10" font-weight="700">File 2 ikut tertempel</text>
+
+              <text x="410" y="300" text-anchor="middle" fill="#e2e8f0" font-size="13" font-weight="700">Virus adalah parasit pada file</text>
+              <text x="410" y="322" text-anchor="middle" fill="#94a3b8" font-size="11">Perlu host + eksekusi atau berbagi oleh pengguna</text>
+            </g>
+
+            <!-- Step 3: worm -->
+            <g id="layerWorm" class="layer hidden">
+              <line class="net-line" x1="140" y1="90" x2="680" y2="90"/>
+              <line class="net-line" x1="680" y1="90" x2="680" y2="250"/>
+              <line class="net-line" x1="680" y1="250" x2="140" y2="250"/>
+              <line class="net-line" x1="140" y1="250" x2="140" y2="90"/>
+
+              <g id="wormPcs">
+                <g class="pc-node">
+                  <rect class="pc-disk" x="116" y="68" width="48" height="36" rx="6" fill="#1e293b" stroke="#64748b" stroke-width="1.6"/>
+                  <text class="pc-tag" x="140" y="122" text-anchor="middle" fill="#94a3b8" font-size="10">PC A</text>
+                </g>
+                <g class="pc-node">
+                  <rect class="pc-disk" x="656" y="68" width="48" height="36" rx="6" fill="#1e293b" stroke="#64748b" stroke-width="1.6"/>
+                  <text class="pc-tag" x="680" y="122" text-anchor="middle" fill="#94a3b8" font-size="10">PC B</text>
+                </g>
+                <g class="pc-node">
+                  <rect class="pc-disk" x="656" y="228" width="48" height="36" rx="6" fill="#1e293b" stroke="#64748b" stroke-width="1.6"/>
+                  <text class="pc-tag" x="680" y="282" text-anchor="middle" fill="#94a3b8" font-size="10">PC C</text>
+                </g>
+                <g class="pc-node">
+                  <rect class="pc-disk" x="116" y="228" width="48" height="36" rx="6" fill="#1e293b" stroke="#64748b" stroke-width="1.6"/>
+                  <text class="pc-tag" x="140" y="282" text-anchor="middle" fill="#94a3b8" font-size="10">PC D</text>
+                </g>
+              </g>
+
+              <ellipse rx="14" ry="7" class="packet packet-amber move-worm-1" filter="url(#glowAmber)"/>
+              <ellipse rx="14" ry="7" class="packet packet-amber move-worm-2"/>
+              <ellipse rx="14" ry="7" class="packet packet-amber move-worm-3"/>
+              <ellipse rx="14" ry="7" class="packet packet-amber move-worm-4"/>
+
+              <text x="410" y="175" text-anchor="middle" fill="#fcd34d" font-size="12" font-weight="800">WORM</text>
+              <text x="410" y="194" text-anchor="middle" fill="#94a3b8" font-size="10">tanpa file induk · tanpa klik user</text>
+
+              <text x="410" y="318" text-anchor="middle" fill="#e2e8f0" font-size="13" font-weight="700">Worm merayap sendiri di jaringan</text>
+              <text x="410" y="340" text-anchor="middle" fill="#94a3b8" font-size="11">Replikasi mandiri. Tidak ada tangan pengguna di gambar ini.</text>
+            </g>
+
+            <!-- Step 4: trojan -->
+            <g id="layerTrojan" class="layer hidden">
+              <g class="no-spread">
+                <rect x="70" y="70" width="46" height="34" rx="6" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+                <text x="93" y="122" text-anchor="middle" fill="#64748b" font-size="10">PC tetangga</text>
+                <text x="93" y="138" text-anchor="middle" fill="#64748b" font-size="9">tidak tertular</text>
+                <rect x="704" y="70" width="46" height="34" rx="6" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+                <text x="727" y="122" text-anchor="middle" fill="#64748b" font-size="10">PC tetangga</text>
+                <text x="727" y="138" text-anchor="middle" fill="#64748b" font-size="9">tidak tertular</text>
+              </g>
+
+              <g class="click-hand">
+                <path d="M250 250 l8 -18 6 4 -2 20 10 2 2 8 -22 4 z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+                <text x="258" y="292" text-anchor="middle" fill="#f87171" font-size="9" font-weight="700">USER INSTAL</text>
+              </g>
+
+              <g class="gift-mask">
+                <rect x="330" y="88" width="160" height="110" rx="12" fill="#14532d" stroke="#22c55e" stroke-width="2"/>
+                <rect x="400" y="88" width="20" height="110" fill="#22c55e" opacity="0.85"/>
+                <rect x="330" y="132" width="160" height="18" fill="#22c55e" opacity="0.85"/>
+                <text x="410" y="128" text-anchor="middle" fill="#dcfce7" font-size="12" font-weight="800">PDF Tool GRATIS</text>
+                <text x="410" y="175" text-anchor="middle" fill="#86efac" font-size="10">terlihat berguna</text>
+              </g>
+
+              <g class="backdoor-reveal">
+                <rect x="348" y="96" width="124" height="96" rx="8" fill="#450a0a" stroke="#ef4444" stroke-width="2"/>
+                <rect x="392" y="118" width="36" height="58" rx="4" fill="#7f1d1d" stroke="#fca5a5"/>
+                <circle cx="420" cy="148" r="4" fill="#fcd34d"/>
+                <text x="410" y="210" text-anchor="middle" fill="#fca5a5" font-size="11" font-weight="800">BACKDOOR</text>
+              </g>
+
+              <text x="410" y="318" text-anchor="middle" fill="#e2e8f0" font-size="13" font-weight="700">Trojan adalah hadiah palsu / kuda Troya</text>
+              <text x="410" y="340" text-anchor="middle" fill="#94a3b8" font-size="11">Tidak mereplikasi diri. Pintu masuk lewat tipuan pada manusia.</text>
+            </g>
+
+            <!-- Step 5: analogi -->
+            <g id="layerAnalogi" class="layer hidden">
+              <g>
+                <rect x="28" y="36" width="240" height="250" rx="14" fill="#1e1233" stroke="#c084fc" stroke-width="1.8"/>
+                <rect x="98" y="78" width="100" height="70" rx="8" fill="#1e293b" stroke="#c084fc" stroke-width="2"/>
+                <circle cx="148" cy="92" r="12" fill="#6b21a8" stroke="#c084fc"/>
+                <text x="148" y="168" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="700">file host</text>
+                <text x="148" y="210" text-anchor="middle" fill="#c084fc" font-size="16" font-weight="800">VIRUS</text>
+                <text x="148" y="236" text-anchor="middle" fill="#e9d5ff" font-size="12">Parasit pada file</text>
+                <text x="148" y="258" text-anchor="middle" fill="#94a3b8" font-size="10">menempel, lalu ikut tersalin</text>
+              </g>
+              <g>
+                <rect x="290" y="36" width="240" height="250" rx="14" fill="#1c1408" stroke="#f59e0b" stroke-width="1.8"/>
+                <rect x="328" y="88" width="36" height="26" rx="4" fill="#1e293b" stroke="#f59e0b"/>
+                <rect x="456" y="88" width="36" height="26" rx="4" fill="#1e293b" stroke="#f59e0b"/>
+                <line x1="364" y1="101" x2="456" y2="101" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5 4"/>
+                <ellipse cx="410" cy="101" rx="16" ry="7" fill="#f59e0b"/>
+                <text x="410" y="168" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="700">kabel jaringan</text>
+                <text x="410" y="210" text-anchor="middle" fill="#f59e0b" font-size="16" font-weight="800">WORM</text>
+                <text x="410" y="236" text-anchor="middle" fill="#fde68a" font-size="12">Merayap sendiri</text>
+                <text x="410" y="258" text-anchor="middle" fill="#94a3b8" font-size="10">tanpa klik, tanpa file induk</text>
+              </g>
+              <g>
+                <rect x="552" y="36" width="240" height="250" rx="14" fill="#2a0b0b" stroke="#ef4444" stroke-width="1.8"/>
+                <rect x="622" y="72" width="100" height="70" rx="8" fill="#14532d" stroke="#22c55e" stroke-width="2"/>
+                <rect x="664" y="72" width="16" height="70" fill="#22c55e"/>
+                <rect x="656" y="118" width="36" height="40" rx="3" fill="#7f1d1d" stroke="#fca5a5"/>
+                <text x="672" y="168" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="700">kado yang dibuka</text>
+                <text x="672" y="210" text-anchor="middle" fill="#f87171" font-size="16" font-weight="800">TROJAN</text>
+                <text x="672" y="236" text-anchor="middle" fill="#fecaca" font-size="12">Hadiah palsu</text>
+                <text x="672" y="258" text-anchor="middle" fill="#94a3b8" font-size="10">kuda Troya: pengguna yang mengundang</text>
+              </g>
+            </g>
+
+            <!-- Step 8: defense -->
+            <g id="layerDefense" class="layer hidden">
+              <path class="shield-glow" d="M410 70 L470 96 L470 160 L410 190 L350 160 L350 96 Z" fill="rgba(6,182,212,0.14)" stroke="#06b6d4" stroke-width="2" filter="url(#glowCyan)"/>
+              <rect x="382" y="112" width="56" height="40" rx="6" fill="#1e293b" stroke="#06b6d4"/>
+              <text x="410" y="212" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="700">Sistem yang dijaga</text>
+
+              <g>
+                <rect x="40" y="48" width="200" height="70" rx="10" fill="#0f172a" stroke="#334155"/>
+                <text x="140" y="78" text-anchor="middle" fill="#67e8f9" font-size="12" font-weight="800">Lampiran</text>
+                <text x="140" y="98" text-anchor="middle" fill="#94a3b8" font-size="10">Jangan jalankan yang mencurigakan</text>
+              </g>
+              <g>
+                <rect x="580" y="48" width="200" height="70" rx="10" fill="#0f172a" stroke="#334155"/>
+                <text x="680" y="78" text-anchor="middle" fill="#67e8f9" font-size="12" font-weight="800">Patch</text>
+                <text x="680" y="98" text-anchor="middle" fill="#94a3b8" font-size="10">Tutup celah yang sudah diketahui</text>
+              </g>
+              <g>
+                <rect x="40" y="240" width="200" height="70" rx="10" fill="#0f172a" stroke="#334155"/>
+                <text x="140" y="270" text-anchor="middle" fill="#67e8f9" font-size="12" font-weight="800">Least privilege</text>
+                <text x="140" y="290" text-anchor="middle" fill="#94a3b8" font-size="10">Hak akses sebatas tugas</text>
+              </g>
+              <g>
+                <rect x="580" y="240" width="200" height="70" rx="10" fill="#0f172a" stroke="#334155"/>
+                <text x="680" y="270" text-anchor="middle" fill="#67e8f9" font-size="12" font-weight="800">Sumber software</text>
+                <text x="680" y="290" text-anchor="middle" fill="#94a3b8" font-size="10">Instal hanya dari kanal resmi</text>
+              </g>
+              <text x="410" y="340" text-anchor="middle" fill="#94a3b8" font-size="11">Konseptual dan defensif. Bukan prosedur serangan.</text>
+            </g>
+          </svg>
+
+          <div id="matrixOverlay" class="canvas-overlay hidden" role="region" aria-label="Matriks perbandingan">
+            <div class="cmp-wrap">
+              <h3>Lima sumbu pembeda</h3>
+              <table class="cmp-table">
+                <thead>
+                  <tr>
+                    <th>Sumbu</th>
+                    <th class="col-v">Virus</th>
+                    <th class="col-w">Worm</th>
+                    <th class="col-t">Trojan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="axis">Host</td>
+                    <td>Perlu file atau program sah sebagai tempat menempel</td>
+                    <td>Tidak perlu file induk</td>
+                    <td>Tidak menempel sebagai parasit; menyamar sebagai program utuh</td>
+                  </tr>
+                  <tr>
+                    <td class="axis">Replikasi</td>
+                    <td>Menyalin diri saat file host dieksekusi atau dibagikan</td>
+                    <td>Mereplikasi diri sendiri lewat jaringan</td>
+                    <td>Tidak mereplikasi diri</td>
+                  </tr>
+                  <tr>
+                    <td class="axis">Penyebaran</td>
+                    <td>Ikut file infektif yang dibagikan pengguna</td>
+                    <td>Merambat antar mesin di jaringan</td>
+                    <td>Sampai ke target karena pengguna menginstal</td>
+                  </tr>
+                  <tr>
+                    <td class="axis">Interaksi user</td>
+                    <td>Wajib: file harus dijalankan atau disalin orang</td>
+                    <td>Tidak wajib untuk replikasi</td>
+                    <td>Wajib: manusia tertipu lalu menginstal</td>
+                  </tr>
+                  <tr>
+                    <td class="axis">Tujuan tipikal</td>
+                    <td>Menginfeksi file atau program lain</td>
+                    <td>Menyebar luas dengan cepat antar sistem</td>
+                    <td>Membuka backdoor / akses tersembunyi</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="quizOverlay" class="canvas-overlay hidden" role="region" aria-label="Checkpoint">
+            <div class="quiz-wrap">
+              <h3>Checkpoint: kunci perbedaan</h3>
+              <div class="quiz-block" data-quiz="0">
+                <p class="quiz-q">1. Mana yang dapat menyebar tanpa file host?</p>
+                <div class="quiz-opts">
+                  <button type="button" data-kind="virus" data-ok="0">Virus</button>
+                  <button type="button" data-kind="worm" data-ok="1">Worm</button>
+                  <button type="button" data-kind="trojan" data-ok="0">Trojan</button>
+                </div>
+                <p class="quiz-fb" aria-live="polite"></p>
+              </div>
+              <div class="quiz-block" data-quiz="1">
+                <p class="quiz-q">2. Mana yang menyamar sebagai aplikasi berguna?</p>
+                <div class="quiz-opts">
+                  <button type="button" data-kind="virus" data-ok="0">Virus</button>
+                  <button type="button" data-kind="worm" data-ok="0">Worm</button>
+                  <button type="button" data-kind="trojan" data-ok="1">Trojan</button>
+                </div>
+                <p class="quiz-fb" aria-live="polite"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel detail">
+        <h2>Penjelasan Langkah</h2>
+        <p id="stepDesc"></p>
+        <div class="def-box" id="termBox"></div>
+      </aside>
+    </div>
+
+    <div class="controls">
+      <div class="controls-left">
+        <button class="ctrl" id="btnPrev" type="button">&#8592; Sebelumnya</button>
+        <button class="ctrl primary" id="btnNext" type="button">Berikutnya &#8594;</button>
+        <button class="ctrl" id="btnReset" type="button">Reset</button>
+      </div>
+      <div class="progress" id="progressDots" aria-label="Progres langkah"></div>
+      <div class="controls-right">
+        <button class="ctrl" id="btnAuto" type="button">&#9654; Putar otomatis</button>
+      </div>
+    </div>
+
+    <footer>
+      <cite>[1]</cite> Cybersecurity Fundamentals, UNDIP Cyber Security Course Materials, Universitas Diponegoro, Semarang, Indonesia, 2026.
+      <cite>[2]</cite> Eight Most Common Cybersecurity Threats, UNDIP Cyber Security Course Materials, Universitas Diponegoro, Semarang, Indonesia, 2026.
+      <cite>[3]</cite> National Institute of Standards and Technology, "The NIST Cybersecurity Framework 2.0," NIST, Gaithersburg, MD, USA, 2024.
+    </footer>
+  </div>
+
+  <script>
+    const STEPS = [
+      {
+        title: "Tiga ancaman, satu kata",
+        status: { text: "Tampak mirip", cls: "info" },
+        desc: "Di kanvas, tiga kotak gelap sama saja: malware A, B, dan C. Di kelas, virus, worm, dan Trojan Horse sering dicampuradukkan karena ketiganya adalah perangkat lunak jahat. Yang membedakan bukan kesan berbahaya, melainkan cara hidup: menempel, merambat sendiri, atau menipu agar diundang masuk.",
+        terms: [
+          ["Malware", "Perangkat lunak jahat yang dirancang untuk merusak, mengganggu, atau mengakses sistem tanpa izin."],
+          ["Taksonomi", "Pengelompokan ancaman berdasarkan sifat perilaku, bukan berdasarkan kesan pertama."]
+        ],
+        show: ["layerHook"]
+      },
+      {
+        title: "Virus: parasit pada file",
+        status: { text: "Perlu host", cls: "info" },
+        desc: "Virus menempel pada file atau program sah yang sudah ada. Infeksi dan penyebaran terjadi setelah pengguna mengeksekusi file itu atau membagikan salinannya. Tanpa host dan tanpa aksi manusia, virus tidak berpindah.",
+        terms: [
+          ["Virus", "Malware yang menempel pada file atau program sah, lalu menyebar saat file itu dijalankan atau dibagikan."],
+          ["Host", "File atau program yang dijadikan tempat menempel virus."]
+        ],
+        show: ["layerVirus"],
+        replay: true
+      },
+      {
+        title: "Worm: mandiri di jaringan",
+        status: { text: "Tanpa campur tangan", cls: "warn" },
+        desc: "Worm mereplikasi dirinya secara mandiri melintasi jaringan. Ia tidak membutuhkan file induk dan tidak menunggu klik pengguna. Di animasi, empat komputer menyala bergiliran sementara tidak ada tangan yang menekan apa pun.",
+        terms: [
+          ["Worm", "Program berbahaya yang mereplikasi diri sendiri lewat jaringan tanpa file induk."],
+          ["Replikasi mandiri", "Penyebaran yang berjalan tanpa bantuan manusia untuk setiap salinan baru."]
+        ],
+        show: ["layerWorm"],
+        worming: true,
+        replay: true
+      },
+      {
+        title: "Trojan: hadiah palsu",
+        status: { text: "Tampak berguna", cls: "bad" },
+        desc: "Trojan Horse menyamar sebagai program yang tampaknya berguna, misalnya utilitas atau game, lalu menunggu pengguna sendiri yang menginstal. Ia tidak mereplikasi diri ke PC tetangga. Setelah dijalankan, yang terbuka adalah backdoor rahasia.",
+        terms: [
+          ["Trojan Horse", "Program yang menyamar sebagai aplikasi berguna, tetapi menjalankan aksi tersembunyi setelah diinstal."],
+          ["Social engineering", "Manipulasi manusia agar melakukan aksi yang menguntungkan penyerang."],
+          ["Backdoor", "Jalur akses tersembunyi ke sistem setelah program dijalankan."]
+        ],
+        show: ["layerTrojan"],
+        replay: true
+      },
+      {
+        title: "Tiga analogi",
+        status: { text: "Mudah diingat", cls: "ok" },
+        desc: "Kunci ingatan: virus seperti parasit pada file, worm seperti cacing yang merayap sendiri di kabel jaringan, Trojan seperti kuda Troya, hadiah yang tampak aman. Jika gambarnya tertukar, definisinya hampir pasti tertukar juga.",
+        terms: [
+          ["Parasit", "Hidup menempel pada inang, analogi virus pada file host."],
+          ["Kuda Troya", "Hadiah yang tampak aman, isinya ancaman yang diundang masuk oleh korban."]
+        ],
+        show: ["layerAnalogi"]
+      },
+      {
+        title: "Matriks pembeda",
+        status: { text: "Lima sumbu", cls: "ok" },
+        desc: "Bandingkan lima sumbu: host, replikasi, penyebaran, interaksi pengguna, dan tujuan tipikal. Rumus singkat: virus menempel pada file, worm mandiri di jaringan, Trojan menipu manusia dan tidak menyalin diri.",
+        terms: [
+          ["Interaksi pengguna", "Apakah manusia harus menjalankan, menyalin, atau menginstal sesuatu."],
+          ["Penyebaran", "Jalur pindah dari satu sistem ke sistem lain."]
+        ],
+        show: [],
+        overlay: "matrix"
+      },
+      {
+        title: "Checkpoint",
+        status: { text: "Uji konsep", cls: "warn" },
+        desc: "Dua soal untuk mengunci perbedaan yang paling sering tertukar. Klik Virus, Worm, atau Trojan di kanvas. Jika salah, kartu yang benar tetap ditandai hijau. Ini bukan ujian nilai.",
+        terms: [
+          ["Checkpoint", "Uji singkat di tengah materi, untuk mengunci konsep sebelum lanjut ke pertahanan."],
+          ["Umpan balik", "Setelah diklik, jawaban yang benar menyala hijau. Yang salah tetap tampak."]
+        ],
+        show: [],
+        overlay: "quiz"
+      },
+      {
+        title: "Pertahanan",
+        status: { text: "Human firewall", cls: "ok" },
+        desc: "Pertahanan di sini konseptual. Jangan jalankan lampiran mencurigakan, pasang patch secara rutin, terapkan least privilege, dan verifikasi sumber software sebelum menginstal. Email gateway membantu menyaring ancaman sebelum dibuka, tetapi keputusan terakhir tetap di manusia.",
+        terms: [
+          ["Patch", "Pembaruan yang menutup celah keamanan yang sudah diketahui."],
+          ["Least privilege", "Setiap akun atau proses hanya mendapat izin minimum yang diperlukan untuk bekerja."],
+          ["Verifikasi sumber", "Memastikan software berasal dari kanal resmi sebelum diinstal."]
+        ],
+        show: ["layerDefense"]
+      }
+    ];
+
+    const QUIZ_FB = [
+      {
+        ok: "Tepat. Worm tidak perlu file host. Ia mereplikasi diri lewat jaringan.",
+        no: "Belum tepat. Yang menyebar tanpa file host adalah worm."
+      },
+      {
+        ok: "Tepat. Trojan menyamar sebagai aplikasi berguna, lalu membuka backdoor.",
+        no: "Belum tepat. Yang menyamar sebagai aplikasi berguna adalah Trojan."
+      }
+    ];
+
+    let current = 0;
+    let autoTimer = null;
+
+    const els = {
+      stepList: document.getElementById("stepList"),
+      progressDots: document.getElementById("progressDots"),
+      stepBadge: document.getElementById("stepBadge"),
+      stageTitle: document.getElementById("stageTitle"),
+      stageStatus: document.getElementById("stageStatus"),
+      stepDesc: document.getElementById("stepDesc"),
+      termBox: document.getElementById("termBox"),
+      btnPrev: document.getElementById("btnPrev"),
+      btnNext: document.getElementById("btnNext"),
+      btnReset: document.getElementById("btnReset"),
+      btnAuto: document.getElementById("btnAuto"),
+      matrixOverlay: document.getElementById("matrixOverlay"),
+      quizOverlay: document.getElementById("quizOverlay")
+    };
+
+    const ALL_LAYERS = [
+      "layerHook", "layerVirus", "layerWorm", "layerTrojan",
+      "layerAnalogi", "layerDefense"
+    ];
+
+    function buildUI() {
+      STEPS.forEach((step, i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "step-btn";
+        btn.dataset.step = String(i);
+        btn.innerHTML = `
+          <span class="num">${i + 1}</span>
+          <span class="label">${step.title}</span>
+          <span class="hint">${step.status.text}</span>`;
+        btn.addEventListener("click", () => goTo(i));
+        els.stepList.appendChild(btn);
+
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "dot";
+        dot.title = step.title;
+        dot.setAttribute("aria-label", step.title);
+        dot.dataset.step = String(i);
+        dot.addEventListener("click", () => goTo(i));
+        els.progressDots.appendChild(dot);
+      });
+    }
+
+    function sceneSvg() {
+      return document.querySelector("svg.scene");
+    }
+
+    function replayScene() {
+      const svg = sceneSvg();
+      if (!svg) return;
+      const clone = svg.cloneNode(true);
+      svg.replaceWith(clone);
+    }
+
+    function setLayerVisibility(names) {
+      ALL_LAYERS.forEach(id => {
+        const node = document.getElementById(id);
+        if (!node) return;
+        node.classList.toggle("visible", names.includes(id));
+        node.classList.toggle("hidden", !names.includes(id));
+      });
+    }
+
+    function resetQuiz() {
+      document.querySelectorAll(".quiz-block").forEach(block => {
+        const fb = block.querySelector(".quiz-fb");
+        if (fb) {
+          fb.textContent = "";
+          fb.className = "quiz-fb";
+        }
+        block.querySelectorAll(".quiz-opts button").forEach(btn => {
+          btn.classList.remove("correct", "wrong", "dim");
+          btn.disabled = false;
+        });
+      });
+    }
+
+    function render(stepIndex) {
+      const step = STEPS[stepIndex];
+      current = stepIndex;
+
+      document.querySelectorAll(".step-btn").forEach((btn, i) => {
+        btn.classList.toggle("active", i === stepIndex);
+      });
+      document.querySelectorAll(".dot").forEach((dot, i) => {
+        dot.classList.toggle("active", i === stepIndex);
+      });
+
+      els.stepBadge.textContent = `Langkah ${stepIndex + 1} / ${STEPS.length}`;
+      els.stageTitle.textContent = step.title;
+      els.stageStatus.textContent = step.status.text;
+      els.stageStatus.className = `status-pill ${step.status.cls}`;
+      els.stepDesc.textContent = step.desc;
+      els.stepDesc.className = "fade-in";
+
+      els.termBox.innerHTML = step.terms.map(([term, def]) =>
+        `<div><strong>${term}</strong> — ${def}</div>`
+      ).join("");
+
+      if (step.replay) replayScene();
+
+      setLayerVisibility(step.show || []);
+
+      const wormLayer = document.getElementById("layerWorm");
+      if (wormLayer) wormLayer.classList.toggle("worming", !!step.worming);
+
+      const svg = sceneSvg();
+      const useOverlay = !!step.overlay;
+      if (svg) {
+        svg.classList.toggle("hidden", useOverlay);
+        svg.style.pointerEvents = useOverlay ? "none" : "auto";
+      }
+      els.matrixOverlay.classList.toggle("hidden", step.overlay !== "matrix");
+      els.quizOverlay.classList.toggle("hidden", step.overlay !== "quiz");
+      if (step.overlay === "quiz") resetQuiz();
+
+      els.btnPrev.disabled = stepIndex === 0;
+      els.btnNext.disabled = stepIndex === STEPS.length - 1;
+      els.btnPrev.setAttribute("aria-disabled", String(stepIndex === 0));
+      els.btnNext.setAttribute("aria-disabled", String(stepIndex === STEPS.length - 1));
+    }
+
+    function goTo(index) {
+      if (index < 0 || index >= STEPS.length) return;
+      render(index);
+    }
+
+    function next() { if (current < STEPS.length - 1) goTo(current + 1); else stopAuto(); }
+    function prev() { if (current > 0) goTo(current - 1); }
+
+    function stopAuto() {
+      if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+      }
+      els.btnAuto.textContent = "\u25B6 Putar otomatis";
+    }
+
+    function toggleAuto() {
+      if (autoTimer) {
+        stopAuto();
+        return;
+      }
+      els.btnAuto.textContent = "\u23F8 Jeda otomatis";
+      autoTimer = setInterval(() => {
+        if (current >= STEPS.length - 1) {
+          stopAuto();
+          return;
+        }
+        next();
+      }, 3500);
+    }
+
+    els.quizOverlay.addEventListener("click", (e) => {
+      const btn = e.target.closest(".quiz-opts button");
+      if (!btn || btn.disabled) return;
+      const block = btn.closest(".quiz-block");
+      const idx = Number(block.dataset.quiz);
+      const correct = btn.dataset.ok === "1";
+      const fb = block.querySelector(".quiz-fb");
+      block.querySelectorAll(".quiz-opts button").forEach(b => {
+        b.disabled = true;
+        if (b.dataset.ok === "1") b.classList.add("correct");
+        else b.classList.add("dim");
+      });
+      if (!correct) btn.classList.add("wrong");
+      fb.textContent = correct ? QUIZ_FB[idx].ok : QUIZ_FB[idx].no;
+      fb.className = "quiz-fb " + (correct ? "ok" : "no");
+    });
+
+    els.btnPrev.addEventListener("click", prev);
+    els.btnNext.addEventListener("click", next);
+    els.btnReset.addEventListener("click", () => { stopAuto(); goTo(0); });
+    els.btnAuto.addEventListener("click", toggleAuto);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "Home") goTo(0);
+      if (e.key === "End") goTo(STEPS.length - 1);
+    });
+
+    const startStep = (() => {
+      const n = Number(new URLSearchParams(location.search).get("step"));
+      return Number.isInteger(n) && n >= 0 && n < STEPS.length ? n : 0;
+    })();
+
+    buildUI();
+    render(startStep);
+  </script>
+</body>
+</html>

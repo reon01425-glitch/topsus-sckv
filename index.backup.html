@@ -1,0 +1,2023 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animasi Threat Modeling &amp; Defense in Depth — Fintech E-Wallet | Topik Khusus Sistem Cerdas/Komputasi Visual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: #0f172a;
+      --panel-2: #111827;
+      --line: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --cyan: #06b6d4;
+      --cyan-soft: rgba(6, 182, 212, 0.15);
+      --red: #ef4444;
+      --red-soft: rgba(239, 68, 68, 0.18);
+      --green: #22c55e;
+      --green-soft: rgba(34, 197, 94, 0.18);
+      --amber: #f59e0b;
+      --amber-soft: rgba(245, 158, 11, 0.18);
+      --indigo: #6366f1;
+      --indigo-soft: rgba(99, 102, 241, 0.18);
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: "Source Sans 3", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(6, 182, 212, 0.12), transparent 35%),
+        radial-gradient(circle at 85% 85%, rgba(239, 68, 68, 0.08), transparent 30%),
+        linear-gradient(160deg, #0f172a 0%, var(--bg) 55%, #020617 100%);
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 0.75rem;
+      top: -40px;
+      z-index: 20;
+      padding: 0.45rem 0.8rem;
+      background: var(--cyan);
+      color: #042f2e;
+      font-weight: 700;
+      border-radius: 8px;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0.75rem; }
+
+    .app {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 0.85rem clamp(0.75rem, 2.5vw, 1.75rem) 1.5rem;
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    /* HEADER */
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.85rem 1.25rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .brand .tag {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand .tag span.badge-undip {
+      background: rgba(6, 182, 212, 0.2);
+      color: #38bdf8;
+      padding: 0.1rem 0.45rem;
+      border-radius: 4px;
+      border: 1px solid rgba(6, 182, 212, 0.4);
+    }
+
+    .brand h1 {
+      font-family: Montserrat, sans-serif;
+      font-size: clamp(1.05rem, 2.2vw, 1.45rem);
+      font-weight: 800;
+      line-height: 1.25;
+      color: #fff;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+
+    /* SCENARIO TABS IN HEADER */
+    .scenario-nav {
+      display: flex;
+      gap: 0.35rem;
+      background: #090e1a;
+      padding: 0.25rem;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+    }
+
+    .scenario-btn {
+      font-family: Montserrat, sans-serif;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 0.4rem 0.75rem;
+      border-radius: 7px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .scenario-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
+    .scenario-btn.active {
+      background: var(--cyan);
+      color: #042f2e;
+      box-shadow: 0 2px 10px rgba(6, 182, 212, 0.3);
+    }
+
+    .step-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      background: var(--cyan-soft);
+      color: var(--cyan);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      white-space: nowrap;
+      font-family: Montserrat, sans-serif;
+    }
+
+    /* 3-COLUMN LAYOUT */
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr 320px;
+      gap: 0.85rem;
+      min-height: 540px;
+    }
+
+    @media (max-width: 1080px) {
+      .layout { grid-template-columns: 1fr; min-height: auto; }
+      .timeline { order: 2; }
+      .stage { order: 1; }
+      .detail { order: 3; }
+    }
+
+    .panel {
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    /* TIMELINE PANEL */
+    .timeline {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .timeline-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.35rem;
+    }
+
+    .timeline h2 {
+      font-family: Montserrat, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .scenario-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--amber);
+      font-family: Montserrat, sans-serif;
+    }
+
+    #stepList {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      overflow-y: auto;
+      max-height: 480px;
+      padding-right: 0.25rem;
+    }
+
+    .step-btn {
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 0.55rem;
+      align-items: start;
+      width: 100%;
+      text-align: left;
+      padding: 0.65rem 0.7rem;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    }
+
+    .step-btn:hover { background: rgba(255, 255, 255, 0.04); }
+    .step-btn:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
+    }
+    .step-btn.active {
+      background: var(--cyan-soft);
+      border-color: rgba(6, 182, 212, 0.45);
+    }
+
+    .step-btn .num {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 0.82rem;
+      background: #1e293b;
+      color: var(--muted);
+      font-family: Montserrat, sans-serif;
+      transition: all 0.2s;
+    }
+
+    .step-btn.active .num {
+      background: var(--cyan);
+      color: #042f2e;
+    }
+
+    .step-btn .label {
+      font-weight: 700;
+      font-size: 0.86rem;
+      line-height: 1.25;
+      color: #f1f5f9;
+    }
+
+    .step-btn .hint {
+      grid-column: 2;
+      margin-top: 0.1rem;
+      font-size: 0.74rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    /* STAGE PANEL (CENTER) */
+    .stage {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+
+    .stage-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .stage-head h2 {
+      font-family: Montserrat, sans-serif;
+      font-size: clamp(1rem, 2vw, 1.22rem);
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .status-pill {
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-family: Montserrat, sans-serif;
+      letter-spacing: 0.03em;
+    }
+
+    .status-pill.ok { background: var(--green-soft); color: var(--green); border: 1px solid rgba(34, 197, 94, 0.35); }
+    .status-pill.warn { background: var(--amber-soft); color: var(--amber); border: 1px solid rgba(245, 158, 11, 0.35); }
+    .status-pill.bad { background: var(--red-soft); color: var(--red); border: 1px solid rgba(239, 68, 68, 0.35); }
+
+    .canvas-wrap {
+      flex: 1;
+      min-height: 380px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #1e293b;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(180deg, #090e1a, #020617);
+      background-size: 28px 28px, 28px 28px, auto;
+      position: relative;
+    }
+
+    svg.scene {
+      width: 100%;
+      height: 100%;
+      min-height: 380px;
+      display: block;
+    }
+
+    /* DETAIL PANEL (RIGHT) */
+    .detail {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .detail h2 {
+      font-family: Montserrat, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .detail p {
+      line-height: 1.55;
+      color: #cbd5e1;
+      font-size: 0.92rem;
+    }
+
+    .def-box {
+      display: grid;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid #334155;
+    }
+
+    .def-box div {
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: #cbd5e1;
+    }
+
+    .def-box strong { color: var(--cyan); }
+
+    /* CHECKPOINT QUIZ CARD */
+    .quiz-overlay {
+      display: none;
+      margin-top: auto;
+      border-radius: 10px;
+      background: #111c35;
+      border: 1px solid #38bdf8;
+      padding: 0.75rem;
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.15);
+    }
+    .quiz-overlay.visible { display: block; }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+    .quiz-tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--cyan);
+      text-transform: uppercase;
+      font-family: Montserrat, sans-serif;
+    }
+    .quiz-q {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #f8fafc;
+      line-height: 1.35;
+      margin-bottom: 0.5rem;
+    }
+    .quiz-opts {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .quiz-opts button {
+      font-family: inherit;
+      font-size: 0.78rem;
+      text-align: left;
+      padding: 0.45rem 0.65rem;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      background: #0f172a;
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .quiz-opts button:hover { border-color: #64748b; background: #1e293b; color: #fff; }
+    .quiz-opts button.correct {
+      border-color: #22c55e;
+      background: rgba(34, 197, 94, 0.2);
+      color: #86efac;
+      font-weight: 700;
+    }
+    .quiz-opts button.wrong {
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+    }
+    .quiz-feedback {
+      min-height: 1.2em;
+      font-size: 0.76rem;
+      margin-top: 0.4rem;
+      line-height: 1.35;
+    }
+    .quiz-feedback.ok { color: #86efac; }
+    .quiz-feedback.bad { color: #fca5a5; }
+
+    /* CONTROLS BAR */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      backdrop-filter: blur(8px);
+    }
+
+    .controls-left, .controls-right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    button.ctrl {
+      font-family: inherit;
+      font-size: 0.84rem;
+      font-weight: 700;
+      padding: 0.5rem 0.9rem;
+      border-radius: 9px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    }
+
+    button.ctrl:hover { background: #273449; border-color: #475569; color: #fff; }
+    button.ctrl:active { transform: translateY(1px); }
+    button.ctrl:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+    button.ctrl.primary {
+      background: var(--cyan);
+      border-color: #0891b2;
+      color: #042f2e;
+    }
+    button.ctrl.primary:hover { background: #22d3ee; }
+    button.ctrl:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .progress {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #334155;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.2s;
+    }
+    .dot:hover { background: #475569; }
+    .dot.active {
+      background: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.25);
+      transform: scale(1.15);
+    }
+
+    /* FOOTER */
+    footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      padding: 0 0.5rem;
+    }
+
+    footer cite { font-style: normal; color: #64748b; }
+
+    /* SVG ANIMATION CLASSES */
+    .layer { transition: opacity 0.45s ease, transform 0.45s ease; }
+    .hidden { opacity: 0; pointer-events: none; display: none; }
+    .visible { opacity: 1; pointer-events: auto; display: block; }
+
+    .pulse { animation: pulse 1.4s ease-in-out infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 1; }
+    }
+
+    .fade-in { animation: fadeIn 0.45s ease both; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .shake { animation: shakeAnim 0.4s ease; }
+    @keyframes shakeAnim {
+      0%, 100% { transform: translate(0, 0); }
+      20% { transform: translate(-3px, 2px); }
+      40% { transform: translate(3px, -2px); }
+      60% { transform: translate(-2px, 1px); }
+      80% { transform: translate(2px, -1px); }
+    }
+
+    /* Overlay Drop Animation */
+    .overlay-drop { animation: dropAnim 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes dropAnim {
+      0% { opacity: 0; transform: translateY(-35px) scale(0.95); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Flow packet animation */
+    .flow-packet {
+      stroke-dasharray: 6 6;
+      animation: packetDash 1.2s linear infinite;
+    }
+    @keyframes packetDash {
+      to { stroke-dashoffset: -24; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#mainContent" class="skip-link">Lewati ke konten visualisasi</a>
+
+  <div class="app" id="mainContent">
+    <!-- HEADER -->
+    <header>
+      <div class="brand">
+        <div class="tag">
+          <span class="badge-undip">TOPIK KHUSUS SC/KV</span>
+          <span>Topik Khusus Sistem Cerdas/Komputasi Visual &bull; Kelompok Cipta dkk.</span>
+        </div>
+        <h1>Animasi Pertahanan E-Wallet FinTech — Step by Step</h1>
+      </div>
+
+      <div class="header-actions">
+        <!-- Scenario Switcher -->
+        <nav class="scenario-nav" aria-label="Pilih Vektor Serangan">
+          <button class="scenario-btn active" onclick="switchScenario(1)" id="sc-1">1. Malware Overlay</button>
+          <button class="scenario-btn" onclick="switchScenario(2)" id="sc-2">2. OTP Phishing &amp; ATO</button>
+          <button class="scenario-btn" onclick="switchScenario(3)" id="sc-3">3. API BOLA / IDOR</button>
+          <button class="scenario-btn" onclick="switchScenario(4)" id="sc-4">4. Backup 3-2-1 WORM</button>
+        </nav>
+        <span class="step-badge" id="stepBadge">Langkah 1 / 6</span>
+      </div>
+    </header>
+
+    <!-- MAIN 3-COLUMN LAYOUT -->
+    <div class="layout">
+      <!-- LEFT: TIMELINE LIST -->
+      <aside class="panel timeline" aria-label="Daftar langkah alur serangan">
+        <div class="timeline-head">
+          <h2>Alur Tahapan</h2>
+          <span class="scenario-tag" id="scenarioTag">VEKTOR MALWARE</span>
+        </div>
+        <div id="stepList"></div>
+      </aside>
+
+      <!-- CENTER: VISUAL STAGE & SVG CANVAS -->
+      <section class="panel stage" aria-live="polite">
+        <div class="stage-head">
+          <h2 id="stageTitle">Memuat Skenario...</h2>
+          <span class="status-pill warn" id="stageStatus">Menganalisis</span>
+        </div>
+
+        <div class="canvas-wrap">
+          <svg class="scene" viewBox="0 0 820 380" role="img" aria-labelledby="stageTitle">
+            <defs>
+              <linearGradient id="phoneGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#1e293b"/>
+                <stop offset="100%" stop-color="#0b1329"/>
+              </linearGradient>
+              <linearGradient id="screenGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#0f172a"/>
+                <stop offset="100%" stop-color="#020617"/>
+              </linearGradient>
+              <linearGradient id="walletHeaderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#0284c7"/>
+                <stop offset="100%" stop-color="#2563eb"/>
+              </linearGradient>
+              <linearGradient id="hackerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#3b0764"/>
+                <stop offset="100%" stop-color="#090514"/>
+              </linearGradient>
+              <linearGradient id="serverGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#1e293b"/>
+                <stop offset="100%" stop-color="#0f172a"/>
+              </linearGradient>
+              <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f59e0b"/>
+                <stop offset="100%" stop-color="#d97706"/>
+              </linearGradient>
+              <filter id="glowCyan">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="glowRed">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="glowGreen">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <!-- ======================================================= -->
+            <!-- DYNAMIC SVG LAYERS (Switched via JavaScript) -->
+            <!-- ======================================================= -->
+            <g id="svgContainer"></g>
+          </svg>
+        </div>
+      </section>
+
+      <!-- RIGHT: DETAILS & DEFINITIONS -->
+      <aside class="panel detail" aria-label="Penjelasan teknis dan konsep">
+        <h2>Penjelasan Arsitektur</h2>
+        <p id="stepDesc" class="fade-in">Penjelasan langkah akan muncul di sini.</p>
+
+        <div class="def-box" id="termBox"></div>
+
+        <!-- Checkpoint Quiz Box -->
+        <div class="quiz-overlay" id="quizOverlay">
+          <div class="quiz-header">
+            <span class="quiz-tag">&#9889; Checkpoint Evaluasi</span>
+          </div>
+          <div class="quiz-q" id="quizQuestion">Pertanyaan kuis?</div>
+          <div class="quiz-opts" id="quizOptions"></div>
+          <div class="quiz-feedback" id="quizFeedback"></div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- BOTTOM CONTROLS BAR -->
+    <div class="controls">
+      <div class="controls-left">
+        <button class="ctrl" id="btnPrev" aria-label="Langkah sebelumnya">&larr; Sebelumnya</button>
+        <button class="ctrl primary" id="btnAuto" aria-label="Putar otomatis alur">&#9654; Putar otomatis</button>
+        <button class="ctrl" id="btnNext" aria-label="Langkah berikutnya">Selanjutnya &rarr;</button>
+      </div>
+
+      <div class="progress" id="dotGroup" role="tablist" aria-label="Indikator langkah"></div>
+
+      <div class="controls-right">
+        <button class="ctrl" id="btnReset" aria-label="Reset alur ke awal">&#8634; Reset</button>
+      </div>
+    </div>
+
+    <!-- FOOTER CITATIONS -->
+    <footer>
+      <div>
+        <strong>Acuan Standar:</strong> POJK 11/POJK.03/2022 &bull; PADG BI No. 24/7/PADG/2022 (SPPur) &bull; PCI-DSS v4.0.1 Req 6 &bull; OWASP API Security 2023 &bull; NIST CSF 2.0 &bull; UU PDP No. 27/2022
+      </div>
+      <div>
+        <cite>Topik Khusus Sistem Cerdas/Komputasi Visual - Kelompok Cipta dkk.</cite>
+      </div>
+    </footer>
+  </div>
+
+  <!-- JAVASCRIPT ENGINE -->
+  <script>
+    // =========================================================================
+    // SCENARIOS DATA DEFINITIONS (FinTech Specific)
+    // =========================================================================
+    const SCENARIOS = {
+      1: {
+        tag: "VEKTOR 1 &bull; MALWARE OVERLAY",
+        steps: [
+          {
+            title: "Pengiriman APK Jahat (Social Delivery)",
+            status: { text: "Phishing Infiltrasi", cls: "warn" },
+            desc: "Penyerang mengirimkan file .APK berbahaya (misal: 'Undangan_Digital.apk' atau 'Resi_Paket_J&T.apk') melalui pesan WhatsApp. Korban terpedaya untuk menginstal file tersebut di luar Google Play Store (sideloading).",
+            terms: [
+              ["Vektor", "Social Engineering via Chat Apps"],
+              ["Tipe Malware", "Android Banking Trojan (Anatsa / Godfather family)"],
+              ["Tujuan Awal", "Mendapatkan foothold awal pada perangkat tanpa hak root"]
+            ],
+            svg: `
+              <!-- Adversary Box -->
+              <rect x="50" y="70" width="180" height="230" rx="12" fill="url(#hackerGrad)" stroke="#ef4444" stroke-width="1.5" filter="url(#glowRed)"/>
+              <text x="140" y="98" text-anchor="middle" fill="#fca5a5" font-size="11" font-weight="800">PENYERANG (C2 SERVER)</text>
+              <rect x="66" y="115" width="148" height="60" rx="6" fill="#030712" stroke="#334155"/>
+              <text x="76" y="133" fill="#38bdf8" font-size="9" font-family="monospace">&gt; blast_phishing.py</text>
+              <text x="76" y="150" fill="#f87171" font-size="9" font-family="monospace">[+] payload: Undangan.apk</text>
+              <text x="76" y="165" fill="#4ade80" font-size="8" font-family="monospace">[+] target: +62812xxxxxx</text>
+
+              <!-- Delivery Arrow -->
+              <path d="M 240 180 L 370 180" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="6 4" class="flow-packet"/>
+              <polygon points="370,175 382,180 370,185" fill="#f59e0b"/>
+              <text x="310" y="170" text-anchor="middle" fill="#fcd34d" font-size="10" font-weight="700">Kirim APK via WA</text>
+
+              <!-- Victim Smartphone -->
+              <rect x="400" y="40" width="200" height="300" rx="20" fill="url(#phoneGrad)" stroke="#38bdf8" stroke-width="2"/>
+              <rect x="412" y="60" width="176" height="260" rx="10" fill="url(#screenGrad)"/>
+              <!-- Screen Notch -->
+              <rect x="475" y="46" width="50" height="6" rx="3" fill="#334155"/>
+              <!-- WhatsApp Bubble Message -->
+              <rect x="424" y="90" width="152" height="75" rx="8" fill="#065f46" stroke="#059669"/>
+              <text x="434" y="110" fill="#a7f3d0" font-size="10" font-weight="700">Paket J&amp;T Express</text>
+              <text x="434" y="126" fill="#ecfdf5" font-size="9">Mohon cek resi paket Anda:</text>
+              <rect x="434" y="134" width="132" height="22" rx="4" fill="#047857"/>
+              <text x="444" y="149" fill="#fef08a" font-size="9" font-weight="700">&#128230; Lihat_Resi.apk (6.2 MB)</text>
+
+              <!-- Warning Banner -->
+              <rect x="424" y="180" width="152" height="50" rx="6" fill="#450a0a" stroke="#ef4444"/>
+              <text x="500" y="198" text-anchor="middle" fill="#fca5a5" font-size="9" font-weight="700">Install Unknown Apps?</text>
+              <rect x="436" y="206" width="60" height="16" rx="3" fill="#991b1b"/>
+              <text x="466" y="218" text-anchor="middle" fill="#fff" font-size="8">Batal</text>
+              <rect x="504" y="206" width="60" height="16" rx="3" fill="#ef4444"/>
+              <text x="534" y="218" text-anchor="middle" fill="#fff" font-size="8" font-weight="700">Izinkan</text>
+            `,
+            checkpoint: {
+              q: "Mengapa penyerang mendistribusikan malware dalam bentuk APK di luar Play Store?",
+              options: [
+                "Karena Google Play Store memiliki Google Play Protect yang otomatis memblokir signature malware perbankan umum.",
+                "Karena APK WhatsApp memiliki hak root secara default pada semua versi Android.",
+                "Karena sistem operasi Android melarang pengunduhan aplikasi dari browser."
+              ],
+              correct: 0,
+              feedback: "Tepat! Google Play Protect memeriksa hash dan signature APK. Distribusi lewat WhatsApp (sideloading) menghindari gerbang kurasi resmi."
+            }
+          },
+          {
+            title: "Penyalahgunaan Izin Accessibility Service",
+            status: { text: "Eskalasi Izin", cls: "bad" },
+            desc: "Setelah APK terpasang, trojan memunculkan pesan manipulatif agar pengguna mengaktifkan izin 'Layanan Aksesibilitas' (Accessibility Service). Begitu diaktifkan, trojan dapat membaca konten layar secara real-time dan meniru ketukan tombol.",
+            terms: [
+              ["Izin Kritis", "android.permission.BIND_ACCESSIBILITY_SERVICE"],
+              ["Kapabilitas Trojan", "Membaca teks di layar (UI tree), memotong SMS, merekam tombol (Keylogging)"],
+              ["Trik", "Menyamar sebagai pembaruan keamanan Android atau sertifikat pembaca dokumen"]
+            ],
+            svg: `
+              <!-- Victim Smartphone with Accessibility Menu -->
+              <rect x="300" y="40" width="220" height="300" rx="20" fill="url(#phoneGrad)" stroke="#ef4444" stroke-width="2" filter="url(#glowRed)"/>
+              <rect x="314" y="60" width="192" height="260" rx="10" fill="url(#screenGrad)"/>
+              <rect x="385" y="46" width="50" height="6" rx="3" fill="#334155"/>
+
+              <!-- Settings Header -->
+              <rect x="314" y="60" width="192" height="30" fill="#1e293b"/>
+              <text x="410" y="80" text-anchor="middle" fill="#f8fafc" font-size="10" font-weight="700">Pengaturan Aksesibilitas</text>
+
+              <!-- Malicious App Toggle Item -->
+              <rect x="322" y="100" width="176" height="70" rx="8" fill="#1e1b4b" stroke="#6366f1"/>
+              <text x="332" y="120" fill="#e0e7ff" font-size="9" font-weight="700">Layanan: Paket Resi Tracker</text>
+              <text x="332" y="136" fill="#94a3b8" font-size="8">Izinkan memantau operasi layar Anda?</text>
+              
+              <!-- Toggle switch ON -->
+              <rect x="445" y="142" width="45" height="20" rx="10" fill="#22c55e"/>
+              <circle cx="475" cy="152" r="8" fill="#fff"/>
+
+              <!-- Danger Alert Box below -->
+              <rect x="322" y="180" width="176" height="120" rx="8" fill="#450a0a" stroke="#ef4444" stroke-width="1.5" class="shake"/>
+              <text x="410" y="202" text-anchor="middle" fill="#fecaca" font-size="10" font-weight="800">&#9888; HAK AKSES SISTEM DIBERIKAN</text>
+              <text x="332" y="222" fill="#fca5a5" font-size="8">&bull; Membaca semua teks di layar</text>
+              <text x="332" y="238" fill="#fca5a5" font-size="8">&bull; Mengetahui penekanan tombol PIN</text>
+              <text x="332" y="254" fill="#fca5a5" font-size="8">&bull; Menutup jendela dialog keamanan</text>
+              <text x="332" y="270" fill="#fca5a5" font-size="8">&bull; Menjalankan gestur ketukan otomatis</text>
+              <rect x="350" y="278" width="120" height="16" rx="4" fill="#ef4444"/>
+              <text x="410" y="290" text-anchor="middle" fill="#fff" font-size="8" font-weight="700">MALWARE FULL CONTROL</text>
+            `,
+            checkpoint: {
+              q: "Mengapa Accessibility Service menjadi sasaran utama malware perbankan modern di Android?",
+              options: [
+                "Karena fitur ini memungkinkan aplikasi membaca UI Tree dan melakukan interaksi klik tanpa perlu izin root.",
+                "Karena Accessibility Service secara otomatis mematikan koneksi internet ponsel.",
+                "Karena izin ini hanya berlaku untuk aplikasi sistem Google."
+              ],
+              correct: 0,
+              feedback: "Benar! Accessibility Service dirancang untuk pengguna difabel, sehingga memiliki wewenang membaca isi layar dan mengeksekusi klik."
+            }
+          },
+          {
+            title: "Injeksi Jendela Overlay Palsu (Fake Overlay Window)",
+            status: { text: "Overlay Aktif", cls: "bad" },
+            desc: "Saat korban membuka aplikasi dompet digital asli (com.fintech.ewallet), trojan mendeteksi aktivitas tersebut dan langsung memunculkan jendela Webview/Overlay palsu yang identik 100% tepat di atas aplikasi asli.",
+            terms: [
+              ["Teknik Serangan", "Android Overlay Injection (SYSTEM_ALERT_WINDOW)"],
+              ["Tampilan Layar", "Meniru halaman login PIN e-wallet resmi dengan detail sempurna"],
+              ["Dampak", "Korban yakin bahwa ia sedang berinteraksi dengan aplikasi dompet digital resmi"]
+            ],
+            svg: `
+              <!-- Genuine App in Background -->
+              <rect x="220" y="60" width="180" height="270" rx="16" fill="url(#phoneGrad)" stroke="#475569" stroke-width="1.5" opacity="0.6"/>
+              <rect x="230" y="75" width="160" height="240" rx="8" fill="#0284c7"/>
+              <text x="310" y="110" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">E-WALLET ASLI</text>
+              <text x="310" y="130" text-anchor="middle" fill="#e0f2fe" font-size="8">Tertutup di Lapisan Bawah</text>
+
+              <!-- Injection Arrow -->
+              <path d="M 400 180 L 460 180" stroke="#ef4444" stroke-width="3" stroke-dasharray="6 3" class="flow-packet"/>
+              <polygon points="460,175 472,180 460,185" fill="#ef4444"/>
+              <text x="435" y="165" text-anchor="middle" fill="#f87171" font-size="9" font-weight="700">Injeksi Overlay</text>
+
+              <!-- Fake Overlay Window on Top -->
+              <rect x="480" y="40" width="220" height="300" rx="16" fill="url(#phoneGrad)" stroke="#ef4444" stroke-width="2.5" filter="url(#glowRed)" class="overlay-drop"/>
+              <rect x="492" y="55" width="196" height="270" rx="8" fill="#0f172a"/>
+              
+              <!-- Fake Header -->
+              <rect x="492" y="55" width="196" height="40" fill="url(#walletHeaderGrad)"/>
+              <text x="590" y="80" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">&#128091; Dompet Digital Pay</text>
+
+              <!-- Fake Input Form -->
+              <rect x="506" y="110" width="168" height="130" rx="8" fill="#1e293b" stroke="#f43f5e" stroke-dasharray="4 2"/>
+              <text x="590" y="130" text-anchor="middle" fill="#fca5a5" font-size="9" font-weight="700">MASUKKAN PIN TRANSAKSI</text>
+              
+              <!-- PIN Dots -->
+              <circle cx="550" cy="155" r="5" fill="#38bdf8"/>
+              <circle cx="566" cy="155" r="5" fill="#38bdf8"/>
+              <circle cx="582" cy="155" r="5" fill="#38bdf8"/>
+              <circle cx="598" cy="155" r="5" fill="#334155"/>
+              <circle cx="614" cy="155" r="5" fill="#334155"/>
+              <circle cx="630" cy="155" r="5" fill="#334155"/>
+
+              <!-- Fake Keypad -->
+              <rect x="525" y="180" width="30" height="20" rx="4" fill="#334155"/>
+              <rect x="565" y="180" width="30" height="20" rx="4" fill="#334155"/>
+              <rect x="605" y="180" width="30" height="20" rx="4" fill="#334155"/>
+              <text x="540" y="194" fill="#fff" font-size="8">1</text>
+              <text x="580" y="194" fill="#fff" font-size="8">2</text>
+              <text x="620" y="194" fill="#fff" font-size="8">3</text>
+
+              <rect x="506" y="255" width="168" height="35" rx="6" fill="#450a0a" stroke="#ef4444"/>
+              <text x="590" y="272" text-anchor="middle" fill="#fecaca" font-size="8" font-weight="700">&#9888; OVERLAY WINDOW PALSU</text>
+              <text x="590" y="284" text-anchor="middle" fill="#fca5a5" font-size="7">Input PIN diteruskan ke C2 Trojan</text>
+            `,
+            checkpoint: {
+              q: "Fitur keamanan bawaan sistem operasi manakah yang dapat mencegah injeksi overlay pada aplikasi Android?",
+              options: [
+                "Mengaktifkan WindowManager.LayoutParams.FLAG_SECURE pada activity aplikasi.",
+                "Mengaktifkan Bluetooth Low Energy pada perangkat.",
+                "Menonaktifkan fitur GPS lokasi."
+              ],
+              correct: 0,
+              feedback: "Tepat! FLAG_SECURE mencegah layar aplikasi direkam, di-screenshot, atau ditimpa jendela overlay yang tidak tepercaya."
+            }
+          },
+          {
+            title: "Pencurian PIN & Penyadapan SMS OTP",
+            status: { text: "Eksfiltrasi Data", cls: "bad" },
+            desc: "Korban memasukkan 6 digit PIN pada overlay palsu. Trojan mencatat setiap ketukan, mengekstrak SMS kode verifikasi (OTP) secara langsung via Accessibility Service / SMS Listener, dan mengirimkannya ke server C2 penyerang.",
+            terms: [
+              ["Data Tercuri", "Nomor ponsel, 6-digit PIN, Dynamic SMS OTP"],
+              ["Protokol Eksfiltrasi", "Koneksi HTTPS / WebSocket terenkripsi ke server Command & Control (C2)"],
+              ["Status Korban", "Sama sekali tidak menerima notifikasi bahwa SMS telah terbaca"]
+            ],
+            svg: `
+              <!-- Phone with compromised credentials -->
+              <rect x="150" y="50" width="190" height="280" rx="16" fill="url(#phoneGrad)" stroke="#ef4444" stroke-width="2"/>
+              <rect x="162" y="66" width="166" height="248" rx="8" fill="#0f172a"/>
+              
+              <rect x="172" y="80" width="146" height="40" rx="6" fill="#1e293b"/>
+              <text x="180" y="98" fill="#94a3b8" font-size="9">PIN Tertangkap:</text>
+              <text x="250" y="98" fill="#f87171" font-size="11" font-weight="800" font-family="monospace">849201</text>
+              <text x="180" y="112" fill="#4ade80" font-size="8">&#10003; Keylogger Recorded</text>
+
+              <!-- SMS Intercept Box -->
+              <rect x="172" y="130" width="146" height="60" rx="6" fill="#312e81" stroke="#6366f1"/>
+              <text x="180" y="146" fill="#c7d2fe" font-size="8" font-weight="700">SMS OTP Masuk (Bank BI):</text>
+              <text x="180" y="162" fill="#fef08a" font-size="10" font-weight="800" font-family="monospace">OTP: 583-912</text>
+              <text x="180" y="180" fill="#a5b4fc" font-size="8">&#9889; Intercepted via Accessibility</text>
+
+              <!-- Data Stream Arrow -->
+              <path d="M 350 180 L 520 180" stroke="#f43f5e" stroke-width="3" stroke-dasharray="6 4" class="flow-packet"/>
+              <polygon points="520,175 532,180 520,185" fill="#f43f5e"/>
+              <text x="435" y="165" text-anchor="middle" fill="#fda4af" font-size="9" font-weight="700">POST /api/exfiltrate</text>
+              <text x="435" y="195" text-anchor="middle" fill="#f43f5e" font-size="8" font-family="monospace">{pin: 849201, otp: 583912}</text>
+
+              <!-- C2 Server Box -->
+              <rect x="540" y="70" width="220" height="230" rx="12" fill="url(#hackerGrad)" stroke="#ef4444" stroke-width="2" filter="url(#glowRed)"/>
+              <text x="650" y="98" text-anchor="middle" fill="#fca5a5" font-size="11" font-weight="800">C2 ADVERSARY CONSOLE</text>
+              <rect x="555" y="115" width="190" height="150" rx="6" fill="#020617" stroke="#334155"/>
+              <text x="565" y="135" fill="#4ade80" font-size="8" font-family="monospace">[+] VICTIM SESSION CAPTURED!</text>
+              <text x="565" y="152" fill="#38bdf8" font-size="8" font-family="monospace">Target: +628129988xxxx</text>
+              <text x="565" y="169" fill="#f87171" font-size="8" font-family="monospace">PIN: 849201 [VERIFIED]</text>
+              <text x="565" y="186" fill="#facc15" font-size="8" font-family="monospace">SMS OTP: 583912 [VALID]</text>
+              <text x="565" y="210" fill="#a855f7" font-size="8" font-family="monospace">&gt; READY TO EXECUTE ATS DRAIN</text>
+            `,
+            checkpoint: {
+              q: "Mengapa verifikasi transaksi finansial yang semata-mata mengandalkan SMS OTP dianggap tidak lagi memadai?",
+              options: [
+                "Karena protokol SMS tidak terenkripsi end-to-end dan mudah disadap trojan melalui izin Accessibility atau SIM Swap.",
+                "Karena SMS OTP membutuhkan pulsa yang terlalu mahal bagi pengguna.",
+                "Karena SMS OTP hanya dapat digunakan pada jaringan 2G."
+              ],
+              correct: 0,
+              feedback: "Tepat! SMS OTP memiliki kerentanan mendasar terhadap SIM swap dan interception malware. Standar industri beralih ke Device Binding kriptografis."
+            }
+          },
+          {
+            title: "Eksekusi Mutasi Saldo Ilegal di Background (ATS)",
+            status: { text: "Mutasi Ilegal", cls: "bad" },
+            desc: "Bersenjatakan PIN dan OTP, modul Automated Transfer System (ATS) pada trojan langsung melakukan panggilan transfer otomatis di latar belakang ke rekening penampung (mule account) sebelum nasabah menyadari transaksi tersebut.",
+            terms: [
+              ["Modul Serangan", "Automated Transfer System (ATS)"],
+              ["Aliran Dana", "Saldo dompet nasabah didebet Rp 5.000.000 ke rekening penampung sindikat"],
+              ["Pelanggaran CIA", "Integritas Sistem Finansial (Unauthorized Mutation)"]
+            ],
+            svg: `
+              <!-- Victim Phone (Dimmed screen / Black screen) -->
+              <rect x="80" y="60" width="180" height="260" rx="16" fill="url(#phoneGrad)" stroke="#64748b" stroke-width="1.5"/>
+              <rect x="92" y="75" width="156" height="230" rx="8" fill="#020617"/>
+              <text x="170" y="150" text-anchor="middle" fill="#64748b" font-size="10">Layar Korban Gelap /</text>
+              <text x="170" y="168" text-anchor="middle" fill="#64748b" font-size="10">Fake Loading Screen</text>
+              <text x="170" y="200" text-anchor="middle" fill="#f43f5e" font-size="9" font-weight="700">ATS Menjalankan Klik</text>
+
+              <!-- Arrow to Core Banking API -->
+              <path d="M 270 170 L 400 170" stroke="#f43f5e" stroke-width="3" stroke-dasharray="6 3" class="flow-packet"/>
+              <polygon points="400,165 412,170 400,175" fill="#f43f5e"/>
+              <text x="340" y="155" text-anchor="middle" fill="#f87171" font-size="9" font-weight="700">Transfer Rp 5 Juta</text>
+
+              <!-- E-Wallet Core Banking Server -->
+              <rect x="420" y="50" width="180" height="270" rx="12" fill="url(#serverGrad)" stroke="#f59e0b" stroke-width="2"/>
+              <text x="510" y="80" text-anchor="middle" fill="#fde68a" font-size="11" font-weight="800">CORE LEDGER ENGINE</text>
+              
+              <!-- Ledger DB Transaction -->
+              <rect x="435" y="100" width="150" height="190" rx="8" fill="#020617" stroke="#334155"/>
+              <text x="445" y="125" fill="#38bdf8" font-size="8" font-family="monospace">DEBIT ACC: #100293</text>
+              <text x="445" y="140" fill="#f87171" font-size="9" font-weight="800" font-family="monospace">- Rp 5.000.000</text>
+              <text x="445" y="165" fill="#38bdf8" font-size="8" font-family="monospace">CREDIT ACC: #990182</text>
+              <text x="445" y="180" fill="#4ade80" font-size="9" font-weight="800" font-family="monospace">+ Rp 5.000.000 (Mule)</text>
+              <rect x="445" y="200" width="130" height="22" rx="4" fill="#78350f"/>
+              <text x="510" y="215" text-anchor="middle" fill="#fef08a" font-size="8" font-weight="700">STATUS: BERHASIL</text>
+              <text x="445" y="240" fill="#ef4444" font-size="8" font-weight="700">&#9888; FRAUD ESCAPED!</text>
+
+              <!-- Mule Bank Account Node -->
+              <rect x="630" y="110" width="150" height="150" rx="12" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5"/>
+              <text x="705" y="140" text-anchor="middle" fill="#c7d2fe" font-size="10" font-weight="800">REKENING PENAMPUNG</text>
+              <text x="705" y="165" text-anchor="middle" fill="#94a3b8" font-size="8">Sindikat Mules Network</text>
+              <text x="705" y="195" text-anchor="middle" fill="#4ade80" font-size="12" font-weight="800">Rp 5.000.000</text>
+              <text x="705" y="215" text-anchor="middle" fill="#fca5a5" font-size="8">Tarik Tunai via ATM</text>
+            `,
+            checkpoint: {
+              q: "Apakah dampak terbesar bagi institusi FinTech jika transaksi fraud seperti ini berhasil lolos secara masif?",
+              options: [
+                "Kehilangan reputasi, klaim ganti rugi nasabah (reimbursement), dan ancaman pembekuan lisensi oleh regulator (OJK / BI).",
+                "Membutuhkan penambahan kapasitas server cloud sebesar 200%.",
+                "Tidak ada dampak karena saldo nasabah diasuransikan oleh vendor internet."
+              ],
+              correct: 0,
+              feedback: "Tepat! Selain kerugian finansial, risiko regulatori POJK 11/2022 dan kehilangan kepercayaan nasabah adalah ancaman eksistensial bagi fintech."
+            }
+          },
+          {
+            title: "Mitigasi Defense in Depth: Mobile RASP & Accessibility Guard",
+            status: { text: "Terlindungi (RASP)", cls: "ok" },
+            desc: "Dengan menerapkan Defense in Depth: Mobile RASP aktif mendeteksi jendela overlay dan memblokirnya (FLAG_SECURE); mendeteksi aplikasi berbahaya dengan hak Accessibility dan langsung memutuskan sesi transaksi; serta mengikat sesi ke Hardware Secure Enclave.",
+            terms: [
+              ["Client RASP", "Runtime Application Self-Protection mendeteksi hooking Frida, root, dan overlay"],
+              ["Accessibility Guard", "Memutus sesi jika ada third-party app mencurigakan aktif"],
+              ["Regulasi Terpenuhi", "POJK 11/2022 & PADG BI SPPur (Manajemen Risiko Siber Finansial)"]
+            ],
+            svg: `
+              <!-- Protected Smartphone with Shield -->
+              <rect x="180" y="40" width="220" height="300" rx="20" fill="url(#phoneGrad)" stroke="#22c55e" stroke-width="2.5" filter="url(#glowGreen)"/>
+              <rect x="194" y="60" width="192" height="260" rx="10" fill="url(#screenGrad)"/>
+
+              <!-- Shield Badge on Phone -->
+              <circle cx="290" cy="120" r="32" fill="#064e3b" stroke="#22c55e" stroke-width="2"/>
+              <path d="M 280 120 L 288 128 L 302 114" stroke="#22c55e" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <text x="290" y="170" text-anchor="middle" fill="#86efac" font-size="11" font-weight="800">RASP ACTIVE SHIELD</text>
+
+              <!-- RASP Features List -->
+              <rect x="206" y="185" width="168" height="110" rx="6" fill="#064e3b" stroke="#059669"/>
+              <text x="216" y="205" fill="#a7f3d0" font-size="8">&bull; FLAG_SECURE: Overlay Blocked</text>
+              <text x="216" y="222" fill="#a7f3d0" font-size="8">&bull; Accessibility Hook: Terminated</text>
+              <text x="216" y="239" fill="#a7f3d0" font-size="8">&bull; Anti-Frida / Root Detection: OK</text>
+              <text x="216" y="256" fill="#a7f3d0" font-size="8">&bull; Secure Enclave KeyStore: Locked</text>
+              <text x="216" y="278" fill="#fef08a" font-size="8" font-weight="700">&#10003; Status: Sesi Aman Terisolasi</text>
+
+              <!-- Blocked Attack Icon -->
+              <rect x="470" y="80" width="280" height="220" rx="12" fill="#1e1b4b" stroke="#6366f1" stroke-width="1.5"/>
+              <text x="610" y="110" text-anchor="middle" fill="#c7d2fe" font-size="12" font-weight="800">HASIL AUDIT DEFENSE IN DEPTH</text>
+
+              <rect x="490" y="130" width="240" height="45" rx="6" fill="#450a0a" stroke="#ef4444"/>
+              <text x="500" y="150" fill="#fca5a5" font-size="9" font-weight="700">&#10007; Injeksi Overlay Trojan</text>
+              <text x="500" y="165" fill="#fecaca" font-size="8">Ditolak oleh OS (Window Flag Secure Active)</text>
+
+              <rect x="490" y="185" width="240" height="45" rx="6" fill="#064e3b" stroke="#22c55e"/>
+              <text x="500" y="205" fill="#86efac" font-size="9" font-weight="700">&#10003; Aksesibilitas Dibatasi</text>
+              <text x="500" y="220" fill="#a7f3d0" font-size="8">Aplikasi e-wallet auto-lock saat ada aplikasi tak dikenal</text>
+
+              <rect x="490" y="240" width="240" height="45" rx="6" fill="#0f172a" stroke="#38bdf8"/>
+              <text x="500" y="260" fill="#38bdf8" font-size="9" font-weight="700">&#10003; Integritas Saldo Terjaga 100%</text>
+              <text x="500" y="275" fill="#cbd5e1" font-size="8">Tidak ada dana yang bocor ke rekening penampung</text>
+            `,
+            checkpoint: {
+              q: "Mengapa kombinasi RASP pada client dan FDS di backend merupakan implementasi Defense in Depth yang ideal?",
+              options: [
+                "Karena jika kontrol di client diakali oleh hacker berpengalaman, FDS di backend tetap mampu memblokir transaksi berdasarkan perilaku anomali.",
+                "Karena RASP dan FDS adalah aplikasi yang sama dengan nama berbeda.",
+                "Karena bank tidak perlu lagi menerapkan autentikasi PIN."
+              ],
+              correct: 0,
+              feedback: "Tepat sekali! Prinsip Defense in Depth menuntut tidak adanya 'Single Point of Failure'. Lapisan client dan backend saling melindungi."
+            }
+          }
+        ]
+      },
+      2: {
+        tag: "VEKTOR 2 &bull; SOCIAL ENGINEERING & ATO",
+        steps: [
+          {
+            title: "Pengumpulan Data Nasabah (OSINT & Leaked DB)",
+            status: { text: "Reconnaissance", cls: "warn" },
+            desc: "Sindikat penipuan mengumpulkan data pribadi nasabah (nama lengkap, nomor HP, tanggal lahir) dari kebocoran data masa lalu atau media sosial untuk menyusun profil korban yang meyakinkan.",
+            terms: [
+              ["Vektor Awal", "OSINT & Credential Dumps"],
+              ["Data Target", "Nomor ponsel aktif, nama nasabah, riwayat penggunaan e-wallet"],
+              ["Tujuan", "Membangun kredibilitas palsu saat melakukan kontak telepon"]
+            ],
+            svg: `
+              <rect x="80" y="70" width="260" height="230" rx="12" fill="url(#hackerGrad)" stroke="#f59e0b" stroke-width="2"/>
+              <text x="210" y="100" text-anchor="middle" fill="#fde68a" font-size="11" font-weight="800">PROFILING DATABASE BOCOR</text>
+              <rect x="100" y="120" width="220" height="150" rx="6" fill="#020617" stroke="#334155"/>
+              <text x="110" y="145" fill="#38bdf8" font-size="9" font-family="monospace">&gt; query_leak --phone 08129988xxx</text>
+              <text x="110" y="165" fill="#a3e635" font-size="9" font-family="monospace">[+] Nama: Budi Santoso</text>
+              <text x="110" y="182" fill="#a3e635" font-size="9" font-family="monospace">[+] NIK: 337401xxxxxxxx</text>
+              <text x="110" y="199" fill="#a3e635" font-size="9" font-family="monospace">[+] Ibu Kandung: Siti xxxxx</text>
+              <text x="110" y="216" fill="#f87171" font-size="9" font-family="monospace">[+] E-Wallet: FinTech Pay (Active)</text>
+              <text x="110" y="245" fill="#fcd34d" font-size="9" font-family="monospace">&gt; GENERATE VISHING SCRIPT...</text>
+
+              <!-- Arrow -->
+              <path d="M 360 185 L 480 185" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="6 4" class="flow-packet"/>
+              <polygon points="480,180 492,185 480,190" fill="#f59e0b"/>
+
+              <!-- Victim Profile Card -->
+              <rect x="500" y="70" width="240" height="230" rx="12" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+              <circle cx="620" cy="120" r="30" fill="#1e293b" stroke="#64748b"/>
+              <text x="620" y="126" text-anchor="middle" fill="#fff" font-size="18">&#128100;</text>
+              <text x="620" y="170" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">Profil Target: Budi Santoso</text>
+              <text x="620" y="190" text-anchor="middle" fill="#94a3b8" font-size="9">Nasabah E-Wallet Reguler</text>
+              <rect x="520" y="210" width="200" height="65" rx="6" fill="#1e293b"/>
+              <text x="530" y="230" fill="#cbd5e1" font-size="8">&bull; Saldo Aktif: Rp 3.200.000</text>
+              <text x="530" y="246" fill="#cbd5e1" font-size="8">&bull; Limit Paylater: Rp 15.000.000</text>
+              <text x="530" y="262" fill="#f87171" font-size="8">&bull; Kerentanan: Panik jika ada fraud</text>
+            `,
+            checkpoint: {
+              q: "Mengapa informasi seperti NIK dan nama ibu kandung sangat berbahaya jika jatuh ke tangan pelaku kejahatan?",
+              options: [
+                "Karena data tersebut sering digunakan sebagai verifikasi identitas (Knowledge-Based Authentication) oleh call center atau gerai operator.",
+                "Karena data tersebut otomatis mengubah kata sandi akun email nasabah.",
+                "Karena data tersebut dapat mematikan sinyal telepon korban."
+              ],
+              correct: 0,
+              feedback: "Tepat! Knowledge-Based Authentication (KBA) adalah titik lemah yang dieksploitasi pelaku untuk lolos verifikasi CS atau gerai operator."
+            }
+          },
+          {
+            title: "Panggilan Vishing CS Palsu (Caller ID Spoofing)",
+            status: { text: "Manipulasi Vishing", cls: "bad" },
+            desc: "Penyerang menelepon korban menggunakan VoIP gateway dengan teknik Caller ID Spoofing sehingga layar ponsel korban menampilkan nomor resmi Call Center E-Wallet (misal: '1500xxx'). Pelaku menciptakan rasa panik akut.",
+            terms: [
+              ["Teknik Serangan", "Voice Phishing (Vishing) & Caller ID Spoofing"],
+              ["Skenario Panik", "'Akun Anda sedang dibobol dari luar kota! Sebutkan kode pembatalan untuk mengamankan!'"],
+              ["Psikologi Korban", "Cognitive overload — korban kehilangan kewaspadaan kritis"]
+            ],
+            svg: `
+              <!-- Attacker with VoIP headset -->
+              <rect x="60" y="70" width="220" height="230" rx="12" fill="url(#hackerGrad)" stroke="#ef4444" stroke-width="2"/>
+              <text x="170" y="100" text-anchor="middle" fill="#fca5a5" font-size="11" font-weight="800">SPOOFING CALL CENTER</text>
+              <rect x="80" y="120" width="180" height="150" rx="6" fill="#020617" stroke="#334155"/>
+              <text x="90" y="145" fill="#38bdf8" font-size="8" font-family="monospace">&gt; voip_spoof.exe</text>
+              <text x="90" y="165" fill="#f87171" font-size="8" font-family="monospace">Caller-ID: 1500-FINTECH</text>
+              <text x="90" y="185" fill="#e2e8f0" font-size="8">"Halo Pak Budi, kami dari</text>
+              <text x="90" y="200" fill="#e2e8f0" font-size="8">Pusat Keamanan E-Wallet...</text>
+              <text x="90" y="220" fill="#fcd34d" font-size="8">Ada transaksi Rp 5 Juta!</text>
+              <text x="90" y="245" fill="#ef4444" font-size="8" font-weight="700">Sebutkan KODE PEMBATALAN!"</text>
+
+              <!-- Sound wave / Call Line -->
+              <path d="M 290 185 L 470 185" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="6 3" class="flow-packet"/>
+              <polygon points="470,180 482,185 470,190" fill="#ef4444"/>
+              <text x="380" y="170" text-anchor="middle" fill="#f87171" font-size="9" font-weight="700">VoIP Call Masuk</text>
+
+              <!-- Victim Phone Ringing -->
+              <rect x="490" y="40" width="220" height="300" rx="20" fill="url(#phoneGrad)" stroke="#ef4444" stroke-width="2" class="shake"/>
+              <rect x="504" y="60" width="192" height="260" rx="10" fill="#020617"/>
+              <circle cx="600" cy="110" r="28" fill="#1e293b" stroke="#38bdf8"/>
+              <text x="600" y="117" text-anchor="middle" fill="#fff" font-size="16">&#128222;</text>
+              <text x="600" y="155" text-anchor="middle" fill="#f87171" font-size="11" font-weight="800">Panggilan Masuk:</text>
+              <text x="600" y="175" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="800">1500-FINTECH (Resmi)</text>
+              <rect x="520" y="200" width="160" height="40" rx="6" fill="#450a0a"/>
+              <text x="600" y="218" text-anchor="middle" fill="#fecaca" font-size="8">Spoofed Caller ID via SIP Gateway</text>
+              <text x="600" y="230" text-anchor="middle" fill="#fca5a5" font-size="8" font-weight="700">Korban Mengira Telepon Asli</text>
+
+              <circle cx="550" cy="275" r="18" fill="#ef4444"/>
+              <circle cx="650" cy="275" r="18" fill="#22c55e"/>
+            `,
+            checkpoint: {
+              q: "Apakah institusi perbankan atau dompet digital resmi pernah meminta kode OTP melalui telepon?",
+              options: [
+                "TIDAK PERNAH. Kode OTP adalah rahasia mutlak pemilik akun dan pihak resmi tidak akan pernah memintanya.",
+                "Pernah, jika transaksi bernilai di atas Rp 10.000.000.",
+                "Pernah, khusus untuk proses pembatalan transfer salah sasaran."
+              ],
+              correct: 0,
+              feedback: "Tepat! Pihak bank/fintech TIDAK PERNAH meminta kode OTP, PIN, atau password dalam kondisi apa pun."
+            }
+          },
+          {
+            title: "Penyerahan Kode OTP / Alternatif SIM Swap",
+            status: { text: "OTP Bocor", cls: "bad" },
+            desc: "Korban yang panik membacakan kode 6-digit OTP SMS kepada penelepon. Sebagai alternatif jika vishing gagal, penyerang mendatangi gerai operator seluler dengan KTP palsu untuk melakukan SIM Swap guna menduplikasi nomor HP.",
+            terms: [
+              ["Vektor Utama", "OTP Harvesting via Vishing Voice Call"],
+              ["Vektor Sekunder", "SIM Swap Fraud di gerai telekomunikasi"],
+              ["Dampak Kritis", "Penyerang memegang seluruh faktor autentikasi untuk login perangkat baru"]
+            ],
+            svg: `
+              <!-- Victim speaks OTP -->
+              <rect x="100" y="60" width="220" height="260" rx="16" fill="url(#phoneGrad)" stroke="#f59e0b" stroke-width="2"/>
+              <rect x="114" y="76" width="192" height="228" rx="8" fill="#0f172a"/>
+              <text x="210" y="110" text-anchor="middle" fill="#fde68a" font-size="11" font-weight="800">SMS MASUK KE KORBAN</text>
+              
+              <rect x="126" y="130" width="168" height="60" rx="6" fill="#1e293b" stroke="#f59e0b"/>
+              <text x="136" y="150" fill="#94a3b8" font-size="8">Kode OTP Registrasi HP Baru:</text>
+              <text x="210" y="172" text-anchor="middle" fill="#facc15" font-size="14" font-weight="800" font-family="monospace">718-492</text>
+
+              <!-- Speech Bubble from Victim -->
+              <rect x="126" y="205" width="168" height="75" rx="6" fill="#78350f"/>
+              <text x="210" y="225" text-anchor="middle" fill="#fef08a" font-size="8" font-weight="700">Korban Mendiktekan ke Telepon:</text>
+              <text x="210" y="245" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">"Kodenya 718-492, Pak!"</text>
+              <text x="210" y="265" text-anchor="middle" fill="#fecaca" font-size="7">(Mengira untuk batalkan fraud)</text>
+
+              <!-- Transfer Arrow -->
+              <path d="M 330 180 L 490 180" stroke="#ef4444" stroke-width="3" stroke-dasharray="6 3" class="flow-packet"/>
+              <polygon points="490,175 502,180 490,185" fill="#ef4444"/>
+              <text x="410" y="165" text-anchor="middle" fill="#f87171" font-size="9" font-weight="700">OTP Diberikan Sukarela</text>
+
+              <!-- Attacker Phone Registering -->
+              <rect x="510" y="50" width="220" height="280" rx="16" fill="url(#phoneGrad)" stroke="#ef4444" stroke-width="2.5" filter="url(#glowRed)"/>
+              <rect x="524" y="66" width="192" height="248" rx="8" fill="#020617"/>
+              <text x="620" y="98" text-anchor="middle" fill="#fca5a5" font-size="11" font-weight="800">HP BARU PENYERANG</text>
+              
+              <rect x="536" y="120" width="168" height="170" rx="6" fill="#1e1b4b" stroke="#6366f1"/>
+              <text x="620" y="145" text-anchor="middle" fill="#c7d2fe" font-size="9">Input OTP Verifikasi HP:</text>
+              <rect x="550" y="160" width="140" height="30" rx="4" fill="#030712" stroke="#22c55e"/>
+              <text x="620" y="180" text-anchor="middle" fill="#4ade80" font-size="13" font-weight="800" font-family="monospace">7 1 8 4 9 2</text>
+              <rect x="560" y="205" width="120" height="22" rx="4" fill="#22c55e"/>
+              <text x="620" y="220" text-anchor="middle" fill="#042f2e" font-size="9" font-weight="800">&#10003; LOGIN DEVICE SUKSES</text>
+              <text x="620" y="250" text-anchor="middle" fill="#f87171" font-size="8">Sesi HP Korban Terputus</text>
+            `,
+            checkpoint: {
+              q: "Mengapa teknik Social Engineering / Vishing sangat berbahaya dibanding eksploit software?",
+              options: [
+                "Karena mengeksploitasi kerentanan psikologis manusia (human factor) sehingga mampu mem-bypass firewall tercanggih sekalipun.",
+                "Karena membutuhkan koneksi serat optik berkecepatan tinggi.",
+                "Karena hanya bisa dicegah dengan mematikan server database perbankan."
+              ],
+              correct: 0,
+              feedback: "Tepat! Seperti dicatat dalam Verizon DBIR, 68% insiden melibatkan faktor manusia karena manusia dapat dimanipulasi tanpa perlu meretas sistem."
+            }
+          },
+          {
+            title: "Account Takeover (ATO) & Pengurasan Limit Paylater",
+            status: { text: "Akun Dikuasai", cls: "bad" },
+            desc: "Penyerang berhasil login di perangkat baru, mereset PIN transaksi, mengganti email notifikasi, lalu menguras seluruh saldo tunai dompet serta mencairkan limit pinjaman Paylater menjadi saldo tunai.",
+            terms: [
+              ["Status Akun", "Full Account Takeover (ATO)"],
+              ["Kerugian", "Saldo Tunai Rp 3.200.000 + Tagihan Paylater Rp 15.000.000"],
+              ["Dampak Konsumen", "Korban kehilangan akses dan menanggung beban utang kredit macet"]
+            ],
+            svg: `
+              <!-- Adversary device draining funds -->
+              <rect x="140" y="50" width="220" height="280" rx="16" fill="url(#phoneGrad)" stroke="#ef4444" stroke-width="2.5" filter="url(#glowRed)"/>
+              <rect x="154" y="66" width="192" height="248" rx="8" fill="#020617"/>
+              <text x="250" y="96" text-anchor="middle" fill="#fca5a5" font-size="11" font-weight="800">KONTROL PENUH AKUN</text>
+
+              <rect x="166" y="115" width="168" height="180" rx="8" fill="#1e1b4b" stroke="#f43f5e"/>
+              <text x="176" y="138" fill="#f87171" font-size="9" font-weight="700">1. Saldo Dompet:</text>
+              <text x="320" y="138" text-anchor="end" fill="#f87171" font-size="9" font-weight="800">Rp 0 (Habis)</text>
+
+              <text x="176" y="165" fill="#f87171" font-size="9" font-weight="700">2. Limit Paylater:</text>
+              <text x="320" y="165" text-anchor="end" fill="#f87171" font-size="9" font-weight="800">Rp 0 (Max Dicairkan)</text>
+
+              <rect x="176" y="180" width="148" height="30" rx="4" fill="#450a0a"/>
+              <text x="250" y="195" text-anchor="middle" fill="#fca5a5" font-size="8">Transfer ke Merchant Voucher</text>
+              <text x="250" y="206" text-anchor="middle" fill="#fca5a5" font-size="8" font-weight="700">Total Kerugian: Rp 18.200.000</text>
+
+              <rect x="176" y="225" width="148" height="25" rx="4" fill="#ef4444"/>
+              <text x="250" y="241" text-anchor="middle" fill="#fff" font-size="9" font-weight="800">&#128680; FRAUD SELESAI</text>
+
+              <!-- Arrow -->
+              <path d="M 370 190 L 470 190" stroke="#f43f5e" stroke-width="2.5" stroke-dasharray="6 3" class="flow-packet"/>
+              <polygon points="470,185 482,190 470,195" fill="#f43f5e"/>
+
+              <!-- Victim Panic State -->
+              <rect x="490" y="60" width="240" height="260" rx="12" fill="#0f172a" stroke="#64748b"/>
+              <circle cx="610" cy="115" r="30" fill="#1e293b" stroke="#ef4444"/>
+              <text x="610" y="122" text-anchor="middle" fill="#ef4444" font-size="20">&#9888;</text>
+              <text x="610" y="165" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">KORBAN TERKUNCI DARI AKUN</text>
+              
+              <rect x="510" y="185" width="200" height="110" rx="6" fill="#1e293b"/>
+              <text x="520" y="205" fill="#cbd5e1" font-size="8">&bull; Sesi ponsel asli otomatis logout</text>
+              <text x="520" y="222" fill="#cbd5e1" font-size="8">&bull; PIN telah diubah oleh penyerang</text>
+              <text x="520" y="239" fill="#cbd5e1" font-size="8">&bull; Notifikasi email diarahkan ke pelaku</text>
+              <text x="520" y="258" fill="#fca5a5" font-size="8">&bull; Tagihan paylater Rp 18,2 Juta muncul</text>
+              <text x="520" y="278" fill="#f87171" font-size="8" font-weight="700">&bull; Sengketa hukum konsumen UU PDP</text>
+            `,
+            checkpoint: {
+              q: "Mengapa pembatasan transfer dan verifikasi tambahan wajib diterapkan pada perangkat baru?",
+              options: [
+                "Untuk mencegah penarikan saldo instan pada kasus ATO dengan masa karantina (Cooling-off Period) selama 24 jam.",
+                "Agar kuota internet pengguna tidak cepat habis.",
+                "Karena perangkat baru membutuhkan pembaruan sistem operasi."
+              ],
+              correct: 0,
+              feedback: "Tepat! Standar BI mewajibkan cooling-off period atau limitasi transaksi pada perangkat yang baru terdaftar."
+            }
+          },
+          {
+            title: "Mitigasi: Push Auth, CS Data Masking & Cooling-off",
+            status: { text: "Terlindungi (Zero Trust)", cls: "ok" },
+            desc: "Pilar Tindakan & Teknologi memitigasi ATO: Notifikasi verifikasi push out-of-band ke perangkat lama; Cooling-off period 24 jam untuk transaksi besar di perangkat baru; data masking pada sistem CS; dan verifikasi biometrik liveness.",
+            terms: [
+              ["Out-of-Band Auth", "Persetujuan login perangkat baru wajib diklik di perangkat lama"],
+              ["Cooling-off Period", "Limit transaksi dibatasi maks Rp 500rb selama 24 jam pertama pada HP baru"],
+              ["CS Data Masking", "Staf Call Center hanya melihat 4 digit nomor HP terakhir (Least Privilege)"]
+            ],
+            svg: `
+              <!-- Protected Architecture Flow -->
+              <rect x="80" y="50" width="300" height="280" rx="12" fill="#064e3b" stroke="#22c55e" stroke-width="2" filter="url(#glowGreen)"/>
+              <text x="230" y="80" text-anchor="middle" fill="#86efac" font-size="12" font-weight="800">KONTROL PERTAHANAN MULTI-LAYER</text>
+
+              <rect x="100" y="105" width="260" height="48" rx="6" fill="#022c22" stroke="#059669"/>
+              <text x="110" y="125" fill="#a7f3d0" font-size="9" font-weight="700">&#10003; Out-of-Band Push Notification</text>
+              <text x="110" y="140" fill="#cbd5e1" font-size="8">Ponsel lama wajib approve: "Apakah ini Anda login di Jakarta?"</text>
+
+              <rect x="100" y="165" width="260" height="48" rx="6" fill="#022c22" stroke="#059669"/>
+              <text x="110" y="185" fill="#a7f3d0" font-size="9" font-weight="700">&#10003; Biometric Liveness Verification</text>
+              <text x="110" y="200" fill="#cbd5e1" font-size="8">FaceID 3D liveness aktif saat deteksi login gawai baru</text>
+
+              <rect x="100" y="225" width="260" height="48" rx="6" fill="#022c22" stroke="#059669"/>
+              <text x="110" y="245" fill="#a7f3d0" font-size="9" font-weight="700">&#10003; CS Masking &amp; Maker-Checker</text>
+              <text x="110" y="260" fill="#cbd5e1" font-size="8">Staf CS tidak bisa unblock akun tanpa persetujuan Supervisor</text>
+
+              <rect x="100" y="285" width="260" height="30" rx="4" fill="#065f46"/>
+              <text x="230" y="304" text-anchor="middle" fill="#fef08a" font-size="8" font-weight="700">&#10003; Kepatuhan POJK 11/2022 Pasal 24 Terpenuhi</text>
+
+              <!-- Attack Blocked Result -->
+              <rect x="420" y="80" width="340" height="220" rx="12" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+              <circle cx="590" cy="135" r="32" fill="#1e293b" stroke="#22c55e" stroke-width="2"/>
+              <text x="590" y="143" text-anchor="middle" fill="#22c55e" font-size="22">&#128737;</text>
+              <text x="590" y="185" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">SERANGAN VISHING GAGAL TOTAL</text>
+              <text x="590" y="205" text-anchor="middle" fill="#94a3b8" font-size="9">OTP Bocor Tidak Cukup untuk Menembus Akun</text>
+
+              <rect x="450" y="225" width="280" height="50" rx="6" fill="#1e1b4b"/>
+              <text x="590" y="245" text-anchor="middle" fill="#c7d2fe" font-size="8">Penyerang ditolak karena gagal lolos FaceID Liveness</text>
+              <text x="590" y="260" text-anchor="middle" fill="#4ade80" font-size="8" font-weight="700">Akun Dibekukan Sementara &bull; Dana Aman 100%</text>
+            `,
+            checkpoint: {
+              q: "Mengapa Data Masking pada sistem internal Customer Service sangat krusial dalam pertahanan FinTech?",
+              options: [
+                "Untuk mencegah staf internal atau agen outsourcing membocorkan data nasabah kepada sindikat kejahatan (Insider Threat).",
+                "Untuk menghemat pemakaian memori RAM pada komputer CS.",
+                "Agar tampilan monitor CS terlihat lebih sederhana."
+              ],
+              correct: 0,
+              feedback: "Tepat! Data Masking memastikan prinsip Least Privilege—staf CS hanya melihat informasi minimum yang diperlukan untuk melayani nasabah."
+            }
+          }
+        ]
+      },
+      3: {
+        tag: "VEKTOR 3 &bull; API BOLA / IDOR",
+        steps: [
+          {
+            title: "Intersepsi Endpoint Transaksi API (Burp Suite)",
+            status: { text: "Reconnaissance API", cls: "warn" },
+            desc: "Pengguna sah terdaftar ('User_A') menggunakan HTTP debugging proxy (Burp Suite) untuk mencegat dan menganalisis struktur request pemindahan saldo: POST /api/v1/wallet/transfer.",
+            terms: [
+              ["Vektor", "OWASP API Security #1:2023 - BOLA"],
+              ["Endpoint", "POST /api/v1/wallet/transfer"],
+              ["Kredensial", "Bearer JWT Token sah milik User_A (Role: Normal User)"]
+            ],
+            svg: `
+              <!-- Client App Intercept -->
+              <rect x="60" y="70" width="220" height="240" rx="12" fill="url(#serverGrad)" stroke="#38bdf8" stroke-width="1.5"/>
+              <text x="170" y="98" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="800">CLIENT APP (USER_A)</text>
+              <rect x="75" y="115" width="190" height="175" rx="6" fill="#020617" stroke="#334155"/>
+              <text x="85" y="138" fill="#94a3b8" font-size="8" font-family="monospace">Inisiasi Transfer Sah:</text>
+              <text x="85" y="155" fill="#cbd5e1" font-size="8" font-family="monospace">Dompet Asal: WAL-USER-A</text>
+              <text x="85" y="172" fill="#cbd5e1" font-size="8" font-family="monospace">Dompet Tujuan: WAL-MERCHANT</text>
+              <text x="85" y="189" fill="#cbd5e1" font-size="8" font-family="monospace">Nominal: Rp 50.000</text>
+              <rect x="85" y="210" width="170" height="60" rx="4" fill="#0f172a" stroke="#6366f1"/>
+              <text x="95" y="228" fill="#818cf8" font-size="8" font-family="monospace">Header: Authorization</text>
+              <text x="95" y="245" fill="#a5b4fc" font-size="7" font-family="monospace">Bearer eyJhbGciOi...[User_A]</text>
+
+              <!-- Proxy Intercept Box -->
+              <rect x="340" y="60" width="240" height="260" rx="12" fill="url(#hackerGrad)" stroke="#f59e0b" stroke-width="2" filter="url(#glowRed)"/>
+              <text x="460" y="90" text-anchor="middle" fill="#fde68a" font-size="11" font-weight="800">BURP SUITE PROXY (INTERCEPT ON)</text>
+              <rect x="355" y="108" width="210" height="195" rx="6" fill="#020617" stroke="#334155"/>
+              <text x="365" y="130" fill="#f87171" font-size="8" font-family="monospace">POST /api/v1/wallet/transfer HTTP/1.1</text>
+              <text x="365" y="146" fill="#38bdf8" font-size="8" font-family="monospace">Host: api.ewallet.fintech.id</text>
+              <text x="365" y="162" fill="#4ade80" font-size="8" font-family="monospace">Authorization: Bearer [User_A]</text>
+              <text x="365" y="185" fill="#cbd5e1" font-size="8" font-family="monospace">{</text>
+              <text x="375" y="202" fill="#facc15" font-size="8" font-family="monospace"> "source_wallet_id": "WAL-USER-A",</text>
+              <text x="375" y="219" fill="#cbd5e1" font-size="8" font-family="monospace"> "target_wallet_id": "WAL-REK-B",</text>
+              <text x="375" y="236" fill="#cbd5e1" font-size="8" font-family="monospace"> "amount": 50000</text>
+              <text x="365" y="253" fill="#cbd5e1" font-size="8" font-family="monospace">}</text>
+              <rect x="365" y="265" width="190" height="24" rx="4" fill="#78350f"/>
+              <text x="460" y="280" text-anchor="middle" fill="#fef08a" font-size="8" font-weight="700">SIAP DIMANIPULASI</text>
+
+              <!-- Connection lines -->
+              <path d="M 280 180 L 340 180" stroke="#38bdf8" stroke-width="2"/>
+            `,
+            checkpoint: {
+              q: "Mengapa token JWT sah milik User_A tetap diperlukan oleh penyerang dalam uji eksploitasi ini?",
+              options: [
+                "Untuk melewati lapisan autentikasi API Gateway agar request tidak ditolak dengan HTTP 401 Unauthorized.",
+                "Agar kuota transfer bank menjadi tak terbatas.",
+                "Karena JWT adalah protokol enkripsi data storage."
+              ],
+              correct: 0,
+              feedback: "Tepat! Penyerang membutuhkan token sah untuk menembus filter Autentikasi (401), sebelum mengeksploitasi celah Otorisasi Objek (BOLA)."
+            }
+          },
+          {
+            title: "Manipulasi Parameter Objek (Object ID Tampering)",
+            status: { text: "ID Tampering", cls: "bad" },
+            desc: "Penyerang mengganti parameter 'source_wallet_id' dari akun miliknya menjadi ID dompet milik nasabah lain yang menjadi korban ('WAL-VICTIM-99'), dan menaikkan nominal transaksi menjadi Rp 2.500.000.",
+            terms: [
+              ["Parameter Asli", "source_wallet_id: 'WAL-USER-A'"],
+              ["Parameter Diubah", "source_wallet_id: 'WAL-VICTIM-99'"],
+              ["Token Pengirim", "Tetap Bearer JWT milik User_A (Penyerang)"]
+            ],
+            svg: `
+              <rect x="180" y="60" width="460" height="260" rx="12" fill="url(#hackerGrad)" stroke="#ef4444" stroke-width="2" filter="url(#glowRed)"/>
+              <text x="410" y="90" text-anchor="middle" fill="#fca5a5" font-size="12" font-weight="800">TAMPERING REQUEST HTTP DI PROXY</text>
+
+              <rect x="200" y="110" width="420" height="190" rx="8" fill="#020617" stroke="#334155"/>
+              <text x="215" y="135" fill="#f87171" font-size="9" font-family="monospace">POST /api/v1/wallet/transfer HTTP/1.1</text>
+              <text x="215" y="152" fill="#38bdf8" font-size="9" font-family="monospace">Authorization: Bearer eyJhbGciOi... [TOKEN MILIK USER_A]</text>
+              
+              <!-- Tampered payload highlight -->
+              <rect x="215" y="165" width="390" height="100" rx="6" fill="#450a0a" stroke="#ef4444" stroke-width="1.5" class="shake"/>
+              <text x="225" y="185" fill="#fca5a5" font-size="9" font-family="monospace">{</text>
+              <text x="235" y="205" fill="#ef4444" font-size="10" font-weight="800" font-family="monospace">  "source_wallet_id": "WAL-VICTIM-99",  &lt;-- ID KORBAN DIPALSUKAN!</text>
+              <text x="235" y="225" fill="#4ade80" font-size="10" font-weight="800" font-family="monospace">  "target_wallet_id": "WAL-USER-A",     &lt;-- MASUK REKENING PENYERANG</text>
+              <text x="235" y="245" fill="#facc15" font-size="10" font-weight="800" font-family="monospace">  "amount": 2500000</text>
+              <text x="225" y="260" fill="#fca5a5" font-size="9" font-family="monospace">}</text>
+
+              <rect x="215" y="272" width="390" height="20" fill="#991b1b"/>
+              <text x="410" y="286" text-anchor="middle" fill="#fff" font-size="8" font-weight="700">&#9888; IDOR / BOLA PAYLOAD INJECTED &bull; MENGIRIM KE API GATEWAY</text>
+            `,
+            checkpoint: {
+              q: "Apa perbedaan paling mendasar antara Autentikasi dan Otorisasi dalam arsitektur API?",
+              options: [
+                "Autentikasi memverifikasi SIAPA Anda (identitas), sedangkan Otorisasi memverifikasi APA YANG BOLEH Anda akses (hak objek).",
+                "Autentikasi dilakukan di database, sedangkan otorisasi dilakukan di firewall.",
+                "Tidak ada perbedaan; keduanya adalah istilah yang sama."
+              ],
+              correct: 0,
+              feedback: "Tepat! BOLA terjadi ketika autentikasi berhasil (token sah), tetapi sistem lupa memverifikasi hak otorisasi atas objek dompet target."
+            }
+          },
+          {
+            title: "Celah Logika API Gateway & Backend Service",
+            status: { text: "AuthZ Bypass", cls: "bad" },
+            desc: "API Gateway memeriksa tanda tangan digital JWT User_A dan menyatakan token valid (Autentikasi Lolos). Namun, controller backend service gagal memverifikasi apakah subject pada JWT memiliki hak atas 'WAL-VICTIM-99'.",
+            terms: [
+              ["Celah Keamanan", "Missing Object-Level Ownership Verification"],
+              ["Kode Rentan", "walletRepository.debit(request.source_wallet_id) tanpa cek userId"],
+              ["Klasifikasi OWASP", "API1:2023 - Broken Object Level Authorization"]
+            ],
+            svg: `
+              <!-- API Gateway Box -->
+              <rect x="100" y="60" width="240" height="260" rx="12" fill="url(#serverGrad)" stroke="#f59e0b" stroke-width="2"/>
+              <text x="220" y="90" text-anchor="middle" fill="#fde68a" font-size="11" font-weight="800">API GATEWAY</text>
+              
+              <rect x="115" y="110" width="210" height="85" rx="6" fill="#064e3b" stroke="#22c55e"/>
+              <text x="125" y="130" fill="#86efac" font-size="9" font-weight="700">&#10003; Cek Autentikasi JWT</text>
+              <text x="125" y="148" fill="#a7f3d0" font-size="8">Signature: Valid &bull; Exp: Active</text>
+              <text x="125" y="165" fill="#a7f3d0" font-size="8">Subject: User_A (Authenticated)</text>
+              <text x="125" y="182" fill="#fef08a" font-size="8" font-weight="700">STATUS: 200 OK (Teruskan ke Service)</text>
+
+              <!-- Failed AuthZ in Gateway -->
+              <rect x="115" y="205" width="210" height="95" rx="6" fill="#450a0a" stroke="#ef4444"/>
+              <text x="125" y="225" fill="#fca5a5" font-size="9" font-weight="700">&#10007; Cek Otorisasi Objek (BOLA)</text>
+              <text x="125" y="242" fill="#fecaca" font-size="8">Apakah User_A pemilik WAL-VICTIM-99?</text>
+              <text x="125" y="260" fill="#f87171" font-size="9" font-weight="800">TIDAK DIPERIKSA! (LOGIC BUG)</text>
+              <text x="125" y="280" fill="#fca5a5" font-size="8">Request lolos ke TransferService</text>
+
+              <!-- Arrow -->
+              <path d="M 340 180 L 460 180" stroke="#ef4444" stroke-width="3" stroke-dasharray="6 3" class="flow-packet"/>
+              <polygon points="460,175 472,180 460,185" fill="#ef4444"/>
+              <text x="400" y="165" text-anchor="middle" fill="#f87171" font-size="9" font-weight="700">Request Lolos</text>
+
+              <!-- Backend Core Ledger -->
+              <rect x="480" y="60" width="260" height="260" rx="12" fill="url(#serverGrad)" stroke="#ef4444" stroke-width="2"/>
+              <text x="610" y="90" text-anchor="middle" fill="#fca5a5" font-size="11" font-weight="800">TRANSFER SERVICE &amp; LEDGER</text>
+              
+              <rect x="495" y="110" width="230" height="190" rx="6" fill="#020617" stroke="#334155"/>
+              <text x="505" y="135" fill="#f87171" font-size="8" font-family="monospace">// KODE RENTAN:</text>
+              <text x="505" y="152" fill="#cbd5e1" font-size="8" font-family="monospace">public void transfer(Request req) {</text>
+              <text x="515" y="170" fill="#f87171" font-size="8" font-family="monospace">  // Lupa cek kepemilikan dompet!</text>
+              <text x="515" y="188" fill="#facc15" font-size="8" font-family="monospace">  ledger.debit(req.sourceWalletId);</text>
+              <text x="515" y="206" fill="#4ade80" font-size="8" font-family="monospace">  ledger.credit(req.targetWalletId);</text>
+              <text x="505" y="224" fill="#cbd5e1" font-size="8" font-family="monospace">}</text>
+              <rect x="505" y="240" width="210" height="45" rx="4" fill="#450a0a" stroke="#ef4444"/>
+              <text x="610" y="258" text-anchor="middle" fill="#fecaca" font-size="8" font-weight="700">&#9888; CRITICAL VULNERABILITY</text>
+              <text x="610" y="272" text-anchor="middle" fill="#fca5a5" font-size="8">Saldo dipotong tanpa hak otorisasi</text>
+            `,
+            checkpoint: {
+              q: "Di lapisan manakah validasi otorisasi kepemilikan objek (Object-Level Authorization) harus dilakukan?",
+              options: [
+                "Pada level kode logika bisnis backend dan policy enforcement gateway (misal: OPA) sebelum mutasi dieksekusi.",
+                "Hanya pada browser client menggunakan JavaScript.",
+                "Hanya pada DNS router penyedia internet."
+              ],
+              correct: 0,
+              feedback: "Tepat! Validasi otorisasi wajib dilakukan di sisi server/backend karena input dari client tidak boleh dipercaya (Zero Trust)."
+            }
+          },
+          {
+            title: "Pencurian Saldo Lintas Akun Tanpa Persetujuan",
+            status: { text: "Saldo Terkuras", cls: "bad" },
+            desc: "Database core ledger memproses mutasi: Saldo korban 'WAL-VICTIM-99' terpotong Rp 2.500.000 dan berpindah ke dompet penyerang secara sah di mata sistem. Korban sama sekali tidak pernah melakukan transaksi.",
+            terms: [
+              ["Dampak", "Pencurian dana langsung antar-nasabah secara instan"],
+              ["Audit Trail", "Tercatat sebagai transaksi reguler yang sah karena JWT penyerang valid"],
+              ["Pelanggaran Regulasi", "PCI-DSS v4.0 Req 6.5.8 & Ancaman pembekuan lisensi Bank Indonesia"]
+            ],
+            svg: `
+              <!-- Double Entry Database Table -->
+              <rect x="140" y="60" width="540" height="260" rx="12" fill="url(#serverGrad)" stroke="#ef4444" stroke-width="2.5" filter="url(#glowRed)"/>
+              <text x="410" y="90" text-anchor="middle" fill="#fca5a5" font-size="12" font-weight="800">CORE LEDGER MUTATION TABLE (MUTASI SALDO ILEGAL)</text>
+
+              <rect x="160" y="110" width="500" height="190" rx="8" fill="#020617" stroke="#334155"/>
+              
+              <!-- Table Headers -->
+              <rect x="160" y="110" width="500" height="30" fill="#1e293b"/>
+              <text x="180" y="130" fill="#94a3b8" font-size="9" font-weight="700">WAKTU</text>
+              <text x="260" y="130" fill="#94a3b8" font-size="9" font-weight="700">WALLET ID</text>
+              <text x="370" y="130" fill="#94a3b8" font-size="9" font-weight="700">TIPE MUTASI</text>
+              <text x="480" y="130" fill="#94a3b8" font-size="9" font-weight="700">NOMINAL</text>
+              <text x="580" y="130" fill="#94a3b8" font-size="9" font-weight="700">STATUS</text>
+
+              <!-- Row 1: Victim debited -->
+              <rect x="165" y="145" width="490" height="35" rx="4" fill="#450a0a" stroke="#ef4444"/>
+              <text x="180" y="167" fill="#cbd5e1" font-size="8" font-family="monospace">14:02:18</text>
+              <text x="260" y="167" fill="#fca5a5" font-size="9" font-weight="800" font-family="monospace">WAL-VICTIM-99</text>
+              <text x="370" y="167" fill="#f87171" font-size="8" font-weight="700">DEBIT (TERPOTONG)</text>
+              <text x="480" y="167" fill="#ef4444" font-size="10" font-weight="800">- Rp 2.500.000</text>
+              <text x="580" y="167" fill="#f87171" font-size="8" font-weight="700">SUCCESS</text>
+
+              <!-- Row 2: Attacker credited -->
+              <rect x="165" y="185" width="490" height="35" rx="4" fill="#064e3b" stroke="#22c55e"/>
+              <text x="180" y="207" fill="#cbd5e1" font-size="8" font-family="monospace">14:02:18</text>
+              <text x="260" y="207" fill="#86efac" font-size="9" font-weight="800" font-family="monospace">WAL-USER-A (Attacker)</text>
+              <text x="370" y="207" fill="#4ade80" font-size="8" font-weight="700">KREDIT (MASUK)</text>
+              <text x="480" y="207" fill="#22c55e" font-size="10" font-weight="800">+ Rp 2.500.000</text>
+              <text x="580" y="207" fill="#86efac" font-size="8" font-weight="700">SUCCESS</text>
+
+              <!-- Bottom Alert -->
+              <rect x="165" y="230" width="490" height="55" rx="6" fill="#1e1b4b" stroke="#818cf8"/>
+              <text x="410" y="252" text-anchor="middle" fill="#c7d2fe" font-size="9" font-weight="700">&#9888; EKSPLOITASI BOLA BERHASIL</text>
+              <text x="410" y="270" text-anchor="middle" fill="#fca5a5" font-size="8">Penyerang dapat mengulang request ini dengan skrip untuk menguras ribuan dompet lain</text>
+            `,
+            checkpoint: {
+              q: "Mengapa serangan BOLA / IDOR sangat sulit dideteksi oleh Web Application Firewall (WAF) tradisional?",
+              options: [
+                "Karena trafiknya berupa request HTTP valid dengan token JWT sah dan format payload JSON yang benar tanpa ada signature SQL injection.",
+                "Karena WAF tidak mendukung protokol HTTPS.",
+                "Karena WAF hanya berfungsi untuk memblokir alamat email spam."
+              ],
+              correct: 0,
+              feedback: "Tepat! WAF standar mencari pola serangan signature (seperti ' OR 1=1). Serangan BOLA adalah celah logika bisnis yang membutuhkan pemahaman konteks otorisasi."
+            }
+          },
+          {
+            title: "Mitigasi: Open Policy Agent (OPA) & Fine-Grained Auth",
+            status: { text: "Terlindungi (OPA)", cls: "ok" },
+            desc: "Pilar Teknologi memitigasi BOLA: Menempatkan policy engine (Open Policy Agent - OPA) pada API Gateway untuk memvalidasi bahwa klaim subjek JWT identik dengan pemilik source_wallet_id di database; serta rate limiting 10 req/menit.",
+            terms: [
+              ["Kebijakan Rego", "allow { input.user_id == data.wallets[input.source_wallet_id].owner_id }"],
+              ["Penolakan", "HTTP 403 Forbidden otomatis + Alert instan ke SIEM SOC"],
+              ["Standar Industri", "OWASP API Security Top 10 Mitigasi API1:2023"]
+            ],
+            svg: `
+              <!-- Protected API Gateway with OPA -->
+              <rect x="80" y="50" width="300" height="280" rx="14" fill="url(#serverGrad)" stroke="#22c55e" stroke-width="2.5" filter="url(#glowGreen)"/>
+              <text x="230" y="80" text-anchor="middle" fill="#86efac" font-size="12" font-weight="800">API GATEWAY + OPA POLICY GATE</text>
+
+              <rect x="100" y="100" width="260" height="120" rx="8" fill="#022c22" stroke="#059669"/>
+              <text x="110" y="122" fill="#a7f3d0" font-size="9" font-weight="700">Open Policy Agent (Rego Engine):</text>
+              <rect x="110" y="132" width="240" height="80" rx="4" fill="#020617"/>
+              <text x="120" y="150" fill="#38bdf8" font-size="8" font-family="monospace">package fintech.authz</text>
+              <text x="120" y="167" fill="#facc15" font-size="8" font-family="monospace">default allow = false</text>
+              <text x="120" y="184" fill="#a3e635" font-size="8" font-family="monospace">allow {</text>
+              <text x="130" y="200" fill="#a3e635" font-size="8" font-family="monospace"> input.jwt.sub == input.wallet.owner</text>
+              <text x="120" y="210" fill="#a3e635" font-size="8" font-family="monospace">}</text>
+
+              <rect x="100" y="235" width="260" height="80" rx="8" fill="#450a0a" stroke="#ef4444"/>
+              <text x="110" y="255" fill="#fecaca" font-size="9" font-weight="700">&#10007; EVALUASI OPA: GAGAL (DENY)</text>
+              <text x="110" y="272" fill="#fca5a5" font-size="8">JWT.sub (User_A) != Owner(WAL-VICTIM-99)</text>
+              <text x="110" y="295" fill="#f87171" font-size="10" font-weight="800">RESPONSE: 403 FORBIDDEN</text>
+
+              <!-- Arrow blocked -->
+              <path d="M 390 180 L 460 180" stroke="#ef4444" stroke-width="3"/>
+              <line x1="430" y1="165" x2="450" y2="195" stroke="#ef4444" stroke-width="4"/>
+              <line x1="450" y1="165" x2="430" y2="195" stroke="#ef4444" stroke-width="4"/>
+
+              <!-- Core Ledger Unharmed -->
+              <rect x="470" y="60" width="280" height="260" rx="12" fill="url(#serverGrad)" stroke="#22c55e" stroke-width="1.5"/>
+              <text x="610" y="90" text-anchor="middle" fill="#86efac" font-size="11" font-weight="800">DATABASE SALDO AMAN</text>
+
+              <rect x="490" y="110" width="240" height="190" rx="6" fill="#020617" stroke="#334155"/>
+              <circle cx="610" cy="160" r="32" fill="#064e3b" stroke="#22c55e" stroke-width="2"/>
+              <text x="610" y="168" text-anchor="middle" fill="#22c55e" font-size="22">&#10003;</text>
+              <text x="610" y="215" text-anchor="middle" fill="#86efac" font-size="11" font-weight="800">Saldo Korban Tidak Berubah</text>
+              <text x="610" y="235" text-anchor="middle" fill="#cbd5e1" font-size="9">Percobaan transfer BOLA diblokir gateway</text>
+              
+              <rect x="505" y="255" width="210" height="30" rx="4" fill="#1e1b4b"/>
+              <text x="610" y="274" text-anchor="middle" fill="#c7d2fe" font-size="8">Security Event Terkirim ke SIEM SOC</text>
+            `,
+            checkpoint: {
+              q: "Apa keuntungan arsitektural memisahkan otorisasi menggunakan Policy Engine seperti Open Policy Agent (OPA)?",
+              options: [
+                "Aturan otorisasi dapat dikelola secara terpusat (Policy as Code) tanpa harus mengubah kode di setiap microservice.",
+                "Kecepatan transfer uang meningkat hingga 10 kali lipat.",
+                "Tidak perlu lagi menggunakan database finansial."
+              ],
+              correct: 0,
+              feedback: "Tepat! Policy-as-Code (OPA) memisahkan kebijakan keamanan dari kode bisnis, memudahkan audit kepatuhan PCI-DSS dan pembaruan aturan secara instan."
+            }
+          }
+        ]
+      },
+      4: {
+        tag: "KETAHANAN DATA &bull; SKEMA BACKUP 3-2-1",
+        steps: [
+          {
+            title: "Topologi Normal Skema Backup 3-2-1",
+            status: { text: "Operasional Normal", cls: "ok" },
+            desc: "Penerapan standar ketahanan data: 3 salinan data transaksi finansial, pada 2 media penyimpanan berbeda (SSD SAN on-premise + Cloud Object Storage), dan minimal 1 salinan off-site dengan proteksi Immutable WORM tahan ransomware.",
+            terms: [
+              ["Salinan 1 (Primary)", "Multi-AZ PostgreSQL Enterprise Cluster (NVMe SAN on-premise)"],
+              ["Salinan 2 (Local)", "Continuous Snapshot Appliance on-premise terpisah (RTO < 15m)"],
+              ["Salinan 3 (Off-Site)", "Disaster Recovery Center (DRC) > 50km dengan S3 Object Lock (WORM)"]
+            ],
+            svg: `
+              <!-- 3 Nodes Visualized -->
+              <!-- Node 1: Primary -->
+              <rect x="60" y="70" width="200" height="240" rx="12" fill="url(#serverGrad)" stroke="#22c55e" stroke-width="2"/>
+              <text x="160" y="98" text-anchor="middle" fill="#86efac" font-size="11" font-weight="800">1. PRIMARY DATABASE</text>
+              <rect x="75" y="115" width="170" height="175" rx="6" fill="#020617" stroke="#334155"/>
+              <text x="160" y="145" text-anchor="middle" fill="#38bdf8" font-size="10" font-weight="700">Produksi Aktif (DC Utama)</text>
+              <text x="85" y="175" fill="#cbd5e1" font-size="8">&bull; Media: NVMe SSD SAN</text>
+              <text x="85" y="195" fill="#cbd5e1" font-size="8">&bull; Enkripsi: AES-256 KMS</text>
+              <text x="85" y="215" fill="#cbd5e1" font-size="8">&bull; Transaksi: Real-time Live</text>
+              <rect x="85" y="245" width="150" height="24" rx="4" fill="#064e3b"/>
+              <text x="160" y="260" text-anchor="middle" fill="#86efac" font-size="8" font-weight="700">&#10003; STATUS: LIVE ACTIVE</text>
+
+              <!-- Node 2: Local Snapshot -->
+              <rect x="310" y="70" width="200" height="240" rx="12" fill="url(#serverGrad)" stroke="#38bdf8" stroke-width="2"/>
+              <text x="410" y="98" text-anchor="middle" fill="#7dd3fc" font-size="11" font-weight="800">2. LOCAL SNAPSHOT</text>
+              <rect x="325" y="115" width="170" height="175" rx="6" fill="#020617" stroke="#334155"/>
+              <text x="410" y="145" text-anchor="middle" fill="#38bdf8" font-size="10" font-weight="700">Appliance Cadangan Lokal</text>
+              <text x="335" y="175" fill="#cbd5e1" font-size="8">&bull; Media: Dedicated Backup Storage</text>
+              <text x="335" y="195" fill="#cbd5e1" font-size="8">&bull; Interval: Snapshot Tiap 15m</text>
+              <text x="335" y="215" fill="#cbd5e1" font-size="8">&bull; Akses: Terisolasi Jaringan</text>
+              <rect x="335" y="245" width="150" height="24" rx="4" fill="#0c4a6e"/>
+              <text x="410" y="260" text-anchor="middle" fill="#38bdf8" font-size="8" font-weight="700">&#10003; STATUS: SYNCED</text>
+
+              <!-- Node 3: Offsite WORM -->
+              <rect x="560" y="70" width="200" height="240" rx="12" fill="url(#serverGrad)" stroke="#f59e0b" stroke-width="2"/>
+              <text x="660" y="98" text-anchor="middle" fill="#fde68a" font-size="11" font-weight="800">3. OFFSITE IMMUTABLE</text>
+              <rect x="575" y="115" width="170" height="175" rx="6" fill="#020617" stroke="#334155"/>
+              <text x="660" y="145" text-anchor="middle" fill="#fde68a" font-size="10" font-weight="700">DRC Sekunder (> 50 km)</text>
+              <text x="585" y="175" fill="#cbd5e1" font-size="8">&bull; Media: Cloud Object (S3)</text>
+              <text x="585" y="195" fill="#cbd5e1" font-size="8">&bull; Kunci: WORM Lock Active</text>
+              <text x="585" y="215" fill="#cbd5e1" font-size="8">&bull; Retensi: 7 Tahun (POJK)</text>
+              <rect x="585" y="245" width="150" height="24" rx="4" fill="#78350f"/>
+              <text x="660" y="260" text-anchor="middle" fill="#fef08a" font-size="8" font-weight="700">&#128274; WORM IMMUTABLE</text>
+            `,
+            checkpoint: {
+              q: "Mengapa 2 media penyimpanan dalam skema 3-2-1 harus menggunakan teknologi yang berbeda?",
+              options: [
+                "Untuk mencegah 'Common-Mode Failure' di mana bug firmware atau cacat hardware vendor yang sama merusak semua salinan sekaligus.",
+                "Agar biaya tagihan listrik di data center menjadi lebih murah.",
+                "Karena peraturan perbankan mewajibkan penggunaan kaset pita magnetik."
+              ],
+              correct: 0,
+              feedback: "Tepat! Menggunakan 2 teknologi berbeda (misal NVMe SAN fisik dan Cloud Object Storage) mencegah kegagalan fatal serentak akibat cacat vendor yang sama."
+            }
+          },
+          {
+            title: "Serangan Destruktif Ransomware Melumpuhkan Primary DB",
+            status: { text: "Infeksi Ransomware", cls: "bad" },
+            desc: "Penyerang menyusup melalui kredensial terkompromi dan mengeksekusi payload ransomware. File database transaksi utama pada SAN terenkripsi dengan ekstensi .locked, menyebabkan downtime transaksi e-wallet.",
+            terms: [
+              ["Ancaman", "Double-Extortion Ransomware (BlackCat / LockBit variant)"],
+              ["Status Primary DB", "Terkunci dan tidak dapat diakses (Unusable)"],
+              ["Dampak Kritis", "Downtime layanan pembayaran QRIS dan transfer nasabah"]
+            ],
+            svg: `
+              <!-- Node 1: ENCRYPTED -->
+              <rect x="60" y="70" width="200" height="240" rx="12" fill="#450a0a" stroke="#ef4444" stroke-width="2.5" filter="url(#glowRed)" class="shake"/>
+              <text x="160" y="98" text-anchor="middle" fill="#fecaca" font-size="11" font-weight="800">1. PRIMARY DATABASE</text>
+              <rect x="75" y="115" width="170" height="175" rx="6" fill="#020617" stroke="#ef4444"/>
+              <text x="160" y="145" text-anchor="middle" fill="#f87171" font-size="14">&#128274;</text>
+              <text x="160" y="170" text-anchor="middle" fill="#fca5a5" font-size="10" font-weight="800">TERENKRIPSI TOTAL!</text>
+              <text x="85" y="195" fill="#f87171" font-size="8">&bull; ledger_db.mdf.locked</text>
+              <text x="85" y="215" fill="#f87171" font-size="8">&bull; wal_logs.bin.locked</text>
+              <rect x="85" y="245" width="150" height="24" rx="4" fill="#991b1b"/>
+              <text x="160" y="260" text-anchor="middle" fill="#fff" font-size="8" font-weight="800">&#9888; RANSOM NOTE POPUP</text>
+
+              <!-- Node 2: Isolated -->
+              <rect x="310" y="70" width="200" height="240" rx="12" fill="url(#serverGrad)" stroke="#f59e0b" stroke-width="2"/>
+              <text x="410" y="98" text-anchor="middle" fill="#fde68a" font-size="11" font-weight="800">2. LOCAL SNAPSHOT</text>
+              <rect x="325" y="115" width="170" height="175" rx="6" fill="#020617" stroke="#334155"/>
+              <text x="410" y="150" text-anchor="middle" fill="#fde68a" font-size="10" font-weight="700">Mencoba Serangan Lateral</text>
+              <text x="410" y="180" text-anchor="middle" fill="#94a3b8" font-size="8">Koneksi jaringan diputus otomatis</text>
+              <rect x="335" y="245" width="150" height="24" rx="4" fill="#78350f"/>
+              <text x="410" y="260" text-anchor="middle" fill="#fef08a" font-size="8" font-weight="700">ISOLATED SAFEGUARD</text>
+
+              <!-- Node 3: WORM untouched -->
+              <rect x="560" y="70" width="200" height="240" rx="12" fill="url(#serverGrad)" stroke="#22c55e" stroke-width="2"/>
+              <text x="660" y="98" text-anchor="middle" fill="#86efac" font-size="11" font-weight="800">3. OFFSITE IMMUTABLE</text>
+              <rect x="575" y="115" width="170" height="175" rx="6" fill="#020617" stroke="#334155"/>
+              <text x="660" y="150" text-anchor="middle" fill="#22c55e" font-size="20">&#128737;</text>
+              <text x="660" y="180" text-anchor="middle" fill="#86efac" font-size="10" font-weight="800">KEBAL SERANGAN</text>
+              <rect x="585" y="245" width="150" height="24" rx="4" fill="#064e3b"/>
+              <text x="660" y="260" text-anchor="middle" fill="#a7f3d0" font-size="8" font-weight="700">&#10003; ZERO INFECTION</text>
+            `,
+            checkpoint: {
+              q: "Apakah membayar tebusan kepada penyerang ransomware disarankan dalam tata kelola keamanan finansial?",
+              options: [
+                "TIDAK DISARANKAN. Tidak ada jaminan kunci dekripsi diberikan, mendanai kejahatan siber, dan melanggar sanksi regulasi.",
+                "Disarankan, karena lebih cepat daripada melakukan proses restore backup.",
+                "Disarankan jika tebusan di bawah Rp 1 miliar."
+              ],
+              correct: 0,
+              feedback: "Tepat! Standar industri (NIST, CISA, OJK) melarang pembayaran tebusan. Ketahanan sejati bertumpu pada kemampuan restore data yang independen."
+            }
+          },
+          {
+            title: "Penyerang Mencoba Menghapus Backup WORM (Gagal)",
+            status: { text: "WORM Blocked", cls: "ok" },
+            desc: "Penyerang yang memegang kredensial admin mencoba memanggil perintah hapus API (DeleteObject / Overwrite) pada salinan off-site cloud storage. Fitur S3 Object Lock (WORM) menolak perintah tersebut secara kriptografis.",
+            terms: [
+              ["Fitur Pertahanan", "Immutable WORM (Write Once, Read Many) Storage Lock"],
+              ["Respons Cloud", "HTTP 403 Access Denied (Object is Under Legal Hold / Retention Lock)"],
+              ["Integritas Data", "Salinan ledger transaksi keuangan 100% utuh dan tidak tersentuh"]
+            ],
+            svg: `
+              <!-- Adversary sending delete command -->
+              <rect x="80" y="70" width="240" height="240" rx="12" fill="url(#hackerGrad)" stroke="#ef4444" stroke-width="2"/>
+              <text x="200" y="98" text-anchor="middle" fill="#fca5a5" font-size="11" font-weight="800">PENYERANG MERETAS AKUN ADMIN</text>
+              <rect x="95" y="115" width="210" height="175" rx="6" fill="#020617" stroke="#334155"/>
+              <text x="105" y="140" fill="#f87171" font-size="8" font-family="monospace">&gt; aws s3 rm s3://fintech-worm-backup</text>
+              <text x="105" y="158" fill="#f87171" font-size="8" font-family="monospace">--recursive --force</text>
+              
+              <rect x="105" y="180" width="190" height="90" rx="6" fill="#450a0a" stroke="#ef4444"/>
+              <text x="200" y="205" text-anchor="middle" fill="#fecaca" font-size="9" font-weight="800">&#10007; ACCESS DENIED BY WORM LOCK</text>
+              <text x="200" y="225" text-anchor="middle" fill="#fca5a5" font-size="8">Error: ObjectLockConfigurationEnabled</text>
+              <text x="200" y="240" text-anchor="middle" fill="#fca5a5" font-size="8">Compliance Mode: Retention Until 2033</text>
+              <text x="200" y="258" text-anchor="middle" fill="#fff" font-size="8" font-weight="700">PENGHAPUSAN DITOLAK MUTLAK</text>
+
+              <!-- Block Shield -->
+              <path d="M 340 185 L 470 185" stroke="#22c55e" stroke-width="3"/>
+              <polygon points="460,180 472,185 460,190" fill="#22c55e"/>
+
+              <!-- Cloud Immutable WORM Vault -->
+              <rect x="490" y="60" width="260" height="260" rx="14" fill="url(#serverGrad)" stroke="#22c55e" stroke-width="2.5" filter="url(#glowGreen)"/>
+              <text x="620" y="90" text-anchor="middle" fill="#86efac" font-size="12" font-weight="800">IMMUTABLE CLOUD WORM VAULT</text>
+
+              <rect x="510" y="110" width="220" height="190" rx="8" fill="#022c22" stroke="#059669"/>
+              <circle cx="620" cy="155" r="30" fill="#064e3b" stroke="#f59e0b" stroke-width="2"/>
+              <text x="620" y="163" text-anchor="middle" fill="#fde68a" font-size="20">&#128274;</text>
+              <text x="620" y="205" text-anchor="middle" fill="#fef08a" font-size="10" font-weight="800">WORM COMPLIANCE LOCK</text>
+              <text x="620" y="225" text-anchor="middle" fill="#a7f3d0" font-size="8">Bahkan Akun Root Tidak Dapat Mengubah Data</text>
+              <rect x="525" y="245" width="190" height="35" rx="4" fill="#047857"/>
+              <text x="620" y="262" text-anchor="middle" fill="#fff" font-size="9" font-weight="800">&#10003; 100% DATA TERSEDIA UNTUK RESTORE</text>
+              <text x="620" y="274" text-anchor="middle" fill="#a7f3d0" font-size="7">RPO: 2.4 Menit Terakhir Terselamatkan</text>
+            `,
+            checkpoint: {
+              q: "Apa yang membedakan Immutable WORM Storage mode Compliance dibandingkan mode Governance?",
+              options: [
+                "Pada mode Compliance, tidak ada satupun akun (termasuk AWS Root Administrator) yang dapat menghapus atau mempersingkat masa retensi data.",
+                "Mode Compliance hanya berlaku untuk data teks tanpa gambar.",
+                "Mode Governance membutuhkan koneksi satelit."
+              ],
+              correct: 0,
+              feedback: "Tepat! Mode Compliance menjamin tidak ada 'backdoor' administrator sekalipun kredensial root dicuri oleh penyerang ransomware."
+            }
+          },
+          {
+            title: "Failover Bencana & Pemulihan Integritas Finansial (DRC Active)",
+            status: { text: "Sistem Pulih", cls: "ok" },
+            desc: "Tim Incident Response memicu prosedur Disaster Recovery Plan (DRP): Trafik sistem e-wallet diarahkan ke Disaster Recovery Center (DRC); data dipulihkan dari snapshot WORM; transaksi pulih dalam RTO 28 menit dan RPO 2,4 menit.",
+            terms: [
+              ["Target RPO Tercapai", "RPO Realisasi: 2,4 Menit (Di bawah batas toleransi regulasi < 5 Menit)"],
+              ["Target RTO Tercapai", "RTO Realisasi: 28 Menit (Jauh lebih cepat dari batas toleransi < 60 Menit)"],
+              ["Status Ledger", "Integritas saldo dan transaksi pembukuan e-wallet 100% konsisten"]
+            ],
+            svg: `
+              <!-- Failover Process Diagram -->
+              <rect x="60" y="50" width="700" height="280" rx="14" fill="url(#serverGrad)" stroke="#22c55e" stroke-width="2" filter="url(#glowGreen)"/>
+              <text x="410" y="80" text-anchor="middle" fill="#86efac" font-size="13" font-weight="800">&#10003; FAILOVER KE DISASTER RECOVERY CENTER (DRC) SUKSES</text>
+
+              <!-- Metrics Cards Inside -->
+              <rect x="90" y="105" width="180" height="120" rx="8" fill="#022c22" stroke="#059669"/>
+              <text x="180" y="130" text-anchor="middle" fill="#86efac" font-size="10" font-weight="700">RPO REALISASI</text>
+              <text x="180" y="165" text-anchor="middle" fill="#4ade80" font-size="22" font-weight="800">2.4 Menit</text>
+              <text x="180" y="195" text-anchor="middle" fill="#a7f3d0" font-size="8">SLA Regulasi: &lt; 5 Menit</text>
+              <rect x="105" y="205" width="150" height="15" rx="3" fill="#065f46"/>
+              <text x="180" y="216" text-anchor="middle" fill="#fef08a" font-size="8" font-weight="700">ZERO CRITICAL LOSS</text>
+
+              <rect x="290" y="105" width="180" height="120" rx="8" fill="#022c22" stroke="#059669"/>
+              <text x="380" y="130" text-anchor="middle" fill="#86efac" font-size="10" font-weight="700">RTO REALISASI</text>
+              <text x="380" y="165" text-anchor="middle" fill="#38bdf8" font-size="22" font-weight="800">28 Menit</text>
+              <text x="380" y="195" text-anchor="middle" fill="#a7f3d0" font-size="8">SLA Regulasi: &lt; 60 Menit</text>
+              <rect x="305" y="205" width="150" height="15" rx="3" fill="#0c4a6e"/>
+              <text x="380" y="216" text-anchor="middle" fill="#38bdf8" font-size="8" font-weight="700">FAST AUTOMATED FAILOVER</text>
+
+              <rect x="490" y="105" width="240" height="120" rx="8" fill="#1e1b4b" stroke="#6366f1"/>
+              <text x="610" y="130" text-anchor="middle" fill="#c7d2fe" font-size="10" font-weight="700">STATUS AUDIT PEMBUKUAN</text>
+              <text x="505" y="155" fill="#e0e7ff" font-size="8">&bull; Integritas Double-Entry: 100% Cocok</text>
+              <text x="505" y="172" fill="#e0e7ff" font-size="8">&bull; Kriptografi HSM: Master Key Safe</text>
+              <text x="505" y="189" fill="#e0e7ff" font-size="8">&bull; Layanan QRIS: Kembali Online</text>
+              <text x="505" y="206" fill="#e0e7ff" font-size="8">&bull; Laporan OJK/BI: Diserahkan &lt; 24h</text>
+
+              <!-- Bottom Bar -->
+              <rect x="90" y="245" width="640" height="60" rx="8" fill="#064e3b" stroke="#22c55e"/>
+              <text x="410" y="270" text-anchor="middle" fill="#fef08a" font-size="11" font-weight="800">KESIMPULAN RESILIENSI FINANSIAL:</text>
+              <text x="410" y="290" text-anchor="middle" fill="#fff" font-size="9">Skema Backup 3-2-1 dengan Immutable WORM berhasil meniadakan dampak pemerasan ransomware dan melindungi saldo publik.</text>
+            `,
+            checkpoint: {
+              q: "Berapa frekuensi minimum pengujian Disaster Recovery Plan (DR Drill) yang diwajibkan oleh POJK No. 11/POJK.03/2022 bagi sistem finansial?",
+              options: [
+                "Minimal 1 kali dalam 1 tahun secara komprehensif.",
+                "Minimal 1 kali dalam 10 tahun.",
+                "Tidak ada kewajiban pengujian jika backup sudah disimpan di cloud."
+              ],
+              correct: 0,
+              feedback: "Tepat! POJK 11/2022 mewajibkan pengujian pemulihan bencana (Disaster Recovery Drill) minimal 1 kali per tahun untuk memastikan RTO dan RPO tercapai."
+            }
+          }
+        ]
+      }
+    };
+
+    // =========================================================================
+    // APPLICATION STATE & CONTROLLER
+    // =========================================================================
+    let currentScenario = 1;
+    let currentStep = 0;
+    let autoTimer = null;
+
+    const els = {
+      stepBadge: document.getElementById("stepBadge"),
+      scenarioTag: document.getElementById("scenarioTag"),
+      stepList: document.getElementById("stepList"),
+      stageTitle: document.getElementById("stageTitle"),
+      stageStatus: document.getElementById("stageStatus"),
+      svgContainer: document.getElementById("svgContainer"),
+      stepDesc: document.getElementById("stepDesc"),
+      termBox: document.getElementById("termBox"),
+      quizOverlay: document.getElementById("quizOverlay"),
+      quizQuestion: document.getElementById("quizQuestion"),
+      quizOptions: document.getElementById("quizOptions"),
+      quizFeedback: document.getElementById("quizFeedback"),
+      btnPrev: document.getElementById("btnPrev"),
+      btnNext: document.getElementById("btnNext"),
+      btnAuto: document.getElementById("btnAuto"),
+      btnReset: document.getElementById("btnReset"),
+      dotGroup: document.getElementById("dotGroup")
+    };
+
+    function switchScenario(scId) {
+      stopAuto();
+      currentScenario = scId;
+      currentStep = 0;
+
+      // Update Nav Buttons
+      document.querySelectorAll(".scenario-btn").forEach((btn, idx) => {
+        btn.classList.toggle("active", idx + 1 === scId);
+      });
+
+      buildUI();
+      renderStep(0);
+    }
+
+    function buildUI() {
+      const scenario = SCENARIOS[currentScenario];
+      els.scenarioTag.innerHTML = scenario.tag;
+
+      // Build Step List Buttons
+      els.stepList.innerHTML = "";
+      scenario.steps.forEach((step, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "step-btn" + (idx === 0 ? " active" : "");
+        btn.setAttribute("aria-label", `Langkah ${idx + 1}: ${step.title}`);
+        btn.innerHTML = `
+          <span class="num">${idx + 1}</span>
+          <span class="label">${step.title}</span>
+          <span class="hint">${step.status.text}</span>
+        `;
+        btn.addEventListener("click", () => {
+          stopAuto();
+          goTo(idx);
+        });
+        els.stepList.appendChild(btn);
+      });
+
+      // Build Progress Dots
+      els.dotGroup.innerHTML = "";
+      scenario.steps.forEach((_, idx) => {
+        const dot = document.createElement("button");
+        dot.className = "dot" + (idx === 0 ? " active" : "");
+        dot.setAttribute("aria-label", `Pindah ke langkah ${idx + 1}`);
+        dot.addEventListener("click", () => {
+          stopAuto();
+          goTo(idx);
+        });
+        els.dotGroup.appendChild(dot);
+      });
+    }
+
+    function renderStep(idx) {
+      const scenario = SCENARIOS[currentScenario];
+      const step = scenario.steps[idx];
+      if (!step) return;
+
+      currentStep = idx;
+
+      // Update Badges & Titles
+      els.stepBadge.textContent = `Langkah ${idx + 1} / ${scenario.steps.length}`;
+      els.stageTitle.textContent = step.title;
+      els.stageStatus.textContent = step.status.text;
+      els.stageStatus.className = `status-pill ${step.status.cls}`;
+      els.stepDesc.textContent = step.desc;
+      els.stepDesc.className = "fade-in";
+
+      // Update Term Box
+      els.termBox.innerHTML = step.terms.map(([k, v]) => `
+        <div><strong>${k}</strong> &mdash; ${v}</div>
+      `).join("");
+
+      // Render Dynamic SVG
+      els.svgContainer.innerHTML = step.svg;
+
+      // Update Active Classes in Step List & Dots
+      document.querySelectorAll(".step-btn").forEach((btn, i) => {
+        btn.classList.toggle("active", i === idx);
+        if (i === idx) btn.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      });
+      document.querySelectorAll(".dot").forEach((dot, i) => {
+        dot.classList.toggle("active", i === idx);
+      });
+
+      // Handle Checkpoint Quiz
+      if (step.checkpoint) {
+        renderQuiz(step.checkpoint);
+        els.quizOverlay.classList.add("visible");
+      } else {
+        els.quizOverlay.classList.remove("visible");
+      }
+
+      // Update Prev / Next Buttons
+      els.btnPrev.disabled = idx === 0;
+      els.btnNext.disabled = idx === scenario.steps.length - 1;
+    }
+
+    function renderQuiz(cp) {
+      els.quizQuestion.textContent = cp.q;
+      els.quizFeedback.textContent = "";
+      els.quizFeedback.className = "quiz-feedback";
+      els.quizOptions.innerHTML = "";
+
+      cp.options.forEach((optText, optIdx) => {
+        const optBtn = document.createElement("button");
+        optBtn.textContent = optText;
+        optBtn.addEventListener("click", () => {
+          const isCorrect = optIdx === cp.correct;
+          Array.from(els.quizOptions.children).forEach((b, bIdx) => {
+            b.disabled = true;
+            if (bIdx === cp.correct) b.classList.add("correct");
+            else if (bIdx === optIdx) b.classList.add("wrong");
+          });
+
+          if (isCorrect) {
+            els.quizFeedback.textContent = `\u2714 ${cp.feedback}`;
+            els.quizFeedback.className = "quiz-feedback ok";
+          } else {
+            els.quizFeedback.textContent = "\u2716 Pilihan kurang tepat. Perhatikan konsep prinsip Defense in Depth.";
+            els.quizFeedback.className = "quiz-feedback bad";
+          }
+        });
+        els.quizOptions.appendChild(optBtn);
+      });
+    }
+
+    function goTo(idx) {
+      const scenario = SCENARIOS[currentScenario];
+      if (idx < 0 || idx >= scenario.steps.length) return;
+      renderStep(idx);
+    }
+
+    function next() {
+      const scenario = SCENARIOS[currentScenario];
+      if (currentStep < scenario.steps.length - 1) {
+        goTo(currentStep + 1);
+      } else {
+        stopAuto();
+      }
+    }
+
+    function prev() {
+      if (currentStep > 0) goTo(currentStep - 1);
+    }
+
+    function stopAuto() {
+      if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+      }
+      els.btnAuto.textContent = "\u25B6 Putar otomatis";
+    }
+
+    function toggleAuto() {
+      if (autoTimer) {
+        stopAuto();
+        return;
+      }
+      els.btnAuto.textContent = "\u23F8 Jeda otomatis";
+      autoTimer = setInterval(() => {
+        const scenario = SCENARIOS[currentScenario];
+        if (currentStep >= scenario.steps.length - 1) {
+          stopAuto();
+          return;
+        }
+        next();
+      }, 4000);
+    }
+
+    // Event Listeners
+    els.btnPrev.addEventListener("click", prev);
+    els.btnNext.addEventListener("click", next);
+    els.btnReset.addEventListener("click", () => {
+      stopAuto();
+      goTo(0);
+    });
+    els.btnAuto.addEventListener("click", toggleAuto);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "Home") goTo(0);
+      if (e.key === "End") goTo(SCENARIOS[currentScenario].steps.length - 1);
+    });
+
+    // Initialize
+    window.addEventListener("DOMContentLoaded", () => {
+      buildUI();
+      renderStep(0);
+    });
+  </script>
+</body>
+</html>

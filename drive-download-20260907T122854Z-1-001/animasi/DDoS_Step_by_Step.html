@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animasi Serangan DDoS — Step by Step | UNDIP Cyber Security</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: #0f172a;
+      --panel-2: #111827;
+      --line: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --cyan: #06b6d4;
+      --cyan-soft: rgba(6, 182, 212, 0.15);
+      --red: #ef4444;
+      --red-soft: rgba(239, 68, 68, 0.18);
+      --green: #22c55e;
+      --green-soft: rgba(34, 197, 94, 0.18);
+      --amber: #f59e0b;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: "Source Sans 3", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(6, 182, 212, 0.12), transparent 35%),
+        radial-gradient(circle at 85% 85%, rgba(239, 68, 68, 0.08), transparent 30%),
+        linear-gradient(160deg, #172554 0%, var(--bg) 55%, #020617 100%);
+    }
+
+    .app {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1rem clamp(1rem, 3vw, 2rem) 1.5rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .brand .tag {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .brand h1 {
+      font-family: Montserrat, sans-serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.55rem);
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .step-badge {
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.45rem 0.85rem;
+      border-radius: 999px;
+      background: var(--cyan-soft);
+      color: var(--cyan);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      white-space: nowrap;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 240px 1fr 300px;
+      gap: 1rem;
+      min-height: 520px;
+    }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; min-height: auto; }
+      .timeline { order: 2; }
+      .stage { order: 1; }
+      .detail { order: 3; }
+    }
+
+    .panel {
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .timeline {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .timeline h2 {
+      font-family: Montserrat, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .step-btn {
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 0.55rem;
+      align-items: start;
+      width: 100%;
+      text-align: left;
+      padding: 0.65rem 0.7rem;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    }
+
+    .step-btn:hover { background: rgba(255, 255, 255, 0.04); }
+    .step-btn.active {
+      background: var(--cyan-soft);
+      border-color: rgba(6, 182, 212, 0.45);
+    }
+
+    .step-btn .num {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 0.82rem;
+      background: #1e293b;
+      color: var(--muted);
+    }
+
+    .step-btn.active .num {
+      background: var(--cyan);
+      color: #042f2e;
+    }
+
+    .step-btn .label {
+      font-weight: 700;
+      font-size: 0.88rem;
+      line-height: 1.25;
+    }
+
+    .step-btn .hint {
+      grid-column: 2;
+      margin-top: -0.15rem;
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .stage {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+
+    .stage-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .stage-head h2 {
+      font-family: Montserrat, sans-serif;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .status-pill {
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+    }
+
+    .status-pill.ok { background: var(--green-soft); color: var(--green); }
+    .status-pill.warn { background: rgba(245, 158, 11, 0.18); color: var(--amber); }
+    .status-pill.bad { background: var(--red-soft); color: var(--red); }
+
+    .canvas-wrap {
+      flex: 1;
+      min-height: 340px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #1e293b;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(180deg, #0b1224, #020617);
+      background-size: 28px 28px, 28px 28px, auto;
+      position: relative;
+    }
+
+    svg.scene {
+      width: 100%;
+      height: 100%;
+      min-height: 340px;
+      display: block;
+    }
+
+    .detail {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .detail h2 {
+      font-family: Montserrat, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .detail p {
+      line-height: 1.55;
+      color: #cbd5e1;
+      font-size: 0.95rem;
+    }
+
+    .def-box {
+      display: grid;
+      gap: 0.55rem;
+      padding: 0.75rem;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid #334155;
+    }
+
+    .def-box div {
+      font-size: 0.84rem;
+      line-height: 1.45;
+      color: #cbd5e1;
+    }
+
+    .def-box strong { color: var(--cyan); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    .controls-left, .controls-right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    button.ctrl {
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 0.55rem 0.95rem;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    }
+
+    button.ctrl:hover { background: #273449; border-color: #475569; }
+    button.ctrl:active { transform: translateY(1px); }
+    button.ctrl.primary {
+      background: var(--cyan);
+      border-color: #0891b2;
+      color: #042f2e;
+    }
+    button.ctrl.primary:hover { background: #22d3ee; }
+    button.ctrl:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .progress {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #334155;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .dot.active { background: var(--cyan); box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.25); }
+
+    footer {
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.45;
+      padding: 0 0.25rem;
+    }
+
+    footer cite { font-style: normal; color: #64748b; }
+
+    /* SVG animation states */
+    .layer { transition: opacity 0.45s ease; }
+    .hidden { opacity: 0; pointer-events: none; }
+    .visible { opacity: 1; }
+
+    .pulse { animation: pulse 1.4s ease-in-out infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 1; }
+    }
+
+    .traffic-green { stroke: var(--green); }
+    .traffic-red { stroke: var(--red); }
+
+    .packet {
+      stroke-width: 2.5;
+      stroke-linecap: round;
+    }
+
+    .packet-req { fill: #22c55e; }
+    .packet-res { fill: #06b6d4; }
+    .packet-red { fill: #ef4444; }
+
+    /* User 1 (kiri) ↔ Server */
+    .move-u1-req {
+      offset-path: path("M 118 187 Q 270 130 388 190");
+      animation: movePacket 2.4s linear infinite;
+    }
+    .move-u1-res {
+      offset-path: path("M 388 190 Q 270 250 118 187");
+      animation: movePacket 2.4s linear infinite;
+      animation-delay: 1.2s;
+    }
+
+    /* User 2 (kanan) ↔ Server */
+    .move-u2-req {
+      offset-path: path("M 702 187 Q 550 130 462 190");
+      animation: movePacket 2.4s linear infinite;
+      animation-delay: 0.35s;
+    }
+    .move-u2-res {
+      offset-path: path("M 462 190 Q 550 250 702 187");
+      animation: movePacket 2.4s linear infinite;
+      animation-delay: 1.55s;
+    }
+
+    /* Attacker → perangkat (langkah 2) */
+    .move-hijack-pc {
+      offset-path: path("M 387 62 Q 220 55 95 70");
+      animation: movePacket 1.6s linear infinite;
+    }
+    .move-hijack-phone {
+      offset-path: path("M 387 62 Q 560 55 725 70");
+      animation: movePacket 1.6s linear infinite;
+      animation-delay: 0.25s;
+    }
+    .move-hijack-iot {
+      offset-path: path("M 387 62 Q 220 300 95 260");
+      animation: movePacket 1.6s linear infinite;
+      animation-delay: 0.5s;
+    }
+    .move-hijack-cam {
+      offset-path: path("M 387 62 Q 560 300 725 260");
+      animation: movePacket 1.6s linear infinite;
+      animation-delay: 0.75s;
+    }
+
+    .hijack-line {
+      stroke: #ef4444;
+      stroke-width: 1.5;
+      stroke-dasharray: 6 4;
+      fill: none;
+      opacity: 0.55;
+      animation: dashFlow 1.2s linear infinite;
+    }
+
+    @keyframes dashFlow {
+      to { stroke-dashoffset: -20; }
+    }
+
+    .bot-node circle {
+      transition: stroke 0.6s ease, fill 0.6s ease;
+    }
+
+    .bot-node .device-label { transition: fill 0.6s ease; }
+
+    .layer.visible.infecting .bot-node:nth-child(1) circle { animation: compromise 2s ease forwards; animation-delay: 0.5s; }
+    .layer.visible.infecting .bot-node:nth-child(2) circle { animation: compromise 2s ease forwards; animation-delay: 0.8s; }
+    .layer.visible.infecting .bot-node:nth-child(3) circle { animation: compromise 2s ease forwards; animation-delay: 1.1s; }
+    .layer.visible.infecting .bot-node:nth-child(4) circle { animation: compromise 2s ease forwards; animation-delay: 1.4s; }
+
+    @keyframes compromise {
+      0% { stroke: #64748b; fill: #1e293b; }
+      100% { stroke: #ef4444; fill: #450a0a; }
+    }
+
+    .layer.visible.infecting .bot-node:nth-child(1) .device-label { animation: labelRed 2s ease forwards; animation-delay: 0.5s; }
+    .layer.visible.infecting .bot-node:nth-child(2) .device-label { animation: labelRed 2s ease forwards; animation-delay: 0.8s; }
+    .layer.visible.infecting .bot-node:nth-child(3) .device-label { animation: labelRed 2s ease forwards; animation-delay: 1.1s; }
+    .layer.visible.infecting .bot-node:nth-child(4) .device-label { animation: labelRed 2s ease forwards; animation-delay: 1.4s; }
+
+    @keyframes labelRed {
+      to { fill: #fca5a5; }
+    }
+
+    .bot-owned {
+      font-size: 8px;
+      fill: #ef4444;
+      font-weight: 700;
+      opacity: 0;
+    }
+
+    .layer.visible.infecting .bot-node:nth-child(1) .bot-owned { animation: ownedShow 0.4s ease forwards; animation-delay: 1.5s; }
+    .layer.visible.infecting .bot-node:nth-child(2) .bot-owned { animation: ownedShow 0.4s ease forwards; animation-delay: 1.8s; }
+    .layer.visible.infecting .bot-node:nth-child(3) .bot-owned { animation: ownedShow 0.4s ease forwards; animation-delay: 2.1s; }
+    .layer.visible.infecting .bot-node:nth-child(4) .bot-owned { animation: ownedShow 0.4s ease forwards; animation-delay: 2.4s; }
+
+    @keyframes ownedShow { to { opacity: 1; } }
+
+    .bots-compromised .bot-node circle {
+      stroke: #ef4444;
+      fill: #450a0a;
+      animation: none !important;
+    }
+
+    .bots-compromised .device-label { fill: #fca5a5; animation: none !important; }
+    .bots-compromised .bot-owned { opacity: 1; animation: none !important; }
+    .bots-compromised #botnetLabel { opacity: 1; }
+
+    .layer.visible.infecting #botnetLabel {
+      animation: ownedShow 0.5s ease forwards;
+      animation-delay: 2.6s;
+    }
+
+    .move-bot-server {
+      offset-path: path("M 80 280 Q 250 140 420 190");
+      animation: movePacket 1.1s linear infinite;
+    }
+
+    .move-bot-server-2 {
+      offset-path: path("M 700 280 Q 520 130 420 190");
+      animation: movePacket 1s linear infinite;
+      animation-delay: 0.25s;
+    }
+
+    .move-bot-server-3 {
+      offset-path: path("M 120 70 Q 260 110 420 190");
+      animation: movePacket 0.95s linear infinite;
+      animation-delay: 0.5s;
+    }
+
+    .move-bot-server-4 {
+      offset-path: path("M 700 70 Q 540 100 420 190");
+      animation: movePacket 0.9s linear infinite;
+      animation-delay: 0.15s;
+    }
+
+    .move-c2-bot {
+      offset-path: path("M 410 95 Q 180 170 110 250");
+      animation: movePacket 1.8s linear infinite;
+    }
+
+    @keyframes movePacket {
+      0% { offset-distance: 0%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { offset-distance: 100%; opacity: 0; }
+    }
+
+    .meter-fill {
+      transition: width 0.8s ease;
+    }
+
+    .server-overload .server-bar {
+      fill: #ef4444 !important;
+      opacity: 1 !important;
+    }
+
+    .server-overload > rect:first-of-type {
+      stroke: #ef4444;
+      filter: url(#glowRed);
+    }
+
+    .server-meter-pulse {
+      animation: meterPulse 0.75s ease-in-out infinite;
+    }
+
+    @keyframes meterPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.45; }
+    }
+
+    .user503-badge:nth-child(2) { animation-delay: 0.15s; }
+
+    .shake {
+      animation: shake 0.45s ease-in-out infinite;
+      transform-origin: 420px 190px;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translate(0, 0); }
+      25% { transform: translate(-2px, 1px); }
+      75% { transform: translate(2px, -1px); }
+    }
+
+    .blink-red { animation: blinkRed 0.8s step-end infinite; }
+    @keyframes blinkRed {
+      50% { opacity: 0.35; }
+    }
+
+    .fade-in { animation: fadeIn 0.5s ease both; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <span class="tag">Modul 02 · Ancaman Jaringan</span>
+        <h1>Animasi Serangan DDoS — Step by Step</h1>
+      </div>
+      <span class="step-badge" id="stepBadge">Langkah 1 / 6</span>
+    </header>
+
+    <div class="layout">
+      <aside class="panel timeline" aria-label="Daftar langkah">
+        <h2>Alur Serangan</h2>
+        <div id="stepList"></div>
+      </aside>
+
+      <section class="panel stage" aria-live="polite">
+        <div class="stage-head">
+          <h2 id="stageTitle">Layanan Normal</h2>
+          <span class="status-pill ok" id="stageStatus">Server sehat</span>
+        </div>
+        <div class="canvas-wrap">
+          <svg class="scene" viewBox="0 0 820 360" role="img" aria-labelledby="stageTitle">
+            <defs>
+              <linearGradient id="serverGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#1e293b"/>
+                <stop offset="100%" stop-color="#0f172a"/>
+              </linearGradient>
+              <filter id="glowCyan">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="glowRed">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <!-- Users -->
+            <g id="layerUsers" class="layer visible">
+              <rect x="70" y="170" width="46" height="34" rx="6" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+              <rect x="78" y="176" width="30" height="18" rx="2" fill="#334155"/>
+              <text x="93" y="225" text-anchor="middle" fill="#94a3b8" font-size="11">User 1</text>
+
+              <rect x="650" y="170" width="46" height="34" rx="6" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+              <rect x="658" y="176" width="30" height="18" rx="2" fill="#334155"/>
+              <text x="673" y="225" text-anchor="middle" fill="#94a3b8" font-size="11">User 2</text>
+            </g>
+
+            <!-- Target server -->
+            <g id="layerServer" class="layer visible">
+              <g id="serverGroup">
+                <rect x="390" y="155" width="70" height="70" rx="10" fill="url(#serverGrad)" stroke="#06b6d4" stroke-width="2"/>
+                <rect class="server-bar" x="402" y="168" width="46" height="8" rx="2" fill="#06b6d4" opacity="0.8"/>
+                <rect class="server-bar" x="402" y="182" width="46" height="8" rx="2" fill="#06b6d4" opacity="0.55"/>
+                <rect class="server-bar" x="402" y="196" width="46" height="8" rx="2" fill="#06b6d4" opacity="0.35"/>
+                <g id="layerServerCapacity" class="layer hidden">
+                  <rect x="393" y="228" width="64" height="12" rx="6" fill="#450a0a" stroke="#ef4444" stroke-width="1.5"/>
+                  <rect id="serverMeterFill" class="meter-fill server-meter-pulse" x="395" y="230" width="60" height="8" rx="4" fill="#ef4444"/>
+                  <text id="serverMeterLabel" x="425" y="225" text-anchor="middle" fill="#ef4444" font-size="8" font-weight="800">PENUH 100%</text>
+                </g>
+                <text x="425" y="252" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="700">Web Server</text>
+              </g>
+            </g>
+
+            <!-- Attacker -->
+            <g id="layerAttacker" class="layer hidden">
+              <rect x="365" y="28" width="44" height="34" rx="6" fill="#450a0a" stroke="#ef4444" stroke-width="1.5"/>
+              <text x="387" y="50" text-anchor="middle" fill="#fca5a5" font-size="14">&#x1F480;</text>
+              <text x="387" y="78" text-anchor="middle" fill="#ef4444" font-size="11" font-weight="700">Attacker</text>
+            </g>
+
+            <!-- C2 -->
+            <g id="layerC2" class="layer hidden">
+              <rect x="360" y="72" width="54" height="40" rx="8" fill="#172554" stroke="#f59e0b" stroke-width="1.5"/>
+              <text x="387" y="97" text-anchor="middle" fill="#fcd34d" font-size="10" font-weight="700">C&amp;C</text>
+              <text x="387" y="128" text-anchor="middle" fill="#94a3b8" font-size="10">Command Server</text>
+            </g>
+
+            <!-- Botnet nodes -->
+            <g id="layerBots" class="layer hidden">
+              <g class="bot-node" id="botIoT">
+                <circle cx="95" cy="260" r="14" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+                <text class="device-label" x="95" y="285" text-anchor="middle" fill="#94a3b8" font-size="9">IoT</text>
+                <text class="bot-owned" x="95" y="300" text-anchor="middle">DIKUASAI</text>
+              </g>
+              <g class="bot-node" id="botPC">
+                <circle cx="95" cy="70" r="14" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+                <text class="device-label" x="95" y="55" text-anchor="middle" fill="#94a3b8" font-size="9">PC</text>
+                <text class="bot-owned" x="95" y="40" text-anchor="middle">DIKUASAI</text>
+              </g>
+              <g class="bot-node" id="botCam">
+                <circle cx="725" cy="260" r="14" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+                <text class="device-label" x="725" y="285" text-anchor="middle" fill="#94a3b8" font-size="9">Cam</text>
+                <text class="bot-owned" x="725" y="300" text-anchor="middle">DIKUASAI</text>
+              </g>
+              <g class="bot-node" id="botPhone">
+                <circle cx="725" cy="70" r="14" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+                <text class="device-label" x="725" y="55" text-anchor="middle" fill="#94a3b8" font-size="9">Phone</text>
+                <text class="bot-owned" x="725" y="40" text-anchor="middle">DIKUASAI</text>
+              </g>
+              <text x="410" y="320" text-anchor="middle" fill="#ef4444" font-size="12" font-weight="700" id="botnetLabel" opacity="0">Botnet</text>
+            </g>
+
+            <!-- Attacker hijack animation (langkah 2) -->
+            <g id="layerInfection" class="layer hidden">
+              <line class="hijack-line" x1="387" y1="62" x2="95" y2="70"/>
+              <line class="hijack-line" x1="387" y1="62" x2="725" y2="70" style="animation-delay: 0.2s"/>
+              <line class="hijack-line" x1="387" y1="62" x2="95" y2="260" style="animation-delay: 0.4s"/>
+              <line class="hijack-line" x1="387" y1="62" x2="725" y2="260" style="animation-delay: 0.6s"/>
+              <circle r="5" class="packet packet-red move-hijack-pc"/>
+              <circle r="5" class="packet packet-red move-hijack-phone"/>
+              <circle r="5" class="packet packet-red move-hijack-iot"/>
+              <circle r="5" class="packet packet-red move-hijack-cam"/>
+              <text x="387" y="145" text-anchor="middle" fill="#ef4444" font-size="10" font-weight="700" class="pulse">Malware deploy...</text>
+            </g>
+
+            <!-- WAF / CDN shield -->
+            <g id="layerShield" class="layer hidden">
+              <path d="M425 130 L455 145 L455 175 L425 190 L395 175 L395 145 Z" fill="rgba(6,182,212,0.15)" stroke="#06b6d4" stroke-width="2"/>
+              <text x="425" y="162" text-anchor="middle" fill="#67e8f9" font-size="9" font-weight="700">WAF</text>
+            </g>
+
+            <!-- Trafik legitimate: 2 user ↔ server (langkah 1 & 6) -->
+            <g id="layerTrafficLegit" class="layer hidden">
+              <text x="200" y="118" class="traffic-label" fill="#22c55e">REQUEST →</text>
+              <text x="560" y="118" class="traffic-label" fill="#22c55e">← REQUEST</text>
+              <text x="200" y="278" class="traffic-label" fill="#06b6d4">← RESPONSE</text>
+              <text x="560" y="278" class="traffic-label" fill="#06b6d4">RESPONSE →</text>
+
+              <!-- User 1 (kiri) -->
+              <circle r="5" class="packet packet-req move-u1-req"/>
+              <circle r="5" class="packet packet-req move-u1-req" style="animation-delay: 0.8s"/>
+              <circle r="5" class="packet packet-res move-u1-res"/>
+              <circle r="5" class="packet packet-res move-u1-res" style="animation-delay: 0.4s"/>
+
+              <!-- User 2 (kanan) -->
+              <circle r="5" class="packet packet-req move-u2-req"/>
+              <circle r="5" class="packet packet-req move-u2-req" style="animation-delay: 1.1s"/>
+              <circle r="5" class="packet packet-res move-u2-res"/>
+              <circle r="5" class="packet packet-res move-u2-res" style="animation-delay: 0.65s"/>
+            </g>
+
+            <!-- Trafik request saja — user → server, tanpa response (langkah 5) -->
+            <g id="layerTrafficReqOnly" class="layer hidden">
+              <text x="200" y="118" class="traffic-label" fill="#22c55e">REQUEST →</text>
+              <text x="560" y="118" class="traffic-label" fill="#22c55e">← REQUEST</text>
+              <text x="200" y="278" class="traffic-label" fill="#64748b" opacity="0.7">(no response)</text>
+              <text x="560" y="278" class="traffic-label" fill="#64748b" opacity="0.7">(no response)</text>
+              <circle r="5" class="packet packet-req move-u1-req"/>
+              <circle r="5" class="packet packet-req move-u1-req" style="animation-delay: 0.7s"/>
+              <circle r="5" class="packet packet-req move-u2-req"/>
+              <circle r="5" class="packet packet-req move-u2-req" style="animation-delay: 1s"/>
+            </g>
+
+            <g id="layerTrafficRed" class="layer hidden">
+              <circle r="4" class="packet packet-red move-bot-server"/>
+              <circle r="4" class="packet packet-red move-bot-server-2"/>
+              <circle r="4" class="packet packet-red move-bot-server-3"/>
+              <circle r="4" class="packet packet-red move-bot-server-4"/>
+              <circle r="4" class="packet packet-red move-bot-server" style="animation-delay: 0.35s"/>
+              <circle r="4" class="packet packet-red move-bot-server-2" style="animation-delay: 0.55s"/>
+              <circle r="4" class="packet packet-red move-bot-server-3" style="animation-delay: 0.7s"/>
+              <circle r="4" class="packet packet-red move-bot-server-4" style="animation-delay: 0.85s"/>
+            </g>
+
+            <g id="layerC2Signal" class="layer hidden">
+              <circle r="4" class="packet packet-red move-c2-bot"/>
+              <circle r="4" class="packet packet-red move-c2-bot" style="animation-delay: 0.9s"/>
+            </g>
+
+            <!-- Capacity meter -->
+            <g id="layerMeter" class="layer hidden">
+              <text x="560" y="170" fill="#94a3b8" font-size="11">Kapasitas Server</text>
+              <rect x="560" y="178" width="180" height="16" rx="8" fill="#1e293b" stroke="#475569"/>
+              <rect id="meterFill" class="meter-fill" x="560" y="178" width="36" height="16" rx="8" fill="#22c55e"/>
+              <text id="meterLabel" x="650" y="210" text-anchor="middle" fill="#22c55e" font-size="11" font-weight="700">20%</text>
+            </g>
+
+            <!-- Error 503 di kedua user (langkah 5) -->
+            <g id="layerUser503" class="layer hidden">
+              <g class="user503-badge blink-red">
+                <rect x="55" y="128" width="76" height="38" rx="7" fill="rgba(69,10,10,0.92)" stroke="#ef4444" stroke-width="1.5"/>
+                <text x="93" y="146" text-anchor="middle" fill="#fecaca" font-size="13" font-weight="800">503</text>
+                <text x="93" y="159" text-anchor="middle" fill="#fca5a5" font-size="7">SERVER NOT AVAILABLE</text>
+              </g>
+              <g class="user503-badge blink-red">
+                <rect x="635" y="128" width="76" height="38" rx="7" fill="rgba(69,10,10,0.92)" stroke="#ef4444" stroke-width="1.5"/>
+                <text x="673" y="146" text-anchor="middle" fill="#fecaca" font-size="13" font-weight="800">503</text>
+                <text x="673" y="159" text-anchor="middle" fill="#fca5a5" font-size="7">SERVER NOT AVAILABLE</text>
+              </g>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <aside class="panel detail">
+        <h2>Penjelasan Langkah</h2>
+        <p id="stepDesc"></p>
+        <div class="def-box" id="termBox"></div>
+      </aside>
+    </div>
+
+    <div class="controls">
+      <div class="controls-left">
+        <button class="ctrl" id="btnPrev" type="button">&#8592; Sebelumnya</button>
+        <button class="ctrl primary" id="btnNext" type="button">Berikutnya &#8594;</button>
+        <button class="ctrl" id="btnReset" type="button">Reset</button>
+      </div>
+      <div class="progress" id="progressDots" aria-label="Progres langkah"></div>
+      <div class="controls-right">
+        <button class="ctrl" id="btnAuto" type="button">&#9654; Putar otomatis</button>
+      </div>
+    </div>
+
+    <footer>
+      <cite>[1]</cite> Cybersecurity Fundamentals, UNDIP Cyber Security Course Materials, Universitas Diponegoro, Semarang, Indonesia, 2026.
+      <cite>[2]</cite> Eight Most Common Cybersecurity Threats, UNDIP Cyber Security Course Materials, Universitas Diponegoro, Semarang, Indonesia, 2026.
+    </footer>
+  </div>
+
+  <script>
+    const STEPS = [
+      {
+        title: "Layanan Normal",
+        status: { text: "Server sehat", cls: "ok" },
+        desc: "Dua pengguna (User 1 & User 2) mengirim request ke server. Server memproses lalu mengembalikan response/data ke masing-masing user — trafik normal masih sehat.",
+        terms: [
+          ["Web Server", "Komputer yang menyimpan aplikasi/website dan melayani permintaan data dari pengguna."],
+          ["Response", "Data balasan dari server ke browser user setelah request diproses."]
+        ],
+        show: ["layerUsers", "layerServer", "layerTrafficLegit"],
+        meter: 20,
+        meterColor: "#22c55e"
+      },
+      {
+        title: "Infeksi Botnet",
+        status: { text: "Perangkat dikompromikan", cls: "warn" },
+        desc: "Attacker menyebar malware ke PC, Phone, IoT, dan Cam. Animasi menunjukkan perangkat satu per satu dikendalikan (label DIKUASAI) hingga membentuk botnet.",
+        terms: [
+          ["Botnet", "Jaringan perangkat terinfeksi yang dikendalikan penyerang dari jarak jauh."],
+          ["Malware", "Program berbahaya yang dipasang tanpa sepengetahuan pemilik perangkat."]
+        ],
+        show: ["layerAttacker", "layerBots", "layerInfection"],
+        infection: true,
+        meter: 25,
+        meterColor: "#22c55e"
+      },
+      {
+        title: "Perintah Serangan (C&C)",
+        status: { text: "Koordinasi dimulai", cls: "warn" },
+        desc: "Attacker mengirim perintah lewat server Command & Control (C&C) ke seluruh bot: serang target web server sekarang.",
+        terms: [
+          ["C&C (Command & Control)", "Server pusat penyerang untuk mengirim instruksi ke botnet."],
+          ["Target", "Sistem atau layanan yang menjadi sasaran serangan, di sini web server korban."]
+        ],
+        show: ["layerAttacker", "layerC2", "layerBots", "layerServer", "layerC2Signal"],
+        botsCompromised: true,
+        meter: 30,
+        meterColor: "#f59e0b"
+      },
+      {
+        title: "Pembanjiran Trafik",
+        status: { text: "Trafik melonjak", cls: "warn" },
+        desc: "Ribuan bot mengirim request palsu secara bersamaan ke server. Volume trafik naik drastis dalam waktu singkat.",
+        terms: [
+          ["DDoS", "Distributed Denial of Service — serangan pembanjiran trafik dari banyak sumber sekaligus."],
+          ["Trafik palsu", "Request buatan/bot yang bukan dari pengguna legitimate, tapi tetap menghabiskan resource server."]
+        ],
+        show: ["layerBots", "layerServer", "layerTrafficRed"],
+        botsCompromised: true,
+        meter: 78,
+        meterColor: "#f59e0b"
+      },
+      {
+        title: "Kapasitas Habis",
+        status: { text: "Server overload", cls: "bad" },
+        desc: "User 1 & User 2 tetap mengirim request, tapi server sudah penuh — tidak ada response yang kembali. Meter kapasitas di Web Server menunjukkan 100%, dan kedua user menerima error 503.",
+        terms: [
+          ["Overload", "Kondisi sistem kelebihan beban sehingga tidak bisa memproses permintaan baru dengan baik."],
+          ["503 Error", "Kode HTTP di sisi user saat server tidak mampu melayani permintaan."]
+        ],
+        show: ["layerUsers", "layerBots", "layerServer", "layerTrafficRed", "layerTrafficReqOnly", "layerServerCapacity", "layerUser503"],
+        botsCompromised: true,
+        serverOverload: true,
+        meter: 100,
+        meterColor: "#ef4444",
+        shake: true
+      },
+      {
+        title: "Mitigasi",
+        status: { text: "Pertahanan aktif", cls: "ok" },
+        desc: "CDN, WAF, dan rate limiting memfilter trafik mencurigakan. User 1 & User 2 kembali mengirim request dan menerima response normal dari server.",
+        terms: [
+          ["WAF", "Web Application Firewall — filter keamanan yang memblokir request berbahaya."],
+          ["Rate Limiting", "Batasi jumlah request per IP/waktu untuk mencegah pembanjiran."]
+        ],
+        show: ["layerUsers", "layerServer", "layerShield", "layerTrafficLegit"],
+        meter: 35,
+        meterColor: "#22c55e"
+      }
+    ];
+
+    let current = 0;
+    let autoTimer = null;
+
+    const els = {
+      stepList: document.getElementById("stepList"),
+      progressDots: document.getElementById("progressDots"),
+      stepBadge: document.getElementById("stepBadge"),
+      stageTitle: document.getElementById("stageTitle"),
+      stageStatus: document.getElementById("stageStatus"),
+      stepDesc: document.getElementById("stepDesc"),
+      termBox: document.getElementById("termBox"),
+      btnPrev: document.getElementById("btnPrev"),
+      btnNext: document.getElementById("btnNext"),
+      btnReset: document.getElementById("btnReset"),
+      btnAuto: document.getElementById("btnAuto"),
+      meterFill: document.getElementById("meterFill"),
+      meterLabel: document.getElementById("meterLabel"),
+      serverGroup: document.getElementById("serverGroup"),
+      layerBots: document.getElementById("layerBots"),
+      layerInfection: document.getElementById("layerInfection")
+    };
+
+    const ALL_LAYERS = [
+      "layerUsers", "layerServer", "layerAttacker", "layerC2", "layerBots",
+      "layerInfection", "layerShield", "layerTrafficLegit", "layerTrafficReqOnly",
+      "layerTrafficRed", "layerC2Signal", "layerServerCapacity", "layerUser503",
+      "layerMeter"
+    ];
+
+    function buildUI() {
+      STEPS.forEach((step, i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "step-btn";
+        btn.dataset.step = String(i);
+        btn.innerHTML = `
+          <span class="num">${i + 1}</span>
+          <span class="label">${step.title}</span>
+          <span class="hint">${step.status.text}</span>`;
+        btn.addEventListener("click", () => goTo(i));
+        els.stepList.appendChild(btn);
+
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "dot";
+        dot.title = step.title;
+        dot.dataset.step = String(i);
+        dot.addEventListener("click", () => goTo(i));
+        els.progressDots.appendChild(dot);
+      });
+    }
+
+    function setLayerVisibility(names) {
+      ALL_LAYERS.forEach(id => {
+        const node = document.getElementById(id);
+        if (!node) return;
+        node.classList.toggle("visible", names.includes(id));
+        node.classList.toggle("hidden", !names.includes(id));
+      });
+    }
+
+    function restartInfectionAnim() {
+      const clone = els.layerInfection.cloneNode(true);
+      els.layerInfection.replaceWith(clone);
+      els.layerInfection = clone;
+    }
+
+    function restartBotAnim() {
+      const clone = els.layerBots.cloneNode(true);
+      els.layerBots.replaceWith(clone);
+      els.layerBots = clone;
+    }
+
+    function resetBotVisuals(compromised) {
+      els.layerBots.classList.toggle("bots-compromised", compromised);
+      els.layerBots.classList.toggle("infecting", !compromised);
+      const label = document.getElementById("botnetLabel");
+      if (label) label.style.opacity = compromised ? "1" : "0";
+    }
+
+    function render(stepIndex) {
+      const step = STEPS[stepIndex];
+      current = stepIndex;
+
+      document.querySelectorAll(".step-btn").forEach((btn, i) => {
+        btn.classList.toggle("active", i === stepIndex);
+      });
+      document.querySelectorAll(".dot").forEach((dot, i) => {
+        dot.classList.toggle("active", i === stepIndex);
+      });
+
+      els.stepBadge.textContent = `Langkah ${stepIndex + 1} / ${STEPS.length}`;
+      els.stageTitle.textContent = step.title;
+      els.stageStatus.textContent = step.status.text;
+      els.stageStatus.className = `status-pill ${step.status.cls}`;
+      els.stepDesc.textContent = step.desc;
+      els.stepDesc.className = "fade-in";
+
+      els.termBox.innerHTML = step.terms.map(([term, def]) =>
+        `<div><strong>${term}</strong> — ${def}</div>`
+      ).join("");
+
+      if (step.infection) {
+        restartBotAnim();
+        restartInfectionAnim();
+      }
+
+      setLayerVisibility(step.show);
+
+      if (step.infection) {
+        resetBotVisuals(false);
+      } else {
+        resetBotVisuals(!!step.botsCompromised);
+      }
+
+      const meterVisible = step.show.includes("layerMeter");
+      if (meterVisible) {
+        const width = Math.round(1.8 * step.meter);
+        els.meterFill.setAttribute("width", String(width));
+        els.meterFill.setAttribute("fill", step.meterColor);
+        els.meterLabel.textContent = `${step.meter}%`;
+        els.meterLabel.setAttribute("fill", step.meterColor);
+      }
+
+      els.serverGroup.classList.toggle("server-overload", !!step.serverOverload);
+
+      const serverCapVisible = step.show.includes("layerServerCapacity");
+      const serverMeterFill = document.getElementById("serverMeterFill");
+      const serverMeterLabel = document.getElementById("serverMeterLabel");
+      if (serverCapVisible && serverMeterFill && serverMeterLabel) {
+        serverMeterFill.setAttribute("width", "60");
+        serverMeterFill.setAttribute("fill", step.meterColor || "#ef4444");
+        serverMeterLabel.textContent = `PENUH ${step.meter || 100}%`;
+        serverMeterLabel.setAttribute("fill", step.meterColor || "#ef4444");
+      }
+
+      els.serverGroup.classList.toggle("shake", !!step.shake);
+
+      els.btnPrev.disabled = stepIndex === 0;
+      els.btnNext.disabled = stepIndex === STEPS.length - 1;
+    }
+
+    function goTo(index) {
+      if (index < 0 || index >= STEPS.length) return;
+      render(index);
+    }
+
+    function next() { if (current < STEPS.length - 1) goTo(current + 1); else stopAuto(); }
+    function prev() { if (current > 0) goTo(current - 1); }
+
+    function stopAuto() {
+      if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+      }
+      els.btnAuto.textContent = "\u25B6 Putar otomatis";
+    }
+
+    function toggleAuto() {
+      if (autoTimer) {
+        stopAuto();
+        return;
+      }
+      els.btnAuto.textContent = "\u23F8 Jeda otomatis";
+      autoTimer = setInterval(() => {
+        if (current >= STEPS.length - 1) {
+          stopAuto();
+          return;
+        }
+        next();
+      }, 3500);
+    }
+
+    els.btnPrev.addEventListener("click", prev);
+    els.btnNext.addEventListener("click", next);
+    els.btnReset.addEventListener("click", () => { stopAuto(); goTo(0); });
+    els.btnAuto.addEventListener("click", toggleAuto);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "Home") goTo(0);
+      if (e.key === "End") goTo(STEPS.length - 1);
+    });
+
+    buildUI();
+    render(0);
+  </script>
+</body>
+</html>
